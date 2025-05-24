@@ -1,0 +1,64 @@
+{
+  "Aggregate": {
+    "scope": "typescript",
+    "prefix": "_agg",
+    "body": [
+      "export class ${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g} extends Aggregate {",
+      "  constructor(id: Uuid, $0 createdAt: DateValueObject, updatedAt: DateValueObject) {",
+      "    super(id, createdAt, updatedAt);                 ",
+      "  }",
+      " ",
+      "  toPrimitives(): Primitives<${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g}> {",
+      "    return {",
+      "      id: this.id.toString(),",
+      "      createdAt: this.createdAt.getValue(),",
+      "      updatedAt: this.updatedAt.getValue(),",
+      "    };",
+      "  }",
+      " ",
+      "  static fromPrimitives(data: Primitives<${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g}>): ${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g} {",
+      "    return new ${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g}(",
+      "      new Uuid(data.id),",
+      "      new DateValueObject(data.createdAt),",
+      "      new DateValueObject(data.updatedAt)",
+      "    );",
+      "  }",
+      "}"
+    ],
+    "description": "Create an aggregate",
+    "isFileTemplate": true
+  },
+  "Base Object": {
+    "scope": "typescript",
+    "prefix": "_base",
+    "body": [
+      "export class ${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g} extends BaseObject {",
+      "  constructor($0) {",
+      "    super();                 ",
+      "  }",
+      " ",
+      "  toPrimitives(): Primitives<${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g}> {",
+      "    return {};",
+      "  }",
+      " ",
+      "  fromPrimitives(data: Primitives<${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g}>): ${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g} {",
+      "    return new ${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g}();",
+      "  }",
+      "}"
+    ],
+    "description": "Create an aggregate",
+    "isFileTemplate": true
+  },
+  "Class": {
+    "scope": "typescript",
+    "prefix": "_class",
+    "body": [
+      "export class ${TM_FILENAME_BASE/(^\\w*)|(-)/${1:/pascalcase}${2:+ }/g} {",
+      "  constructor($0) {",
+      "  }",
+      "}"
+    ],
+    "description": "Create a class",
+    "isFileTemplate": true
+  }
+}
