@@ -33,5 +33,7 @@
   "editor.cursorBlinking": "expand",
   "polacode.backgroundColor": "#000000",
   "polacode.transparentBackground": true,
-  "polacode.shadow": "rgba(0, 0, 0, 0.55) 0px 0px 0px"
+  "polacode.shadow": "rgba(0, 0, 0, 0.55) 0px 0px 0px",
+  "cSpell.words": ["pagalo"]
 }
+

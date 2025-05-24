@@ -1,5 +1,8 @@
 import { createI18nMiddleware } from "next-international/middleware";
 import { NextRequest, NextResponse } from "next/server";
+import { betterAuthMiddleware } from "./lib/auth/middleware";
+
+const publicRoutes = ["/sign-in", "/sign-up", "/recovery-password", "/"];
 
 const translationMiddleware = createI18nMiddleware({
   locales: ["en", "es"],
@@ -12,7 +15,8 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  return translationMiddleware(req);
+  const response = translationMiddleware(req);
+  return betterAuthMiddleware(req, response, publicRoutes);
 }
 
 export const config = {
