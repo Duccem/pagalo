@@ -1,3 +1,15 @@
 {
-  "cSpell.words": ["pagalo"]
+  "cSpell.words": ["pagalo"],
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/node_modules": true,
+    "**/.expo": true,
+    "**/.turbo": true,
+    "**/.cache": true
+  }
 }
+
