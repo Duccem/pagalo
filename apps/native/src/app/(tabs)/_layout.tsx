@@ -1,48 +1,43 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import React from "react";
-import { Platform } from "react-native";
-
-import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import TabBarBackground from "@/components/ui/TabBarBackground";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { TabBar } from "@/components/shared/tab-bar";
+import { authClient } from "@/lib/auth-client";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+  const { isPending, data } = authClient.useSession();
+  if (isPending) return null;
+  if (!data?.session) {
+    return <Redirect href={"/(auth)/welcome"} />;
+  }
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: "absolute",
-          },
-          default: {},
-        }),
-      }}
-    >
+    <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="index">
       <Tabs.Screen
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
-          ),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="new"
+        options={{
+          title: "Scan",
+          headerShown: false,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Explore",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
-          ),
+          title: "Bills",
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="more"
+        options={{
+          title: "Friends",
+          headerShown: false,
         }}
       />
     </Tabs>
