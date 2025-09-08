@@ -10,6 +10,7 @@
     "**/.expo": true,
     "**/.turbo": true,
     "**/.cache": true
-  }
+  },
+  "postman.settings.dotenv-detection-notification-visibility": false
 }
 
