@@ -7,13 +7,21 @@ import * as schema from "../db/schema/auth";
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
-
-    schema: schema,
+    schema,
   }),
-  trustedOrigins: [process.env.CORS_ORIGIN || "", "pagalo://"],
-  emailAndPassword: {
-    enabled: true,
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      redirectURI:
+        "https://2jphk0dv-3000.use2.devtunnels.ms/api/auth/callback/google",
+    },
   },
+  trustedOrigins: [
+    process.env.CORS_ORIGIN || "",
+    "pagalo://",
+    "exp://s9pku04-ducen29-8081.exp.direct",
+  ],
   advanced: {
     defaultCookieAttributes: {
       sameSite: "none",

@@ -3,15 +3,13 @@ module.exports = function (api) {
   const plugins = [];
 
   plugins.push("react-native-reanimated/plugin");
-  plugins.push("inline-imports");
-  plugins.push({ extensions: [".sql"] });
 
   return {
     presets: [
       ["babel-preset-expo", { jsxImportSource: "nativewind" }],
       "nativewind/babel",
     ],
-    plugins,
+    plugins: [...plugins, ["inline-import", { extensions: [".sql"] }]],
   };
 };
 
