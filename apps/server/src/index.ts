@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { aiRouter } from "./routers/ai";
 import { authRouter } from "./routers/auth";
+import { imageRouter } from "./routers/image";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
@@ -25,6 +26,7 @@ app.get("/", (c) => {
 
 app.route("/", authRouter);
 app.route("/", aiRouter);
+app.route("/", imageRouter);
 
 serve(
   {
