@@ -1,75 +1,38 @@
-import { useState } from "react";
-import * as ImagePicker from "expo-image-picker";
-import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { uploadFiles, useImageUploader } from "@/lib/uploadthing";
-import { ClientUploadedFileData } from "uploadthing/types";
+import { router } from "expo-router";
+import { Camera, NotebookPen, Scan } from "lucide-react-native";
+import { Text, TouchableOpacity } from "react-native";
+import { View } from "react-native";
+import * as Haptics from "expo-haptics";
 
 export default function TabTwoScreen() {
-  const [image, setImage] = useState<string | null>(null);
-  const { openImagePicker, isUploading } = useImageUploader("imageUploader", {
-    onUploadError: (error) => Alert.alert("Upload Error", error.message),
-    onBeforeUploadBegin: (files) => {
-      console.log("Files ready to upload: ", files);
-      setImage((files[0] as any).uri);
-      return files;
-    },
-  });
-
-  const handleTakePhoto = async () => {
-    const data = await openImagePicker({
-      source: "camera", // or "camera"
-      onInsufficientPermissions: () => {
-        ImagePicker.requestCameraPermissionsAsync();
-      },
-    });
-    console.log((data as ClientUploadedFileData<any>[])[0].ufsUrl);
-  };
-
-  const handleUploadGallery = async () => {
-    openImagePicker({
-      source: "library", // or "camera"
-      onInsufficientPermissions: () => {
-        ImagePicker.requestCameraPermissionsAsync();
-      },
-    });
-  };
   return (
-    <View className="flex-1 items-center justify-center">
-      <View className="mb-4 h-[400px]  w-[280px] overflow-hidden  items-center justify-center rounded-2xl border-2  border-violet-700">
-        <Image
-          source={{ uri: image! }}
-          resizeMode="cover"
-          className="w-full h-full"
-        />
+    <View className="flex-1 items-center justify-center py-10">
+      <View className="rounded-full bg-primary/10 p-5">
+        <Scan size={20} />
       </View>
-
-      <View className="flex-row gap-5">
-        <TouchableOpacity
-          className="rounded-full bg-blue-500 px-4 py-2"
-          onPress={handleTakePhoto}
-        >
-          {isUploading ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text className="text-white">Take Photo</Text>
-          )}
+      <View className="mt-8 space-y-4 px-12">
+        <Text className="text-4xl font-medium text-center">
+          Scan. Tap. Split
+        </Text>
+        <Text className="text-center text-lg text-muted-foreground">
+          Snap the receipt, tap your items, see who owes what. No sign-ups, no
+          math, no drama.
+        </Text>
+      </View>
+      <View className="mt-10 w-full px-8 gap-6">
+        <TouchableOpacity className=" flex-row items-center justify-center gap-4 bg-black p-4 rounded-2xl w-full">
+          <Camera color={"#fff"} size={30} />
+          <Text className="text-white">Scan receipt</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          className="rounded-full bg-blue-500 px-4 py-2"
-          onPress={handleUploadGallery}
+          className=" flex-row items-center justify-center gap-4 border border-black p-4 rounded-2xl w-full"
+          onPress={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            router.push("/(receipt)/manual");
+          }}
         >
-          {isUploading ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text className="text-white">Upload Image</Text>
-          )}
+          <NotebookPen color={"#000"} size={30} />
+          <Text className="text-black">Enter manually</Text>
         </TouchableOpacity>
       </View>
     </View>

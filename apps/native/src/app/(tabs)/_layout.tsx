@@ -10,7 +10,7 @@ export default function TabLayout() {
     return <Redirect href={"/(auth)/welcome"} />;
   }
   return (
-    <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="index">
+    <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="new">
       <Tabs.Screen
         name="index"
         options={{
@@ -21,26 +21,17 @@ export default function TabLayout() {
       <Tabs.Screen
         name="new"
         options={{
-          title: "Scan",
+          title: "New",
           headerShown: false,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: "Bills",
-          headerShown: false,
-        }}
-      />
-
-      <Tabs.Screen
-        name="more"
-        options={{
-          title: "Friends",
+          title: "History",
           headerShown: false,
         }}
       />
     </Tabs>
   );
 }
-

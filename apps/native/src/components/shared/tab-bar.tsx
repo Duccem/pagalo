@@ -1,6 +1,7 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useState } from "react";
 import { LayoutChangeEvent, View } from "react-native";
+import * as Haptics from "expo-haptics";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -14,7 +15,8 @@ export const TabBar = ({
   navigation,
 }: BottomTabBarProps) => {
   const [dimensions, setDimensions] = useState({ width: 20, height: 100 });
-  const buttonWidth = dimensions.width / state.routes.length;
+  const buttonWidth =
+    dimensions.width / state.routes.filter((r) => r.name !== "receipt").length;
   const onTabBarLayout = (event: LayoutChangeEvent) => {
     setDimensions({
       width: event.nativeEvent.layout.width,
@@ -27,6 +29,7 @@ export const TabBar = ({
       transform: [{ translateX: tabPositionX.value }],
     };
   });
+
   return (
     <View
       className="absolute bottom-5 right-0 left-0 flex flex-row justify-between items-center bg-white mx-5 py-4  rounded-2xl shadow-lg flex-1"
@@ -42,43 +45,45 @@ export const TabBar = ({
           animatedStyle,
         ]}
       ></Animated.View>
-      {state.routes.map((route: any, index: number) => {
-        const { options } = descriptors[route.key];
+      {state.routes
+        .filter((r) => r.name !== "receipt")
+        .map((route: any, index: number) => {
+          const { options } = descriptors[route.key];
 
-        const isFocused = state.index === index;
+          const isFocused = state.index === index;
 
-        const onPress = () => {
-          tabPositionX.value = withSpring(buttonWidth * index, {
-            duration: 1000,
-          });
-          const event = navigation.emit({
-            type: "tabPress",
-            target: route.key,
-            canPreventDefault: true,
-          });
+          const onPress = () => {
+            tabPositionX.value = withSpring(buttonWidth * index, {
+              duration: 1000,
+            });
+            const event = navigation.emit({
+              type: "tabPress",
+              target: route.key,
+              canPreventDefault: true,
+            });
 
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
-        };
-        const onLongPress = () => {
-          navigation.emit({
-            type: "tabLongPress",
-            target: route.key,
-          });
-        };
-        return (
-          <TabBarButton
-            key={route.name}
-            isFocused={isFocused}
-            route={route}
-            options={options}
-            onLongPress={onLongPress}
-            onPress={onPress}
-          />
-        );
-      })}
+            if (!isFocused && !event.defaultPrevented) {
+              Haptics.impactAsync();
+              navigation.navigate(route.name);
+            }
+          };
+          const onLongPress = () => {
+            navigation.emit({
+              type: "tabLongPress",
+              target: route.key,
+            });
+          };
+          return (
+            <TabBarButton
+              key={route.name}
+              isFocused={isFocused}
+              route={route}
+              options={options}
+              onLongPress={onLongPress}
+              onPress={onPress}
+            />
+          );
+        })}
     </View>
   );
 };
-

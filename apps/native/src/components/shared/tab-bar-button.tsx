@@ -1,6 +1,7 @@
 import {
   Calendar,
   HeartPlus,
+  History,
   Home,
   Receipt,
   Scan,
@@ -53,7 +54,8 @@ const TabBarButton = ({
     index: (props: any) => <Home size={24} color={"#222"} {...props} />,
     new: (props: any) => <Scan size={24} color={"#222"} {...props} />,
     more: (props: any) => <UserCheck size={24} color={"#222"} {...props} />,
-    explore: (props: any) => <Receipt size={24} color={"#222"} {...props} />,
+    explore: (props: any) => <History size={24} color={"#222"} {...props} />,
+    receipt: (props: any) => <Receipt size={24} color={"#222"} {...props} />,
   };
 
   const label =
@@ -96,4 +98,3 @@ const TabBarButton = ({
 };
 
 export default TabBarButton;
-
