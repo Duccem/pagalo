@@ -10,6 +10,13 @@ export default function TabLayout() {
           title: "Manual Entry",
         }}
       />
+      <Stack.Screen
+        name="items"
+        options={{
+          headerShown: false,
+          title: "Items",
+        }}
+      />
     </Stack>
   );
 }

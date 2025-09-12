@@ -10,6 +10,7 @@ import {
 export const invoice = sqliteTable("invoice", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   total: real("total").notNull(),
+  vendor: text("vendor").notNull().default(""),
   tax: real("tax").notNull(),
   tip: real("tip").notNull(),
   date: text("date").notNull().default(new Date().toISOString()),

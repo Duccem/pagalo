@@ -4,13 +4,20 @@ import {
 } from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { router } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, Key } from "lucide-react-native";
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TextInput, TouchableOpacity, View } from "react-native";
 import * as Haptics from "expo-haptics";
+import ScreenView from "@/components/screen-view";
+import { useSQLiteContext } from "expo-sqlite";
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import * as schema from "@/lib/db/schema";
 
 export default function Manual() {
+  const db = useSQLiteContext();
+  const database = drizzle(db, { schema });
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [vendor, setVendor] = useState<string>("");
   const onChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     const currentDate = selectedDate;
     setDate(currentDate);
@@ -23,58 +30,80 @@ export default function Manual() {
       is24Hour: true,
     });
   };
+  const create = async () => {
+    if (!vendor || !date) {
+      Alert.alert("Error", "Please fill in all fields");
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+      return;
+    }
+    Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Reject);
+    const invoice = await database
+      .insert(schema.invoice)
+      .values({
+        total: 0,
+        date: date ? date.toISOString() : new Date().toISOString(),
+        tip: 0,
+        tax: 0,
+        vendor,
+      })
+      .returning();
+    router.push(`/(receipt)/items?invoice=${invoice[0].id}`);
+  };
   return (
-    <View className="flex-1 justify-start items-center pt-24 relative px-6">
-      <View className="w-full ">
-        <TouchableOpacity
-          className="flex-row items-center gap-4"
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-            router.back();
-          }}
-        >
-          <ArrowLeft size={30} color={"#000"} />
-          <Text className="text-xl">Back</Text>
-        </TouchableOpacity>
-      </View>
-      <View className="flex-1 justify-center items-center w-full gap-12">
-        <View className="items-center gap-2">
-          <Text className="text-4xl font-medium text-center">Manual entry</Text>
-          <Text className="text-center text-lg text-muted-foreground">
-            Enter your receipt details manually
-          </Text>
-        </View>
-        <View className="w-full gap-2">
-          <Text className="text-lg font-medium">Restaurant name:</Text>
-          <TextInput
-            className="border border-black w-full rounded-2xl px-4"
-            placeholder="eg. Joe's Pizza"
-          ></TextInput>
-        </View>
-
-        <View className="w-full gap-2">
-          <Text className="text-lg font-medium">Date:</Text>
+    <ScreenView>
+      <View className="flex-1 justify-start items-center relative px-6">
+        <View className="w-full ">
           <TouchableOpacity
-            className="flex-row items-center gap-4  w-full border border-black px-4 py-2 justify-start rounded-2xl"
-            onPress={showMode}
+            className="flex-row items-center gap-4"
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+              router.back();
+            }}
           >
-            <Text className="text-lg">
-              {date ? format(date, "Pp") : "Select date"}
-            </Text>
+            <ArrowLeft size={30} color={"#000"} />
+            <Text className="text-xl">Back</Text>
           </TouchableOpacity>
         </View>
-      </View>
+        <View className="flex-1 justify-center items-center w-full gap-12">
+          <View className="items-center gap-2">
+            <Text className="text-4xl font-medium text-center">
+              Manual entry
+            </Text>
+            <Text className="text-center text-lg text-muted-foreground">
+              Enter your receipt details manually
+            </Text>
+          </View>
+          <View className="w-full gap-2">
+            <Text className="text-lg font-medium">Restaurant name:</Text>
+            <TextInput
+              className="border border-black w-full rounded-2xl px-4 "
+              placeholder="eg. Joe's Pizza"
+              value={vendor}
+              onChangeText={setVendor}
+            />
+          </View>
 
-      <TouchableOpacity
-        className="absolute bottom-10 flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
-        onPress={() => {
-          Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Reject);
-          router.back();
-        }}
-      >
-        <Text className="text-2xl text-white">Continue</Text>
-      </TouchableOpacity>
-    </View>
+          <View className="w-full gap-2">
+            <Text className="text-lg font-medium">Date:</Text>
+            <TouchableOpacity
+              className="flex-row items-center gap-4  w-full border border-black px-4 py-2 justify-start rounded-2xl"
+              onPress={showMode}
+            >
+              <Text className="text-lg">
+                {date ? format(date, "Pp") : "Select date"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <TouchableOpacity
+          className="absolute bottom-0 flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
+          onPress={create}
+        >
+          <Text className="text-2xl text-white">Continue</Text>
+        </TouchableOpacity>
+      </View>
+    </ScreenView>
   );
 }
 
