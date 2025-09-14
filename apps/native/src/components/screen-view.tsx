@@ -1,30 +1,36 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import React from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
-  Platform,
-  StyleSheet,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  SafeAreaProvider,
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 const ScreenView = ({ children }: { children: React.ReactNode }) => {
   return (
-    <SafeAreaView className="flex-1 py-5 bg-white">
-      <KeyboardAvoidingView
-        className="flex-1"
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          {children}
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <GestureHandlerRootView className="flex-1 ">
+      <SafeAreaProvider>
+        <SafeAreaView
+          className="flex-1 bg-white pt-6"
+          edges={["top", "left", "right", "bottom"]}
+        >
+          <KeyboardAvoidingView className="flex-1" behavior={"padding"}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+            </TouchableWithoutFeedback>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default ScreenView;
 

@@ -17,6 +17,20 @@ export default function TabLayout() {
           title: "Items",
         }}
       />
+      <Stack.Screen
+        name="people"
+        options={{
+          headerShown: false,
+          title: "Who's Splitting?",
+        }}
+      />
+      <Stack.Screen
+        name="split"
+        options={{
+          headerShown: false,
+          title: "Assign items",
+        }}
+      />
     </Stack>
   );
 }

@@ -54,7 +54,7 @@ export const TabBar = ({
 
           const onPress = () => {
             tabPositionX.value = withSpring(buttonWidth * index, {
-              duration: 1000,
+              duration: 300,
             });
             const event = navigation.emit({
               type: "tabPress",
