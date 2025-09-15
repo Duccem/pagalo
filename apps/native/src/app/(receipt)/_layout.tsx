@@ -31,6 +31,13 @@ export default function TabLayout() {
           title: "Assign items",
         }}
       />
+      <Stack.Screen
+        name="summary"
+        options={{
+          headerShown: false,
+          title: "Summary",
+        }}
+      />
     </Stack>
   );
 }

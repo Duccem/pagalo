@@ -141,7 +141,7 @@ const Split = () => {
           }`}
           style={{ bottom: useSafeAreaInsets().bottom + 16 }}
           onPress={() => {
-            console.log("Continue");
+            router.push("/(receipt)/summary");
           }}
           disabled={!canContinue}
         >

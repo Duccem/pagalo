@@ -16,6 +16,7 @@ import ScreenView from "@/components/screen-view";
 import { useSQLiteContext } from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import * as schema from "@/lib/db/schema";
+import { authClient } from "@/lib/auth-client";
 
 export default function Manual() {
   const db = useSQLiteContext();
@@ -38,17 +39,17 @@ export default function Manual() {
       return;
     }
     Haptics.performAndroidHapticsAsync(Haptics.AndroidHaptics.Reject);
-    // const invoice = await database
-    //   .insert(schema.invoice)
-    //   .values({
-    //     total: 0,
-    //     date: date ? date.toISOString() : new Date().toISOString(),
-    //     tip: 0,
-    //     tax: 0,
-    //     vendor,
-    //   })
-    //   .returning();
-    router.push(`/(receipt)/items?invoice=1`);
+    const invoice = await database
+      .insert(schema.invoice)
+      .values({
+        total: 0,
+        date: date ? date.toISOString() : new Date().toISOString(),
+        tip: 0,
+        tax: 0,
+        vendor,
+      })
+      .returning();
+    router.push(`/(receipt)/items?invoice=${invoice[0].id}`);
   };
   return (
     <ScreenView>
