@@ -32,10 +32,15 @@ export const member = sqliteTable("member", {
     .notNull()
     .references(() => invoice.id, { onDelete: "cascade" }),
   name: text("name").notNull(),
+  total: real("total").notNull().default(0),
+  status: text("status").notNull().default("pending"), // 0 = not paid, 1 = partially paid, 2 = paid
 });
 
 export const memberItem = sqliteTable("member_item", {
   id: integer("id").primaryKey({ autoIncrement: true }),
+  invoiceId: integer("invoice_id")
+    .notNull()
+    .references(() => invoice.id, { onDelete: "cascade" }),
   memberId: integer("member_id")
     .notNull()
     .references(() => member.id, { onDelete: "cascade" }),

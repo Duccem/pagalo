@@ -15,6 +15,27 @@
       "when": 1757696621493,
       "tag": "0001_third_switch",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1757978288471,
+      "tag": "0002_special_karen_page",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1757980404111,
+      "tag": "0003_moaning_hairball",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1757983269757,
+      "tag": "0004_odd_gambit",
+      "breakpoints": true
     }
   ]
 }

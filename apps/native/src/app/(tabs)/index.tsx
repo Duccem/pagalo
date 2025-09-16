@@ -54,7 +54,7 @@ export default function HomeScreen() {
           className="w-full px-6"
           renderItem={(item) => (
             <TouchableOpacity
-              className="w-full border border-black px-4 py-3 my-4 rounded-2xl flex-row justify-between items-center"
+              className="w-full bg-white px-4 py-3 my-4 rounded-2xl flex-row justify-between items-center shadow-lg"
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 router.push(`/(receipt)/summary?id=${item.item.id}`);

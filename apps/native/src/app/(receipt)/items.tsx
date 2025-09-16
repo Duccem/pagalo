@@ -1,9 +1,11 @@
 import ScreenView from "@/components/screen-view";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
-import { ArrowLeft, Minus, Plus, Trash } from "lucide-react-native";
+import { useSQLiteContext } from "expo-sqlite";
+import { ArrowLeft, DollarSign, Minus, Plus, Trash } from "lucide-react-native";
 import { rem } from "nativewind";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,45 +14,82 @@ import {
   View,
   ScrollView,
   FlatList,
+  Alert,
 } from "react-native";
+import * as schema from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { ta } from "date-fns/locale";
 
 const Items = () => {
   const params = useLocalSearchParams<{ invoice: string }>();
+  const db = useSQLiteContext();
+  const database = drizzle(db, { schema });
+  const { data: items } = useLiveQuery(
+    database
+      .select()
+      .from(schema.item)
+      .where(eq(schema.item.invoiceId, Number(params.invoice)))
+  );
+  const { data: invoice } = useLiveQuery(
+    database
+      .select()
+      .from(schema.invoice)
+      .where(eq(schema.invoice.id, Number(params.invoice)))
+      .limit(1)
+  );
   const [name, setName] = React.useState<string>("");
   const [price, setPrice] = React.useState<number>(0);
-  const [items, setItems] = React.useState<{ name: string; price: number }[]>([
-    { name: "Pizza", price: 12.99 },
-    { name: "Soda", price: 1.99 },
-    { name: "Salad", price: 5.99 },
-  ]);
-  const [totalPrice, setTotalPrice] = React.useState<number>(
-    items.reduce((a, b) => a + b.price, 0)
-  );
 
-  const [tax, setTax] = React.useState<number>(0);
-  const [tip, setTip] = React.useState<number>(0);
+  const [tax, setTax] = React.useState<string>(invoice[0]?.tax?.toFixed(2));
+  const [tip, setTip] = React.useState<string>(invoice[0]?.tip?.toFixed(2));
 
-  const addItem = () => {
+  const totalPrice = useMemo(() => {
+    if (!items || !invoice) return 0;
+    return (
+      items.reduce((a, b) => a + b.price * b.quantity, 0) +
+      (Number(tax || 0) + (Number(tip) || 0))
+    );
+  }, [items, invoice, tax, tip]);
+
+  const addItem = async () => {
     if (!name || !price) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+      Alert.alert("Error", "Please enter a name and price");
       return;
     }
-    setItems((prev) => [...prev, { name, price }]);
+    await database.insert(schema.item).values({
+      name,
+      price,
+      invoiceId: Number(params.invoice),
+      quantity: 1,
+    });
     setName("");
     setPrice(0);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
-  const removeItem = (index: number) => {
-    const newItems = [...items];
-    newItems.splice(index, 1);
-    setItems(newItems);
+  const removeItem = async (index: number) => {
+    await database
+      .delete(schema.item)
+      .where(eq(schema.item.id, items[index].id));
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
 
+  const saveTotal = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    const total =
+      items.reduce((a, b) => a + b.price, 0) + Number(tax) + Number(tip);
+    await database
+      .update(schema.invoice)
+      .set({ total, tax: Number(tax), tip: Number(tip) })
+      .where(eq(schema.invoice.id, Number(params.invoice)));
+    router.push(`/(receipt)/people?invoice=${params.invoice}`);
+  };
+
   useEffect(() => {
-    setTotalPrice(items.reduce((a, b) => a + b.price, 0) + tax + tip);
-  }, [items, tax, tip]);
+    setTax(invoice ? invoice[0]?.tax.toFixed(2) : "0");
+    setTip(invoice ? invoice[0]?.tip.toFixed(2) : "0");
+  }, [invoice]);
 
   return (
     <ScreenView>
@@ -88,6 +127,7 @@ const Items = () => {
             <TouchableOpacity
               className="bg-black w-1/5 rounded-2xl px-4 justify-center items-center"
               onPress={addItem}
+              activeOpacity={1}
             >
               <Plus size={25} color={"#fff"} />
             </TouchableOpacity>
@@ -117,27 +157,39 @@ const Items = () => {
             }}
           ></FlatList>
         </View>
-        <View className="absolute bottom-0 gap-6 w-full px-2 bg-white">
+        <View className="absolute bottom-0 gap-6 w-full px-2 bg-gray-100">
           <View className="w-full flex-row justify-between items-center gap-2">
             <View className="w-2/5 gap-2">
               <Text className="text-lg font-medium">Tax:</Text>
-              <TextInput
-                className="border border-black w-full rounded-2xl px-4 py-3"
-                placeholder="$0"
-                value={tax ? tax.toString() : ""}
-                onChangeText={(text) => setTax(Number(text))}
-                keyboardType="numeric"
-              />
+
+              <View className="relative">
+                <TextInput
+                  className="border border-black w-full rounded-2xl px-4 py-4 pl-8"
+                  placeholder="$0"
+                  value={tax ?? "0"}
+                  onChangeText={(text) => setTax(text)}
+                  keyboardType="numeric"
+                />
+                <View className="absolute left-2 top-4">
+                  <DollarSign size={20} color={"black"} />
+                </View>
+              </View>
             </View>
             <View className="w-2/5 gap-2">
-              <Text className="text-lg font-medium">Tip:</Text>
-              <TextInput
-                className="border border-black w-full rounded-2xl px-4 py-3"
-                placeholder="$0"
-                value={tip ? tip.toString() : ""}
-                onChangeText={(text) => setTip(Number(text))}
-                keyboardType="numeric"
-              />
+              <Text className="text-lg font-medium">Tax:</Text>
+
+              <View className="relative">
+                <TextInput
+                  className="border border-black w-full rounded-2xl px-4 py-4 pl-8"
+                  placeholder="$0"
+                  value={tip ?? "0"}
+                  onChangeText={(text) => setTip(text)}
+                  keyboardType="numeric"
+                />
+                <View className="absolute left-2 top-4">
+                  <DollarSign size={20} color={"black"} />
+                </View>
+              </View>
             </View>
           </View>
           <View>
@@ -147,9 +199,7 @@ const Items = () => {
           </View>
           <TouchableOpacity
             className="flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
-            onPress={() => {
-              router.push(`/(receipt)/people?invoice=${params.invoice}`);
-            }}
+            onPress={saveTotal}
           >
             <Text className="text-2xl text-white">Continue</Text>
           </TouchableOpacity>

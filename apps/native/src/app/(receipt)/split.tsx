@@ -1,5 +1,5 @@
 import ScreenView from "@/components/screen-view";
-import React from "react";
+import React, { useMemo } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -8,32 +8,103 @@ import {
   View,
 } from "react-native";
 import { ArrowLeft, BrushCleaning, Plus } from "lucide-react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import * as Haptics from "expo-haptics";
 import PeopleSheet from "@/components/people-sheet";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-type Item = {
-  name: string;
-  price: number;
-  persons: string[];
-};
-const mockedItems: Item[] = [
-  { name: "Pizza", price: 12.99, persons: [] },
-  { name: "Soda", price: 1.99, persons: [] },
-  { name: "Salad", price: 5.99, persons: [] },
-];
-
-const persons = ["Alice", "Bob", "Charlie"];
+import { useSQLiteContext } from "expo-sqlite";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import * as schema from "@/lib/db/schema";
+import { eq, getTableColumns, sql } from "drizzle-orm";
 
 const Split = () => {
-  const [items, setItems] = React.useState<Item[]>([...mockedItems]);
+  const params = useLocalSearchParams<{ invoice: string }>();
+  const db = useSQLiteContext();
+  const database = drizzle(db, { schema });
+  const { data: items } = useLiveQuery(
+    database
+      .select()
+      .from(schema.item)
+      .where(eq(schema.item.invoiceId, Number(params.invoice)))
+  );
+  const { data: persons } = useLiveQuery(
+    database
+      .select()
+      .from(schema.member)
+      .where(eq(schema.member.invoiceId, Number(params.invoice)))
+  );
+  const { data: personItems } = useLiveQuery(
+    database
+      .select()
+      .from(schema.memberItem)
+      .where(eq(schema.memberItem.invoiceId, Number(params.invoice)))
+  );
   const [evenly, setEvenly] = React.useState<number>(0);
   const changeEvenly = () => {
     setEvenly((current) => (current === 0 ? 1 : 0));
   };
-  const canContinue =
-    mockedItems.every((item) => item.persons.length > 0) || evenly === 1;
+  const canContinue = useMemo(() => {
+    if (!items || !persons) return false;
+    if (evenly === 1 && persons.length > 0) return true;
+    return items.every((item) => {
+      const assignedPersons = personItems
+        ? personItems
+            .filter((pi) => pi.itemId === item.id)
+            .map((pi) => {
+              const person = persons.find((p) => p.id === pi.memberId);
+              return person ? person.name : null;
+            })
+            .filter((p): p is string => p !== null)
+        : [];
+      return assignedPersons.length > 0;
+    });
+  }, [items, persons, evenly, personItems]);
+  const saveAssignments = async () => {
+    if (!items || !persons) return;
+    const totalByPerson: { id: number; total: number }[] = [];
+
+    if (evenly === 1) {
+      const splitAmount =
+        items.reduce((a, b) => a + b.price * b.quantity, 0) / persons.length;
+      for (const person of persons) {
+        totalByPerson.push({ id: person.id, total: splitAmount });
+      }
+    } else {
+      for (const person of persons) {
+        totalByPerson.push({ id: person.id, total: 0 });
+      }
+      for (const item of items) {
+        const assignedPersons = personItems
+          ? personItems
+              .filter((pi) => pi.itemId === item.id)
+              .map((pi) => {
+                const person = persons.find((p) => p.id === pi.memberId);
+                return person ? person.id : null;
+              })
+              .filter((p): p is number => p !== null)
+          : [];
+        const splitAmount =
+          (item.price * item.quantity) / assignedPersons.length;
+        for (const personId of assignedPersons) {
+          const personTotal = totalByPerson.find((p) => p.id === personId);
+          if (personTotal) {
+            personTotal.total += splitAmount;
+          }
+        }
+      }
+    }
+
+    await database.transaction(async (tx) => {
+      for (const personTotal of totalByPerson) {
+        await tx
+          .update(schema.member)
+          .set({ total: personTotal.total })
+          .where(eq(schema.member.id, personTotal.id));
+      }
+    });
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push(`/(receipt)/summary?id=${params.invoice}`);
+  };
   return (
     <ScreenView>
       <View
@@ -86,50 +157,64 @@ const Split = () => {
                   <TouchableOpacity
                     className="rounded-full p-2 border border-black border-dashed"
                     activeOpacity={1}
-                    onPress={() => {
-                      setItems((current) =>
-                        current.map((it) =>
-                          it.name === item.name ? { ...it, persons: [] } : it
-                        )
-                      );
+                    onPress={async () => {
+                      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                      await database
+                        .delete(schema.memberItem)
+                        .where(eq(schema.memberItem.itemId, item.id));
                     }}
                   >
                     <BrushCleaning color={"black"} size={25} />
                   </TouchableOpacity>
                   <PeopleSheet
-                    initialPeople={item.persons}
+                    initialPeople={persons.filter((p) =>
+                      personItems
+                        ?.filter((pi) => pi.itemId === item.id)
+                        .some((pi) => pi.memberId === p.id)
+                    )}
                     people={persons}
-                    setPeople={(p) => {
-                      setItems((current) =>
-                        current.map((it) =>
-                          it.name === item.name ? { ...it, persons: p } : it
-                        )
-                      );
+                    setPeople={async (p) => {
+                      await database.transaction(async (tx) => {
+                        const personIds = persons
+                          .filter((person) =>
+                            p.some((pi) => pi.id === person.id)
+                          )
+                          .map((person) => person.id);
+                        // Delete existing assignments for this item
+                        await tx
+                          .delete(schema.memberItem)
+                          .where(eq(schema.memberItem.itemId, item.id));
+                        // Insert new assignments
+                        for (const personId of personIds) {
+                          await tx.insert(schema.memberItem).values({
+                            invoiceId: Number(params.invoice),
+                            memberId: personId,
+                            itemId: item.id,
+                          });
+                        }
+                      });
                     }}
                   />
                 </View>
               </View>
               <View className="flex-row flex-wrap mt-2">
-                {item.persons.map((person) => (
-                  <TouchableOpacity
-                    key={person}
-                    className="bg-gray-200 px-3 py-1 rounded-full m-1"
-                    onPress={() => {
-                      setItems((current) =>
-                        current.map((it) =>
-                          it.name === item.name
-                            ? {
-                                ...it,
-                                persons: it.persons.filter((p) => p !== person),
-                              }
-                            : it
-                        )
-                      );
-                    }}
-                  >
-                    <Text className="text-lg">{person}</Text>
-                  </TouchableOpacity>
-                ))}
+                {personItems
+                  .filter((pi) => pi.itemId === item.id)
+                  .map((person) => (
+                    <TouchableOpacity
+                      key={person.id}
+                      className="bg-gray-200 px-3 py-1 rounded-full m-1"
+                      onPress={async () => {
+                        await database
+                          .delete(schema.memberItem)
+                          .where(eq(schema.memberItem.id, person.id));
+                      }}
+                    >
+                      <Text className="text-lg">
+                        {persons.find((p) => p.id === person.memberId)?.name}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
               </View>
             </View>
           )}
@@ -140,9 +225,7 @@ const Split = () => {
             canContinue ? "" : "bg-gray-500"
           }`}
           style={{ bottom: useSafeAreaInsets().bottom + 16 }}
-          onPress={() => {
-            router.push("/(receipt)/summary");
-          }}
+          onPress={saveAssignments}
           disabled={!canContinue}
         >
           <Text className="text-2xl text-white">

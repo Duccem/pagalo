@@ -13,12 +13,21 @@ const PeopleSheet = ({
   setPeople,
   initialPeople = [],
 }: {
-  people: string[];
-  setPeople: (people: string[]) => void;
-  initialPeople?: string[];
+  people: { id: number; invoiceId: number; name: string; total: number }[];
+  setPeople: (
+    people: { id: number; invoiceId: number; name: string; total: number }[]
+  ) => void;
+  initialPeople?: {
+    id: number;
+    invoiceId: number;
+    name: string;
+    total: number;
+  }[];
 }) => {
   const [selectedPeople, setSelectedPeople] =
-    React.useState<string[]>(initialPeople);
+    React.useState<
+      { id: number; invoiceId: number; name: string; total: number }[]
+    >(initialPeople);
   // ref
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -53,16 +62,16 @@ const PeopleSheet = ({
             data={people}
             renderItem={({ item }) => (
               <View className="w-full border border-black rounded-2xl px-4 py-3 my-2 flex-row items-center justify-between">
-                <Text className="text-lg">{item}</Text>
+                <Text className="text-lg">{item.name}</Text>
                 <View>
                   <BouncyCheckbox
-                    isChecked={selectedPeople.includes(item)}
+                    isChecked={selectedPeople.some((p) => p.id === item.id)}
                     onPress={(isChecked: boolean) => {
                       if (isChecked) {
                         setSelectedPeople((current) => [...current, item]);
                       } else {
                         setSelectedPeople((current) =>
-                          current.filter((person) => person !== item)
+                          current.filter((person) => person.id !== item.id)
                         );
                       }
                     }}

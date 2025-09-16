@@ -1,6 +1,7 @@
 import ScreenView from "@/components/screen-view";
 import React, { useState } from "react";
 import {
+  Alert,
   FlatList,
   StyleSheet,
   Text,
@@ -9,26 +10,44 @@ import {
   View,
 } from "react-native";
 import { ArrowLeft, Minus, Plus, Trash } from "lucide-react-native";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import * as Haptics from "expo-haptics";
+import { useSQLiteContext } from "expo-sqlite";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import * as schema from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 const People = () => {
+  const params = useLocalSearchParams<{ invoice: string }>();
+  const db = useSQLiteContext();
+  const database = drizzle(db, { schema });
+  const { data: items } = useLiveQuery(
+    database
+      .select()
+      .from(schema.member)
+      .where(eq(schema.member.invoiceId, Number(params.invoice)))
+  );
   const [name, setName] = useState<string>("");
-  const [items, setItems] = useState<{ name: string }[]>([]);
-  const addItem = () => {
+  const addItem = async () => {
     if (!name) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+      Alert.alert("Error", "Please enter a name");
       return;
     }
-    setItems((prev) => [...prev, { name }]);
+    console.log("Adding", name);
+    await database.insert(schema.member).values({
+      name,
+      invoiceId: Number(params.invoice),
+      total: 0,
+    });
     setName("");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
-  const removeItem = (index: number) => {
-    const newItems = [...items];
-    newItems.splice(index, 1);
-    setItems(newItems);
+  const removeItem = async (index: number) => {
+    await database
+      .delete(schema.member)
+      .where(eq(schema.member.id, items[index].id));
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
   };
   return (
@@ -66,6 +85,7 @@ const People = () => {
             <TouchableOpacity
               className="bg-black w-1/5 rounded-2xl px-4 justify-center items-center"
               onPress={addItem}
+              activeOpacity={1}
             >
               <Plus size={25} color={"#fff"} />
             </TouchableOpacity>
@@ -95,7 +115,8 @@ const People = () => {
         <TouchableOpacity
           className="absolute bottom-0 flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
           onPress={() => {
-            router.push("/(receipt)/split");
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            router.push(`/(receipt)/split?invoice=${params.invoice}`);
           }}
         >
           <Text className="text-2xl text-white">Continue</Text>
