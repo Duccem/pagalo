@@ -4,19 +4,32 @@ import {
   BottomSheetModal,
   BottomSheetView,
   BottomSheetModalProvider,
+  BottomSheetFlashList,
+  BottomSheetFlatList,
 } from "@gorhom/bottom-sheet";
 import { Plus } from "lucide-react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { rem } from "nativewind";
 
 const PeopleSheet = ({
   people,
   setPeople,
+  removePeople,
   initialPeople = [],
 }: {
   people: { id: number; invoiceId: number; name: string; total: number }[];
-  setPeople: (
-    people: { id: number; invoiceId: number; name: string; total: number }[]
-  ) => void;
+  setPeople: (people: {
+    id: number;
+    invoiceId: number;
+    name: string;
+    total: number;
+  }) => void;
+  removePeople: (people: {
+    id: number;
+    invoiceId: number;
+    name: string;
+    total: number;
+  }) => void;
   initialPeople?: {
     id: number;
     invoiceId: number;
@@ -55,44 +68,37 @@ const PeopleSheet = ({
         handleStyle={{
           display: "none",
         }}
+        style={{
+          paddingLeft: 20,
+          paddingRight: 20,
+          position: "relative",
+          paddingTop: 20,
+        }}
       >
-        <BottomSheetView className="h-full justify-center items-center w-screen rounded-t-2xl border-x border-t border-gray-200 pt-5 relative px-6">
-          <FlatList
-            className="w-full"
-            data={people}
-            renderItem={({ item }) => (
-              <View className="w-full border border-black rounded-2xl px-4 py-3 my-2 flex-row items-center justify-between">
-                <Text className="text-lg">{item.name}</Text>
-                <View>
-                  <BouncyCheckbox
-                    isChecked={selectedPeople.some((p) => p.id === item.id)}
-                    onPress={(isChecked: boolean) => {
-                      if (isChecked) {
-                        setSelectedPeople((current) => [...current, item]);
-                      } else {
-                        setSelectedPeople((current) =>
-                          current.filter((person) => person.id !== item.id)
-                        );
-                      }
-                    }}
-                    fillColor="black"
-                  />
-                </View>
+        <BottomSheetFlatList
+          className="w-full "
+          estimatedItemSize={43.3}
+          data={people}
+          renderItem={({ item }: any) => (
+            <View className="w-full border border-black rounded-2xl px-4 py-3 my-2 flex-row items-center justify-between">
+              <Text className="text-lg">{item.name}</Text>
+              <View>
+                <BouncyCheckbox
+                  isChecked={selectedPeople.some((p) => p.id === item.id)}
+                  onPress={(isChecked: boolean) => {
+                    if (isChecked) {
+                      setPeople(item);
+                    } else {
+                      removePeople(item);
+                    }
+                  }}
+                  fillColor="black"
+                />
               </View>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
-          <TouchableOpacity
-            className="absolute bottom-0 flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
-            onPress={() => {
-              setPeople(selectedPeople);
-              setSelectedPeople(initialPeople);
-              bottomSheetModalRef.current?.dismiss();
-            }}
-          >
-            <Text className="text-xl text-white">Done</Text>
-          </TouchableOpacity>
-        </BottomSheetView>
+            </View>
+          )}
+          keyExtractor={(item: any, index: number) => index.toString()}
+        />
       </BottomSheetModal>
     </>
   );

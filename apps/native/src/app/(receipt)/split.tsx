@@ -174,25 +174,21 @@ const Split = () => {
                     )}
                     people={persons}
                     setPeople={async (p) => {
-                      await database.transaction(async (tx) => {
-                        const personIds = persons
-                          .filter((person) =>
-                            p.some((pi) => pi.id === person.id)
-                          )
-                          .map((person) => person.id);
-                        // Delete existing assignments for this item
-                        await tx
-                          .delete(schema.memberItem)
-                          .where(eq(schema.memberItem.itemId, item.id));
-                        // Insert new assignments
-                        for (const personId of personIds) {
-                          await tx.insert(schema.memberItem).values({
-                            invoiceId: Number(params.invoice),
-                            memberId: personId,
-                            itemId: item.id,
-                          });
-                        }
+                      await database.insert(schema.memberItem).values({
+                        invoiceId: Number(params.invoice),
+                        itemId: item.id,
+                        memberId: p.id,
                       });
+                    }}
+                    removePeople={async (p) => {
+                      const personItem = personItems?.find(
+                        (pi) => pi.itemId === item.id && pi.memberId === p.id
+                      );
+                      if (personItem) {
+                        await database
+                          .delete(schema.memberItem)
+                          .where(eq(schema.memberItem.id, personItem.id));
+                      }
                     }}
                   />
                 </View>

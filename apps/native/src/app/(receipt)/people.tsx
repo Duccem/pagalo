@@ -1,6 +1,7 @@
 import ScreenView from "@/components/screen-view";
 import React, { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   FlatList,
   StyleSheet,
@@ -9,18 +10,26 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ArrowLeft, Minus, Plus, Trash } from "lucide-react-native";
+import {
+  ArrowLeft,
+  ClipboardPaste,
+  Minus,
+  Plus,
+  Trash,
+} from "lucide-react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import * as Haptics from "expo-haptics";
 import { useSQLiteContext } from "expo-sqlite";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as schema from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
+import * as Clipboard from "expo-clipboard";
 
 const People = () => {
   const params = useLocalSearchParams<{ invoice: string }>();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
+  const [extractingParticipants, setExtractingParticipants] = useState(false);
   const { data: items } = useLiveQuery(
     database
       .select()
@@ -49,6 +58,39 @@ const People = () => {
       .delete(schema.member)
       .where(eq(schema.member.id, items[index].id));
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+  };
+
+  const pasteFromClipboard = async () => {
+    const text = await Clipboard.getStringAsync();
+    if (!text) {
+      Alert.alert("Error", "Clipboard is empty");
+      return;
+    }
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setExtractingParticipants(true);
+    const res = await fetch(
+      `${process.env.EXPO_PUBLIC_SERVER_URL}/api/ai/participants`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: text,
+        }),
+      }
+    );
+    const data = await res.json();
+    const names: { name: string }[] = data.participants;
+    for (const name of names) {
+      await database.insert(schema.member).values({
+        name: name.name,
+        invoiceId: Number(params.invoice),
+        total: 0,
+        status: "pending",
+      });
+    }
+    setExtractingParticipants(false);
   };
   return (
     <ScreenView>
@@ -83,13 +125,26 @@ const People = () => {
             />
 
             <TouchableOpacity
-              className="bg-black w-1/5 rounded-2xl px-4 justify-center items-center"
+              className="bg-black w-1/5 rounded-2xl px-4 py-3 justify-center items-center"
               onPress={addItem}
               activeOpacity={1}
             >
               <Plus size={25} color={"#fff"} />
             </TouchableOpacity>
           </View>
+          <TouchableOpacity
+            className="bg-black w-full rounded-2xl px-4 py-3 justify-center items-center flex-row gap-4"
+            activeOpacity={1}
+            onPress={pasteFromClipboard}
+            disabled={extractingParticipants}
+          >
+            {extractingParticipants ? (
+              <ActivityIndicator color={"white"} size={25} />
+            ) : (
+              <ClipboardPaste size={25} color={"#fff"} />
+            )}
+            <Text className="text-lg text-white">Paste names list</Text>
+          </TouchableOpacity>
           <FlatList
             className="w-full mt-8 mb-32 flex-1"
             data={items}
