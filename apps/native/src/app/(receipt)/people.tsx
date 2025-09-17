@@ -43,7 +43,6 @@ const People = () => {
       Alert.alert("Error", "Please enter a name");
       return;
     }
-    console.log("Adding", name);
     await database.insert(schema.member).values({
       name,
       invoiceId: Number(params.invoice),

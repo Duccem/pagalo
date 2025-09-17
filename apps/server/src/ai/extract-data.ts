@@ -6,6 +6,16 @@ const schema = z.object({
   vendor: z.string().describe("The name of the vendor or store"),
   date: z.string().describe("The date of the transaction in YYYY-MM-DD format"),
   total: z.number().describe("The total amount paid, including tax"),
+  tax: z
+    .number()
+    .nullable()
+    .describe("The tax amount, if available, otherwise null")
+    .default(0),
+  tip: z
+    .number()
+    .nullable()
+    .describe("The tip amount, if available, otherwise null")
+    .default(0),
   items: z
     .array(
       z.object({
@@ -40,7 +50,7 @@ type InvoiceData = z.infer<typeof schema>;
 export const extractData = async (img: string): Promise<InvoiceData> => {
   const response = await generateObject({
     model: google("gemini-2.0-flash"),
-    prompt,
+    system: prompt,
     schema,
     messages: [
       {

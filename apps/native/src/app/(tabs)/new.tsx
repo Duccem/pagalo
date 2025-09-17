@@ -1,8 +1,9 @@
 import { router } from "expo-router";
 import { Camera, NotebookPen, Scan } from "lucide-react-native";
-import { Text, TouchableOpacity } from "react-native";
+import { Text } from "react-native";
 import { View } from "react-native";
 import * as Haptics from "expo-haptics";
+import Button from "@/components/ui/button";
 
 export default function TabTwoScreen() {
   return (
@@ -20,20 +21,25 @@ export default function TabTwoScreen() {
         </Text>
       </View>
       <View className="mt-10 w-full px-8 gap-6">
-        <TouchableOpacity className=" flex-row items-center justify-center gap-4 bg-black p-4 rounded-2xl w-full">
+        <Button
+          action={() => {
+            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+            router.push("/(receipt)/scan");
+          }}
+        >
           <Camera color={"#fff"} size={30} />
           <Text className="text-white">Scan receipt</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          className=" flex-row items-center justify-center gap-4 border border-black p-4 rounded-2xl w-full"
-          onPress={() => {
+        </Button>
+        <Button
+          action={() => {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             router.push("/(receipt)/manual");
           }}
+          variant="outline"
         >
           <NotebookPen color={"#000"} size={30} />
           <Text className="text-black">Enter manually</Text>
-        </TouchableOpacity>
+        </Button>
       </View>
     </View>
   );

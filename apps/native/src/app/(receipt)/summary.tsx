@@ -22,7 +22,9 @@ import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as schema from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import * as Progress from "react-native-progress";
+import * as Clipboard from "expo-clipboard";
+import Toast from "react-native-simple-toast";
+import Button from "@/components/ui/button";
 
 const Details = () => {
   const params = useLocalSearchParams<{ id: string }>();
@@ -59,6 +61,20 @@ const Details = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
+  const copyToClipboard = async () => {
+    const text = `Receipt Summary \n\nTotal: $${data[0]?.total.toFixed(
+      2
+    )} \nTax: $${data[0]?.tax.toFixed(2)} \nTip: $${data[0]?.tip.toFixed(
+      2
+    )} \n\nPeople: \n${people
+      .map((person) => `${person.name}: $${person.total.toFixed(2)}`)
+      .join("\n")}
+    `;
+    await Clipboard.setStringAsync(text);
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    Toast.show("Copied to clipboard", Toast.SHORT);
+  };
+
   if (error) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -69,7 +85,7 @@ const Details = () => {
   return (
     <ScreenView>
       <View className="flex-1 px-6">
-        <View className="w-full ">
+        <View className="w-full flex-row justify-between items-center mb-4">
           <TouchableOpacity
             className="flex-row items-center gap-4"
             onPress={() => {
@@ -80,22 +96,28 @@ const Details = () => {
             <ArrowLeft size={30} color={"#000"} />
             <Text className="text-xl">Back</Text>
           </TouchableOpacity>
+          <Button
+            action={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              router.push("/(tabs)");
+            }}
+            variant="outline"
+            styles={{ padding: 10 }}
+          >
+            <Home color={"black"} size={25} />
+          </Button>
         </View>
 
         <View className="w-full flex-1 justify-start items-center px-2 gap-6">
-          <View className="w-full  justify-start items-center gap-4 mt-8">
-            <Text className="text-4xl w-full text-start font-bold ">
+          <View className="w-full  flex-row justify-between items-center">
+            <Text className="text-2xl text-start font-bold ">
               Split summary
             </Text>
-            <Text className="text-lg w-full text-start font-medium">
-              Here is how you should split this bill:
-            </Text>
-          </View>
-          <View className="flex-row w-full justify-between items-center">
             <Text className="text-end text-black text-2xl">
               {`${Math.round(percentagePayed * 100)}% paid`}
             </Text>
           </View>
+
           <View className="w-full gap-2 flex-row justify-between items-center border-b border-black pb-4">
             <View className="w rounded-2xl">
               <Text className="text-xl font-medium">Total</Text>
@@ -117,38 +139,38 @@ const Details = () => {
             </View>
           </View>
 
-          <View className="w-full flex-row justify-between items-center">
-            <TouchableOpacity
-              className="flex-row items-center gap-2 bg-black px-2 py-3 rounded-2xl"
-              onPress={() => {
+          <View className="w-full flex-row justify-between items-center gap-2">
+            <Button
+              action={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 router.push(`/(receipt)/people?invoice=${params.id}`);
               }}
+              styles={{ padding: 12 }}
             >
               <Users color={"white"} size={25} />
-              <Text className="text-white text-lg">Members</Text>
-            </TouchableOpacity>
+            </Button>
 
-            <TouchableOpacity
-              className="flex-row items-center gap-2 border border-black px-2 py-3 rounded-2xl"
-              onPress={() => {
+            <Button
+              action={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 router.push(`/(receipt)/items?invoice=${params.id}`);
               }}
+              styles={{ padding: 14 }}
             >
-              <Package color={"black"} size={25} />
-              <Text className="text-black text-lg">Items</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="flex-row items-center gap-2 border border-black px-2 py-3 rounded-2xl"
-              onPress={() => {
+              <Package color={"white"} size={25} />
+            </Button>
+            <Button
+              action={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 router.push(`/(receipt)/split?invoice=${params.id}`);
               }}
+              styles={{ padding: 14 }}
             >
-              <Divide color={"black"} size={25} />
-              <Text className="text-black text-lg">Split</Text>
-            </TouchableOpacity>
+              <Divide color={"white"} size={25} />
+            </Button>
+            <Button action={copyToClipboard} styles={{ padding: 14 }}>
+              <Paperclip color={"white"} size={25} />
+            </Button>
           </View>
           <FlatList
             data={people}
@@ -175,27 +197,6 @@ const Details = () => {
               </View>
             )}
           />
-          <View className="w-full gap-4 mb-8">
-            <TouchableOpacity
-              className="flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              }}
-            >
-              <Paperclip color={"white"} size={25} />
-              <Text className="text-2xl text-white">Share</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className="flex-row items-center gap-4  w-full border border-black p-4 justify-center rounded-2xl"
-              onPress={() => {
-                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-                router.push("/(tabs)");
-              }}
-            >
-              <Home color={"black"} size={25} />
-              <Text className="text-2xl text-black">Go Home</Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </View>
     </ScreenView>

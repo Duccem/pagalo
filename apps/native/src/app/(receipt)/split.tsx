@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ArrowLeft, BrushCleaning, Plus } from "lucide-react-native";
+import { ArrowLeft, BrushCleaning } from "lucide-react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import * as Haptics from "expo-haptics";
 import PeopleSheet from "@/components/people-sheet";
@@ -15,7 +15,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSQLiteContext } from "expo-sqlite";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as schema from "@/lib/db/schema";
-import { eq, getTableColumns, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 const Split = () => {
   const params = useLocalSearchParams<{ invoice: string }>();
@@ -107,13 +107,7 @@ const Split = () => {
   };
   return (
     <ScreenView>
-      <View
-        className="flex-1 justify-start items-center relative px-6"
-        style={{
-          paddingTop: useSafeAreaInsets().top + 16,
-          paddingBottom: useSafeAreaInsets().bottom + 16,
-        }}
-      >
+      <View className="flex-1 justify-start items-center relative px-6">
         <View className="w-full ">
           <TouchableOpacity
             className="flex-row items-center gap-4"

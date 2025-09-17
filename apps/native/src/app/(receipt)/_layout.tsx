@@ -11,6 +11,13 @@ export default function TabLayout() {
         }}
       />
       <Stack.Screen
+        name="scan"
+        options={{
+          headerShown: false,
+          title: "Scan Receipt",
+        }}
+      />
+      <Stack.Screen
         name="items"
         options={{
           headerShown: false,
