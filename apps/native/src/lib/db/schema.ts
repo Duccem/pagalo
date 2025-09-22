@@ -14,6 +14,7 @@ export const invoice = sqliteTable("invoice", {
   tax: real("tax").notNull(),
   tip: real("tip").notNull(),
   date: text("date").notNull().default(new Date().toISOString()),
+  state: text("state").notNull().default("pending"), // pending, paid, cancelled
 });
 
 export const item = sqliteTable("item", {

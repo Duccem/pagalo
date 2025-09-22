@@ -1,18 +1,12 @@
 import ScreenView from "@/components/screen-view";
-import React from "react";
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import {
   ArrowLeft,
   Divide,
   Home,
   Package,
   Paperclip,
+  Trash,
   Users,
 } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
@@ -75,6 +69,14 @@ const Details = () => {
     Toast.show("Copied to clipboard", Toast.SHORT);
   };
 
+  const deleteInvoice = async () => {
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+    await database
+      .delete(schema.invoice)
+      .where(eq(schema.invoice.id, Number(params.id)));
+    router.push("/(tabs)");
+  };
+
   if (error) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -96,16 +98,25 @@ const Details = () => {
             <ArrowLeft size={30} color={"#000"} />
             <Text className="text-xl">Back</Text>
           </TouchableOpacity>
-          <Button
-            action={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-              router.push("/(tabs)");
-            }}
-            variant="outline"
-            styles={{ padding: 10 }}
-          >
-            <Home color={"black"} size={25} />
-          </Button>
+          <View className="flex-row items-center gap-4">
+            <Button
+              action={deleteInvoice}
+              variant="white"
+              styles={{ padding: 10 }}
+            >
+              <Trash color={"black"} size={25} />
+            </Button>
+            <Button
+              action={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+                router.push("/(tabs)");
+              }}
+              variant="white"
+              styles={{ padding: 10 }}
+            >
+              <Home color={"black"} size={25} />
+            </Button>
+          </View>
         </View>
 
         <View className="w-full flex-1 justify-start items-center px-2 gap-6">
@@ -146,8 +157,9 @@ const Details = () => {
                 router.push(`/(receipt)/people?invoice=${params.id}`);
               }}
               styles={{ padding: 12 }}
+              variant="white"
             >
-              <Users color={"white"} size={25} />
+              <Users color={"black"} size={25} />
             </Button>
 
             <Button
@@ -156,8 +168,9 @@ const Details = () => {
                 router.push(`/(receipt)/items?invoice=${params.id}`);
               }}
               styles={{ padding: 14 }}
+              variant="white"
             >
-              <Package color={"white"} size={25} />
+              <Package color={"black"} size={25} />
             </Button>
             <Button
               action={() => {
@@ -165,11 +178,16 @@ const Details = () => {
                 router.push(`/(receipt)/split?invoice=${params.id}`);
               }}
               styles={{ padding: 14 }}
+              variant="white"
             >
-              <Divide color={"white"} size={25} />
+              <Divide color={"black"} size={25} />
             </Button>
-            <Button action={copyToClipboard} styles={{ padding: 14 }}>
-              <Paperclip color={"white"} size={25} />
+            <Button
+              action={copyToClipboard}
+              styles={{ padding: 14 }}
+              variant="white"
+            >
+              <Paperclip color={"black"} size={25} />
             </Button>
           </View>
           <FlatList
@@ -188,7 +206,6 @@ const Details = () => {
                   <BouncyCheckbox
                     isChecked={item.status === "payed"}
                     onPress={async (isChecked: boolean) => {
-                      console.log(isChecked);
                       savePayments(item.id, isChecked);
                     }}
                     fillColor="black"
@@ -202,8 +219,6 @@ const Details = () => {
     </ScreenView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default Details;
 

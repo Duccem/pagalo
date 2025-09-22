@@ -18,7 +18,6 @@ import {
 } from "react-native";
 import * as schema from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
-import { ta } from "date-fns/locale";
 
 const Items = () => {
   const params = useLocalSearchParams<{ invoice: string }>();

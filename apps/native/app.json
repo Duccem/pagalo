@@ -63,7 +63,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.ducen.pagalo",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": false
     }
   }
 }

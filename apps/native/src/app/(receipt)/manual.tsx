@@ -16,21 +16,18 @@ import ScreenView from "@/components/screen-view";
 import { useSQLiteContext } from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import * as schema from "@/lib/db/schema";
-import { authClient } from "@/lib/auth-client";
 
 export default function Manual() {
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [showPicker, setShowPicker] = useState(false);
-  const [mode, setMode] = useState("date");
   const [vendor, setVendor] = useState<string>("");
-  const showMode = (currentMode: string) => {
+  const showMode = () => {
     setShowPicker(true);
-    setMode(currentMode);
   };
   const showDatepicker = () => {
-    showMode("date");
+    showMode();
   };
   const create = async () => {
     if (!vendor || !date) {

@@ -14,13 +14,14 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       redirectURI:
-        "https://2jphk0dv-3000.use2.devtunnels.ms/api/auth/callback/google",
+        "https://filiberto-uncasemated-penni.ngrok-free.dev/api/auth/callback/google",
     },
   },
   trustedOrigins: [
     process.env.CORS_ORIGIN || "",
     "pagalo://",
     "exp://s9pku04-ducen29-8081.exp.direct",
+    "exp://192.168.1.102:8081",
   ],
   advanced: {
     defaultCookieAttributes: {

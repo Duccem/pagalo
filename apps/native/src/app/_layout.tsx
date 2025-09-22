@@ -10,22 +10,30 @@ import "react-native-reanimated";
 import "../../global.css";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Suspense } from "react";
-import { ActivityIndicator } from "react-native";
+import { Suspense, useEffect } from "react";
+import { ActivityIndicator, Platform } from "react-native";
 import { SQLiteProvider, openDatabaseSync } from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../drizzle/migrations";
 import Animated, { FadeIn } from "react-native-reanimated";
+import * as NavigationBar from "expo-navigation-bar";
 
 export default function RootLayout() {
   const expoDb = openDatabaseSync("pagalo");
   const db = drizzle(expoDb);
-  const { success, error } = useMigrations(db, migrations);
+  const { success: _s } = useMigrations(db, migrations);
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      // Set the navigation bar style
+      NavigationBar.setBackgroundColorAsync("#000000");
+    }
+  }, []);
 
   if (!loaded) {
     // Async font loading only occurs in development.

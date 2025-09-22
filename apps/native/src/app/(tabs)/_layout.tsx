@@ -1,10 +1,10 @@
 import { Redirect, Tabs } from "expo-router";
-import React from "react";
 import { TabBar } from "@/components/shared/tab-bar";
 import { authClient } from "@/lib/auth-client";
 
 export default function TabLayout() {
   const { isPending, data } = authClient.useSession();
+
   if (isPending) return null;
   if (!data?.session) {
     return <Redirect href={"/(auth)/welcome"} />;

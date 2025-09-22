@@ -8,12 +8,24 @@ import Animated, {
 
 const variantStyles = {
   primary: {
-    backgroundColor: "#000000",
-    activeBackgroundColor: "#262626",
+    backgroundColor: "#4ade80",
+    activeBackgroundColor: "#15803d",
+    borderColor: "#4ade80",
   },
   outline: {
     backgroundColor: "#f3f4f6",
     activeBackgroundColor: "#E5E5E5",
+    borderColor: "#000000",
+  },
+  black: {
+    backgroundColor: "#000000",
+    activeBackgroundColor: "#262626",
+    borderColor: "#000000",
+  },
+  white: {
+    backgroundColor: "#ffffff",
+    activeBackgroundColor: "#f3f4f6",
+    borderColor: "#ffffff",
   },
 };
 
@@ -27,11 +39,9 @@ const Button = ({
   children: React.ReactNode;
   styles?: ViewStyle;
   action?: () => void;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "outline" | "black" | "white";
   className?: string;
 }) => {
-  // Import useSharedValue and useAnimatedStyle from react-native-reanimated
-
   const background = useSharedValue(0);
 
   const handlePress = () => {
@@ -48,6 +58,7 @@ const Button = ({
         background.value === 1
           ? variantStyles[variant].activeBackgroundColor
           : variantStyles[variant].backgroundColor,
+      borderColor: variantStyles[variant].borderColor,
     };
   });
 
@@ -66,7 +77,6 @@ const Button = ({
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "row",
-            borderColor: "#000000",
             borderWidth: 1,
             gap: 12,
           },

@@ -32,11 +32,11 @@ export const TabBar = ({
 
   return (
     <View
-      className="absolute bottom-5 right-0 left-0 flex flex-row justify-between items-center bg-white mx-5 py-4  rounded-2xl shadow-lg flex-1"
+      className="absolute bottom-5 right-10 left-10 flex flex-row justify-between items-center bg-green-400 mx-5 py-5  rounded-2xl shadow-lg flex-1"
       onLayout={onTabBarLayout}
     >
       <Animated.View
-        className={"rounded-2xl bg-neutral-800 absolute mx-3"}
+        className={"rounded-2xl bg-white absolute mx-3"}
         style={[
           {
             width: buttonWidth - 25,
@@ -44,7 +44,7 @@ export const TabBar = ({
           },
           animatedStyle,
         ]}
-      ></Animated.View>
+      />
       {state.routes
         .filter((r) => r.name !== "receipt")
         .map((route: any, index: number) => {

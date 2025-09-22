@@ -24,7 +24,6 @@ import {
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { Image } from "expo-image";
-import { usePermissions } from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
 import { supabase } from "@/lib/supabase/client";
 import { decode } from "base64-arraybuffer";
@@ -87,19 +86,16 @@ export default function Scan() {
       exif: false,
     });
     setPhoto(photo);
-    console.log(photo);
   }
 
   async function pickImage() {
-    let result = await ImagePicker.launchImageLibraryAsync({
+    const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images", "videos"],
       allowsEditing: true,
       aspect: [4, 5],
       quality: 1,
       base64: true,
     });
-
-    console.log(result);
 
     if (!result.canceled) {
       setPhoto({
@@ -121,12 +117,11 @@ export default function Scan() {
     const name = new Date().toISOString() + photo?.format;
     await supabase.storage
       .from("pagalo-receipts")
-      .upload(name, decode(photo!.base64!), {
+      .upload(name, decode(photo?.base64 ?? ""), {
         contentType: `image/${photo?.format}`,
       });
     const url = supabase.storage.from("pagalo-receipts").getPublicUrl(name)
       .data.publicUrl;
-    console.log(url);
     const response = await fetch(
       `${process.env.EXPO_PUBLIC_SERVER_URL}/api/ai/extract`,
       {
@@ -172,7 +167,7 @@ export default function Scan() {
       )}
       {uploading && (
         <View className="absolute inset-0 bg-black/50 justify-center items-center">
-          <ActivityIndicator size={30} color={"white"}></ActivityIndicator>
+          <ActivityIndicator size={30} color={"white"} />
         </View>
       )}
       <View className="absolute top-12 w-full justify-between items-center flex-row px-6">

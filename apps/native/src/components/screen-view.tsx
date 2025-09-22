@@ -11,7 +11,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const ScreenView = ({ children }: { children: React.ReactNode }) => {
   return (
-    <GestureHandlerRootView className="flex-1 ">
+    <GestureHandlerRootView className="flex-1 w-full">
       <SafeAreaProvider>
         <SafeAreaView
           className="flex-1  pt-6"
