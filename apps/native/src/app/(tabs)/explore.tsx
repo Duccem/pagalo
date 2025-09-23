@@ -26,7 +26,7 @@ export default function TabTwoScreen() {
     <ScreenView>
       <View className="px-6 gap-8">
         <View>
-          <Text className="w-full text-start text-2xl font-light">
+          <Text className="w-full text-start text-2xl font-light text-foreground">
             History of bills
           </Text>
         </View>
@@ -41,7 +41,7 @@ export default function TabTwoScreen() {
             renderItem={(item) => {
               return (
                 <Pressable
-                  className="w-full bg-white px-4 py-3 my-4 rounded-2xl flex-row justify-between items-center shadow-lg"
+                  className="w-full bg-card px-4 py-3 my-4 rounded-2xl flex-row justify-between items-center shadow-lg"
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                     router.push(`/(receipt)/summary?id=${item.item.id}`);
@@ -59,13 +59,13 @@ export default function TabTwoScreen() {
                             : "#60a5fa",
                       }}
                     >
-                      <Receipt size={25} color={"white"} />
+                      <Receipt size={25} />
                     </View>
                     <View className=" gap-1">
-                      <Text className="text-xl text-black">
+                      <Text className="text-xl text-foreground">
                         {item.item.vendor}
                       </Text>
-                      <Text className="text-sm text-gray-500">
+                      <Text className="text-sm text-muted-foreground">
                         {new Date(item.item.date).toLocaleDateString("en-US", {
                           month: "short",
                           day: "numeric",
@@ -75,12 +75,12 @@ export default function TabTwoScreen() {
                     </View>
                   </View>
                   <View className="gap-1 items-end">
-                    <Text className="text-xl text-black">
+                    <Text className="text-xl text-foreground">
                       ${item.item?.total?.toFixed(2)}
                     </Text>
                     <View className="flex-row items-center gap-1">
                       <Text>{item.item.participantCount ?? 0}</Text>
-                      <Users className="size-2 text-black" size={15} />
+                      <Users className="size-2 text-foreground" size={15} />
                     </View>
                   </View>
                 </Pressable>
@@ -101,4 +101,3 @@ export default function TabTwoScreen() {
     </ScreenView>
   );
 }
-

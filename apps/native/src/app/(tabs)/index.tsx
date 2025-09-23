@@ -8,6 +8,7 @@ import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Bell, Receipt, Settings, Users } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
 import {
   FlatList,
   Image,
@@ -18,6 +19,7 @@ import {
 } from "react-native";
 
 export default function HomeScreen() {
+  const { colorScheme } = useColorScheme();
   const { data: session } = authClient.useSession();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
@@ -57,59 +59,70 @@ export default function HomeScreen() {
               variant="white"
               action={() => router.push("/(settings)/notifications")}
             >
-              <Bell className="text-black size-6" />
+              <Bell
+                className="text-foreground size-6"
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
             </Button>
             <Button
               variant="white"
               action={() => router.push("/(settings)/settings")}
             >
-              <Settings className="text-black size-6" />
+              <Settings
+                className="text-foreground size-6"
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
             </Button>
           </View>
         </View>
         <View className="flex-col w-full px-6 ">
-          <Text className="text-3xl font-normal text-black w-full text-start ">
+          <Text className="text-3xl font-normal text-foreground w-full text-start ">
             Welcome back
           </Text>
-          <Text className="text-2xl font-light  w-full text-start ">
+          <Text className="text-2xl font-light  w-full text-start text-foreground">
             {session?.user.name ?? session?.user.email ?? "User"}
           </Text>
         </View>
         <View className="w-full px-6 flex-row gap-3 items-center">
-          <Pressable className="flex-1 w-1/3">
-            <View className="bg-white rounded-2xl px-4 py-3 items-center gap-3">
+          <Pressable
+            className="flex-1 w-1/3"
+            onPress={() => router.push("/(receipt)/manual")}
+          >
+            <View className="bg-card rounded-2xl px-4 py-3 items-center gap-3">
               <Image
                 source={require("@/assets/images/recepcion.png")}
                 className="size-12"
               />
-              <Text className="text-sm">Split bill</Text>
+              <Text className="text-sm text-foreground">Split bill</Text>
             </View>
           </Pressable>
           <Pressable className="flex-1 w-1/3">
-            <View className="bg-gray-200 rounded-2xl px-4 py-3 items-center gap-3">
+            <View className="bg-card rounded-2xl px-4 py-3 items-center gap-3">
               <Image
                 source={require("@/assets/images/presupuesto.png")}
                 className="size-12"
               />
-              <Text className="text-sm">Record spend</Text>
+              <Text className="text-sm text-foreground">Record spend</Text>
             </View>
           </Pressable>
           <Pressable className="flex-1 w-1/3">
-            <View className="bg-gray-200 rounded-2xl px-4 py-3 items-center gap-3">
+            <View className="bg-card rounded-2xl px-4 py-3 items-center gap-3">
               <Image
                 source={require("@/assets/images/hucha.png")}
                 className="size-12"
               />
-              <Text className="text-sm">Setup budget</Text>
+              <Text className="text-sm text-foreground">Setup budget</Text>
             </View>
           </Pressable>
         </View>
         <View className="flex-row justify-between w-full px-6">
-          <Text className="text-lg text-gray-700 font-light ">
+          <Text className="text-lg text-muted-foreground font-light ">
             Active bills
           </Text>
           <Pressable onPress={() => router.push("/(tabs)/explore")}>
-            <Text className="text-sm text-gray-600 font-light">view all</Text>
+            <Text className="text-sm text-muted-foreground font-light">
+              view all
+            </Text>
           </Pressable>
         </View>
         <FlatList
@@ -117,7 +130,7 @@ export default function HomeScreen() {
           className="w-full px-6 mb-20"
           renderItem={(item) => (
             <TouchableOpacity
-              className="w-full bg-white px-4 py-3 my-4 rounded-2xl flex-row justify-between items-center shadow-lg"
+              className="w-full bg-card px-4 py-3 my-4 rounded-2xl flex-row justify-between items-center shadow-lg"
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 router.push(`/(receipt)/summary?id=${item.item.id}`);
@@ -128,8 +141,10 @@ export default function HomeScreen() {
                   <Receipt size={25} color={"white"} />
                 </View>
                 <View className=" gap-1">
-                  <Text className="text-xl text-black">{item.item.vendor}</Text>
-                  <Text className="text-sm text-gray-500">
+                  <Text className="text-xl text-foreground">
+                    {item.item.vendor}
+                  </Text>
+                  <Text className="text-sm text-muted-foreground">
                     {new Date(item.item.date).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -139,12 +154,18 @@ export default function HomeScreen() {
                 </View>
               </View>
               <View className="gap-1 items-end">
-                <Text className="text-xl text-black">
+                <Text className="text-xl text-foreground">
                   ${item.item?.total?.toFixed(2)}
                 </Text>
                 <View className="flex-row items-center gap-1">
-                  <Text>{item.item.participantCount ?? 0}</Text>
-                  <Users className="size-2 text-black" size={15} />
+                  <Text className="text-foreground">
+                    {item.item.participantCount ?? 0}
+                  </Text>
+                  <Users
+                    className="size-2 text-foreground"
+                    size={15}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
                 </View>
               </View>
             </TouchableOpacity>

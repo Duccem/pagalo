@@ -1,3 +1,4 @@
+import { useColorScheme } from "@/lib/use-color-scheme";
 import { BottomSheetFlatList, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Plus } from "lucide-react-native";
 import React, { useCallback, useEffect, useRef } from "react";
@@ -31,6 +32,7 @@ const PeopleSheet = ({
     total: number;
   }[];
 }) => {
+  const { colorScheme } = useColorScheme();
   const [selectedPeople, setSelectedPeople] =
     React.useState<
       { id: number; invoiceId: number; name: string; total: number }[]
@@ -56,6 +58,9 @@ const PeopleSheet = ({
       </Button>
       <BottomSheetModal
         ref={bottomSheetModalRef}
+        backgroundStyle={{
+          backgroundColor: colorScheme === "dark" ? "#1c1c1e" : "white",
+        }}
         onChange={handleSheetChanges}
         snapPoints={["75%"]}
         bottomInset={0}

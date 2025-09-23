@@ -2,6 +2,7 @@ import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { supabase } from "@/lib/supabase/client";
+import { useColorScheme } from "@/lib/use-color-scheme";
 import { decode } from "base64-arraybuffer";
 import * as Haptics from "expo-haptics";
 import * as ImagePicker from "expo-image-picker";
@@ -22,6 +23,7 @@ import {
 } from "react-native";
 
 const ProfileScreen = () => {
+  const { colorScheme } = useColorScheme();
   const { data: session } = authClient.useSession();
   const user = session?.user;
   const [name, setName] = useState(user?.name || "");
@@ -107,10 +109,15 @@ const ProfileScreen = () => {
                 router.back();
               }}
             >
-              <ArrowLeft size={30} color={"#000"} />
-              <Text className="text-xl">Back</Text>
+              <ArrowLeft
+                size={30}
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
+              <Text className="text-xl text-foreground">Back</Text>
             </TouchableOpacity>
-            <Text className="text-lg font-medium">Edit profile</Text>
+            <Text className="text-lg font-medium text-foreground">
+              Edit profile
+            </Text>
           </View>
 
           {/* Avatar */}
@@ -141,7 +148,7 @@ const ProfileScreen = () => {
                 Name
               </Text>
               <TextInput
-                className="border bg-white border-gray-300  rounded-2xl p-4 text-base"
+                className="border bg-card border-gray-200 text-foreground placeholder:text-foreground  rounded-2xl p-4 text-base"
                 placeholder="Your name"
                 value={name}
                 onChangeText={setName}
@@ -153,8 +160,8 @@ const ProfileScreen = () => {
               <Text className="text-xs uppercase text-gray-500 mb-2 tracking-wider">
                 Email
               </Text>
-              <View className="bg-gray-100 rounded-2xl p-4">
-                <Text className="text-base text-gray-600">{user?.email}</Text>
+              <View className="border bg-card border-gray-200  rounded-2xl p-4">
+                <Text className="text-base text-foreground">{user?.email}</Text>
               </View>
             </View>
           </View>

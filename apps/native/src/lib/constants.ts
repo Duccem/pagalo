@@ -1,18 +1,34 @@
-export const NAV_THEME = {
-	light: {
-		background: "hsl(0 0% 100%)",
-		border: "hsl(220 13% 91%)",
-		card: "hsl(0 0% 100%)",
-		notification: "hsl(0 84.2% 60.2%)",
-		primary: "hsl(221.2 83.2% 53.3%)",
-		text: "hsl(222.2 84% 4.9%)",
-	},
-	dark: {
-		background: "hsl(222.2 84% 4.9%)",
-		border: "hsl(217.2 32.6% 17.5%)",
-		card: "hsl(222.2 84% 4.9%)",
-		notification: "hsl(0 72% 51%)",
-		primary: "hsl(217.2 91.2% 59.8%)",
-		text: "hsl(210 40% 98%)",
-	},
+// Main brand color tokens
+export const BRAND = {
+  primary: "#4ade80",
+  primaryActive: "#15803d",
 };
+
+export const NAV_THEME = {
+  light: {
+    background: "#f3f4f6",
+    backgroundAlt: "#ffffff",
+    border: "#e5e7eb",
+    card: "#ffffff",
+    notification: "#f87171",
+    primary: BRAND.primary,
+    text: "#111827",
+    textSecondary: "#4b5563",
+  },
+  dark: {
+    background: "#09090b",
+    backgroundAlt: "#18181b",
+    border: "#27272a",
+    card: "#18181b",
+    notification: "#f87171",
+    primary: BRAND.primary,
+    text: "#f9fafb",
+    textSecondary: "#9ca3af",
+  },
+};
+
+export type AppTheme = typeof NAV_THEME.light & { mode: "light" | "dark" };
+
+export function getAppTheme(mode: "light" | "dark"): AppTheme {
+  return { ...(NAV_THEME as any)[mode], mode };
+}

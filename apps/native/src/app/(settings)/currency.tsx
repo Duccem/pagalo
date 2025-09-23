@@ -1,6 +1,7 @@
 import ScreenView from "@/components/shared/screen-view";
 import { authClient } from "@/lib/auth-client";
 import { SUPPORTED_CURRENCIES, useCurrencyPreference } from "@/lib/preferences";
+import { useColorScheme } from "@/lib/use-color-scheme";
 import * as Haptics from "expo-haptics";
 import { Redirect, router } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
@@ -8,6 +9,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 export default function CurrencyScreen() {
+  const { colorScheme } = useColorScheme();
   const { isPending, data } = authClient.useSession();
   const { currency, setCurrency, loading } = useCurrencyPreference();
   if (isPending) return null;
@@ -24,26 +26,31 @@ export default function CurrencyScreen() {
             }}
             className="pr-4"
           >
-            <ArrowLeft size={28} color="#000" />
+            <ArrowLeft
+              size={28}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
           </TouchableOpacity>
-          <Text className="text-xl font-semibold">Selecciona moneda</Text>
+          <Text className="text-xl font-semibold text-foreground">
+            Selecciona moneda
+          </Text>
         </View>
         <ScrollView className="flex-1" contentContainerStyle={{ gap: 12 }}>
           {SUPPORTED_CURRENCIES.map((c) => {
             const active = c === currency;
             return (
               <View
-                className="flex-row items-center gap-4 bg-white p-3 rounded-2xl justify-between"
+                className="flex-row items-center gap-4 bg-card p-3 rounded-2xl justify-between"
                 key={c}
               >
-                <Text className="text-lg font-medium">{c}</Text>
+                <Text className="text-lg font-medium text-foreground">{c}</Text>
                 <View>
                   <BouncyCheckbox
                     isChecked={active}
                     useBuiltInState={false}
                     size={26}
                     fillColor="#22c55e"
-                    unFillColor="#ffffff"
+                    unFillColor={colorScheme === "dark" ? "#1c1c1c" : "#ffffff"}
                     iconStyle={{ borderRadius: 8, borderColor: "#22c55e" }}
                     innerIconStyle={{ borderWidth: 2, borderRadius: 8 }}
                     onPress={async () => {

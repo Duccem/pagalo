@@ -1,6 +1,7 @@
 import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import { useShareMessagePreference } from "@/lib/preferences";
+import { useColorScheme } from "@/lib/use-color-scheme";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { ArrowLeft, Save } from "lucide-react-native";
@@ -16,6 +17,7 @@ import {
 } from "react-native";
 
 export default function ShareMessageScreen() {
+  const { colorScheme } = useColorScheme();
   const { shareMessage, setShareMessage, loading, defaultValue } =
     useShareMessagePreference();
   const [value, setValue] = useState(shareMessage || defaultValue);
@@ -59,8 +61,11 @@ export default function ShareMessageScreen() {
                 router.back();
               }}
             >
-              <ArrowLeft size={28} color="#000" />
-              <Text className="text-lg">Back</Text>
+              <ArrowLeft
+                size={28}
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
+              <Text className="text-lg text-foreground">Back</Text>
             </Pressable>
             <Button
               action={onSave}
@@ -87,17 +92,19 @@ export default function ShareMessageScreen() {
           <ScrollView className="flex-1" keyboardShouldPersistTaps="handled">
             <View className="gap-4">
               <View className="gap-2">
-                <Text className="text-base font-semibold">Share message</Text>
-                <Text className="text-xs text-gray-500">
+                <Text className="text-base font-semibold text-foreground">
+                  Share message
+                </Text>
+                <Text className="text-xs text-muted-foreground">
                   This message will appear when you share bills or receipts. You
                   can customize it for your friends or context.
                 </Text>
               </View>
 
-              <View className="bg-white rounded-2xl p-4">
+              <View className="bg-card border-gray-200  rounded-2xl p-4">
                 <TextInput
                   multiline
-                  className="text-base text-black"
+                  className="text-base text-foreground placeholder:text-foreground"
                   placeholder="Write the message..."
                   value={value}
                   onChangeText={setValue}
@@ -110,7 +117,7 @@ export default function ShareMessageScreen() {
                   blurOnSubmit
                 />
                 <View className="flex-row justify-between mt-2">
-                  <Text className="text-xs text-gray-400">
+                  <Text className="text-xs text-muted-foreground">
                     {value.trim().length}/200 characters
                   </Text>
                   {value.trim() !== (shareMessage || defaultValue) && (
@@ -119,12 +126,14 @@ export default function ShareMessageScreen() {
                 </View>
               </View>
 
-              <View className="bg-white rounded-2xl p-4 gap-2">
-                <Text className="text-xs uppercase text-gray-500 tracking-wider">
+              <View className="bg-card rounded-2xl p-4 gap-2">
+                <Text className="text-xs uppercase text-muted-foreground tracking-wider">
                   Preview
                 </Text>
-                <View className="border border-gray-200 rounded-xl p-3 bg-gray-50">
-                  <Text className="text-sm text-gray-800">{value.trim()}</Text>
+                <View className="border border-gray-200 rounded-xl p-3 bg-muted">
+                  <Text className="text-sm text-muted-foreground">
+                    {value.trim()}
+                  </Text>
                 </View>
               </View>
             </View>

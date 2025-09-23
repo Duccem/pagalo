@@ -1,6 +1,7 @@
 import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import * as schema from "@/lib/db/schema";
+import { useColorScheme } from "@/lib/use-color-scheme";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
@@ -19,6 +20,7 @@ import {
 } from "react-native";
 
 export default function Manual() {
+  const { colorScheme } = useColorScheme();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -60,13 +62,16 @@ export default function Manual() {
               router.back();
             }}
           >
-            <ArrowLeft size={30} color={"#000"} />
-            <Text className="text-xl">Back</Text>
+            <ArrowLeft
+              size={30}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+            <Text className="text-xl text-foreground">Back</Text>
           </TouchableOpacity>
         </View>
         <View className="flex-1 justify-center items-center w-full gap-12">
           <View className="items-center gap-2">
-            <Text className="text-4xl font-medium text-center">
+            <Text className="text-4xl font-medium text-center text-foreground">
               Manual entry
             </Text>
             <Text className="text-center text-lg text-muted-foreground">
@@ -74,31 +79,41 @@ export default function Manual() {
             </Text>
           </View>
           <View className="w-full gap-2">
-            <Text className="text-lg font-medium">Restaurant name:</Text>
+            <Text className="text-lg font-medium text-foreground">
+              Restaurant name:
+            </Text>
             <View className="relative h-fit w-full">
               <TextInput
-                className="border bg-white border-gray-300 w-full rounded-2xl px-5 pl-12 py-3"
+                className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-full rounded-2xl px-5 pl-12 py-3"
                 placeholder="eg. Joe's Pizza"
                 value={vendor}
                 onChangeText={setVendor}
               />
               <View className="absolute left-4 top-1/4">
-                <Key className=" " size={20} color="black" />
+                <Key
+                  className=" "
+                  size={20}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
               </View>
             </View>
           </View>
 
           <View className="w-full gap-2">
-            <Text className="text-lg font-medium">Date:</Text>
+            <Text className="text-lg font-medium text-foreground">Date:</Text>
             <TouchableOpacity
-              className="flex-row items-center gap-4  w-full border bg-white border-gray-300 pr-4 pl-12 py-2 justify-start rounded-2xl relative"
+              className="flex-row items-center gap-4  w-full border bg-card border-gray-200 pr-4 pl-12 py-2 justify-start rounded-2xl relative"
               onPress={showDatepicker}
             >
-              <Text className="text-lg">
+              <Text className="text-lg text-foreground">
                 {date ? format(date, "Pp") : "Select date"}
               </Text>
               <View className="absolute left-4 top-1/3">
-                <Calendar className=" " size={20} color="black" />
+                <Calendar
+                  className=" "
+                  size={20}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
               </View>
             </TouchableOpacity>
             {showPicker && (

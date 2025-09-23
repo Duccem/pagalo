@@ -1,3 +1,4 @@
+import { useColorScheme } from "@/lib/use-color-scheme";
 import React from "react";
 import { Pressable, ViewStyle } from "react-native";
 import Animated, {
@@ -5,29 +6,70 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+/*
+ * Definición de estilos de variantes dependientes del esquema de color.
+ * Mantiene compatibilidad con las variantes existentes y mejora contraste en dark mode.
+ */
 
-const variantStyles = {
-  primary: {
-    backgroundColor: "#4ade80",
-    activeBackgroundColor: "#15803d",
-    borderColor: "#4ade80",
-  },
-  outline: {
-    backgroundColor: "#fff",
-    activeBackgroundColor: "#E5E5E5",
-    borderColor: "#4ade80",
-  },
-  black: {
-    backgroundColor: "#000000",
-    activeBackgroundColor: "#262626",
-    borderColor: "#000000",
-  },
-  white: {
-    backgroundColor: "#ffffff",
-    activeBackgroundColor: "#f3f4f6",
-    borderColor: "#ffffff",
-  },
-};
+type VariantKey = "primary" | "outline" | "black" | "white";
+interface VariantStyle {
+  backgroundColor: string;
+  activeBackgroundColor: string;
+  borderColor: string;
+}
+
+function useVariantStyles(isDark: boolean): Record<VariantKey, VariantStyle> {
+  if (isDark) {
+    return {
+      primary: {
+        backgroundColor: "#4ade80",
+        activeBackgroundColor: "#15803d",
+        borderColor: "#4ade80",
+      },
+      outline: {
+        // Fondo transparente para integrarse con el background oscuro
+        backgroundColor: "rgba(255,255,255,0.04)",
+        activeBackgroundColor: "rgba(255,255,255,0.08)",
+        borderColor: "#4ade80", // mantiene acento de marca
+      },
+      black: {
+        // Evitamos #000 puro para diferenciar del fondo (#121212 aprox.)
+        backgroundColor: "#1e1e1e",
+        activeBackgroundColor: "#2a2a2a",
+        borderColor: "#262626",
+      },
+      white: {
+        // Ajustado para que se parezca a la card en dark mode (HSL 0 0% 11%)
+        backgroundColor: "#1c1c1c",
+        activeBackgroundColor: "#262626",
+        borderColor: "#1c1c1c",
+      },
+    } as const;
+  }
+  // Light mode (valores anteriores)
+  return {
+    primary: {
+      backgroundColor: "#4ade80",
+      activeBackgroundColor: "#15803d",
+      borderColor: "#4ade80",
+    },
+    outline: {
+      backgroundColor: "#fff",
+      activeBackgroundColor: "#E5E5E5",
+      borderColor: "#4ade80",
+    },
+    black: {
+      backgroundColor: "#000000",
+      activeBackgroundColor: "#262626",
+      borderColor: "#000000",
+    },
+    white: {
+      backgroundColor: "#ffffff",
+      activeBackgroundColor: "#f3f4f6",
+      borderColor: "#ffffff",
+    },
+  } as const;
+}
 
 const Button = ({
   children,
@@ -44,6 +86,11 @@ const Button = ({
   className?: string;
   disabled?: boolean;
 }) => {
+  const { isDarkColorScheme } = useColorScheme();
+  const variantStyles = React.useMemo(
+    () => useVariantStyles(isDarkColorScheme),
+    [isDarkColorScheme]
+  );
   const background = useSharedValue(0);
 
   const handlePress = () => {
@@ -94,4 +141,3 @@ const Button = ({
 };
 
 export default Button;
-

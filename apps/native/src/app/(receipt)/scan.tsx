@@ -1,6 +1,8 @@
+import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import * as schema from "@/lib/db/schema";
 import { supabase } from "@/lib/supabase/client";
+import { useColorScheme } from "@/lib/use-color-scheme";
 import { decode } from "base64-arraybuffer";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
@@ -32,6 +34,7 @@ import {
 } from "react-native";
 
 export default function Scan() {
+  const { colorScheme } = useColorScheme();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
   const [facing, setFacing] = useState<CameraType>("back");
@@ -50,28 +53,33 @@ export default function Scan() {
   if (!permission.granted) {
     // Camera permissions are not granted yet.
     return (
-      <View className="flex-1 items-center justify-center gap-6">
-        <View className="w-full flex-row justify-center">
-          <TouchableOpacity
-            className="flex-row items-center gap-4"
-            onPress={() => {
-              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-              router.back();
-            }}
-          >
-            <ArrowLeft size={30} color={"#000"} />
-            <Text className="text-xl">Back</Text>
-          </TouchableOpacity>
+      <ScreenView>
+        <View className="flex-1 items-center justify-center gap-6">
+          <View className="w-full flex-row justify-center">
+            <TouchableOpacity
+              className="flex-row items-center gap-4"
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+                router.back();
+              }}
+            >
+              <ArrowLeft
+                size={30}
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
+              <Text className="text-xl">Back</Text>
+            </TouchableOpacity>
+          </View>
+          <Text className="text-center text-2xl text-muted-foreground px-8">
+            We need your permission to show the camera
+          </Text>
+          <View className="w-full px-8">
+            <Button action={requestPermission}>
+              <Text className="text-white">Grant permission</Text>
+            </Button>
+          </View>
         </View>
-        <Text className="text-center text-2xl text-muted-foreground px-8">
-          We need your permission to show the camera
-        </Text>
-        <View className="w-full px-8">
-          <Button action={requestPermission}>
-            <Text className="text-white">Grant permission</Text>
-          </Button>
-        </View>
-      </View>
+      </ScreenView>
     );
   }
 
@@ -167,7 +175,10 @@ export default function Scan() {
       )}
       {uploading && (
         <View className="absolute inset-0 bg-black/50 justify-center items-center">
-          <ActivityIndicator size={30} color={"white"} />
+          <ActivityIndicator
+            size={30}
+            color={colorScheme === "dark" ? "white" : "black"}
+          />
         </View>
       )}
       <View className="absolute top-12 w-full justify-between items-center flex-row px-6">
@@ -179,7 +190,10 @@ export default function Scan() {
           variant="white"
           styles={{ borderRadius: 50 }}
         >
-          <ArrowLeft color={"black"} size={25} />
+          <ArrowLeft
+            color={colorScheme === "dark" ? "white" : "black"}
+            size={25}
+          />
         </Button>
         {photo && (
           <Button
@@ -190,7 +204,7 @@ export default function Scan() {
             variant="white"
             styles={{ borderRadius: 50 }}
           >
-            <X color={"black"} size={25} />
+            <X color={colorScheme === "dark" ? "white" : "black"} size={25} />
           </Button>
         )}
       </View>
@@ -202,8 +216,11 @@ export default function Scan() {
             styles={{ borderRadius: 50 }}
             variant="white"
           >
-            <Upload color={"black"} size={25} />
-            <Text className="text-lg text-black">Upload</Text>
+            <Upload
+              color={colorScheme === "dark" ? "white" : "black"}
+              size={25}
+            />
+            <Text className="text-lg text-foreground">Upload</Text>
           </Button>
         )}
         {!photo && (
@@ -214,7 +231,10 @@ export default function Scan() {
               styles={{ borderRadius: 50 }}
               variant="white"
             >
-              <SwitchCamera color={"black"} size={25} />
+              <SwitchCamera
+                color={colorScheme === "dark" ? "white" : "black"}
+                size={25}
+              />
             </Button>
             <Button
               action={takePicture}
@@ -222,7 +242,10 @@ export default function Scan() {
               styles={{ borderRadius: 50 }}
               variant="white"
             >
-              <ScanEye color={"black"} size={25} />
+              <ScanEye
+                color={colorScheme === "dark" ? "white" : "black"}
+                size={25}
+              />
             </Button>
             <Button
               action={pickImage}
@@ -230,7 +253,10 @@ export default function Scan() {
               styles={{ borderRadius: 50 }}
               variant="white"
             >
-              <FolderOpenDot color={"black"} size={25} />
+              <FolderOpenDot
+                color={colorScheme === "dark" ? "white" : "black"}
+                size={25}
+              />
             </Button>
           </>
         )}

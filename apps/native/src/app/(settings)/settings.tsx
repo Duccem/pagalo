@@ -32,7 +32,8 @@ import {
 
 const Index = () => {
   const { isPending, data } = authClient.useSession();
-  const { toggleColorScheme, isDarkColorScheme } = useColorScheme();
+  const { toggleColorScheme, isDarkColorScheme, colorScheme } =
+    useColorScheme();
   const { currency, loading: loadingCurrency } = useCurrencyPreference();
   const { shareMessage, loading: loadingShareMessage } =
     useShareMessagePreference();
@@ -74,14 +75,20 @@ const Index = () => {
                 router.back();
               }}
             >
-              <ArrowLeft size={30} color={"#000"} />
-              <Text className="text-xl">Back</Text>
+              <ArrowLeft
+                size={30}
+                className="text-foreground"
+                color={colorScheme === "dark" ? "white" : "black"}
+              />
+              <Text className="text-xl text-foreground">Back</Text>
             </TouchableOpacity>
-            <Text className="text-lg font-medium">Settings</Text>
+            <Text className="text-lg font-medium text-foreground">
+              Settings
+            </Text>
           </View>
           {/* User Card */}
           <Pressable
-            className="w-full bg-white rounded-2xl p-4 flex-row items-center gap-4 shadow-sm"
+            className="w-full bg-card rounded-2xl p-4 flex-row items-center gap-4 shadow-sm"
             onPress={() => {
               Haptics.selectionAsync();
               router.push("/(settings)/profile" as any);
@@ -97,30 +104,41 @@ const Index = () => {
               />
             </View>
             <View className="flex-1">
-              <Text className="text-lg font-semibold" numberOfLines={1}>
+              <Text
+                className="text-lg font-semibold text-foreground"
+                numberOfLines={1}
+              >
                 {data?.user.name || "User"}
               </Text>
-              <Text className="text-gray-500 text-sm" numberOfLines={1}>
+              <Text className="text-muted-foreground text-sm" numberOfLines={1}>
                 {data?.user.email}
               </Text>
             </View>
-            <ChevronRight size={24} color={"black"} />
+            <ChevronRight
+              size={24}
+              className="text-foreground"
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
           </Pressable>
 
           {/* Preferences */}
           <View className="gap-4">
-            <Text className="text-xs uppercase text-gray-500 tracking-wider">
+            <Text className="text-xs uppercase tracking-wider text-muted-foreground">
               Preferences
             </Text>
-            <View className="bg-white rounded-2xl divide-y overflow-hidden">
+            <View className="bg-card rounded-2xl divide-y overflow-hidden">
               <View className="flex-row items-center justify-between p-4">
                 <View className="flex-row items-center gap-3">
                   {isDarkColorScheme ? (
-                    <Moon size={20} color="#111" />
+                    <Moon
+                      size={20}
+                      className="text-foreground"
+                      color={"white"}
+                    />
                   ) : (
-                    <SunMedium size={20} color="#111" />
+                    <SunMedium size={20} className="text-foreground" />
                   )}
-                  <Text className="text-base">Dark mode</Text>
+                  <Text className="text-base text-foreground">Dark mode</Text>
                 </View>
                 <Switch
                   value={isDarkColorScheme}
@@ -139,13 +157,17 @@ const Index = () => {
                 }}
               >
                 <View className="flex-row items-center gap-3">
-                  <Text className="text-base">Currency</Text>
+                  <Text className="text-base text-foreground">Currency</Text>
                 </View>
                 <View className="flex-row items-center gap-2">
-                  <Text className="text-sm text-gray-600 font-medium">
+                  <Text className="text-sm font-medium text-muted-foreground">
                     {loadingCurrency ? "..." : currency}
                   </Text>
-                  <ChevronRight size={18} color="#111" />
+                  <ChevronRight
+                    size={18}
+                    className="text-foreground"
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
                 </View>
               </Pressable>
               {/* Share message preference */}
@@ -157,11 +179,13 @@ const Index = () => {
                 }}
               >
                 <View className="flex-row items-center gap-3">
-                  <Text className="text-base">Share message</Text>
+                  <Text className="text-base text-foreground">
+                    Share message
+                  </Text>
                 </View>
                 <View className="flex-row items-center gap-2 max-w-[55%]">
                   <Text
-                    className="text-sm text-gray-600 font-medium"
+                    className="text-sm font-medium text-muted-foreground"
                     numberOfLines={1}
                   >
                     {loadingShareMessage
@@ -170,7 +194,11 @@ const Index = () => {
                       ? `${shareMessage.slice(0, 20)}…`
                       : shareMessage || "(empty)"}
                   </Text>
-                  <ChevronRight size={18} color="#111" />
+                  <ChevronRight
+                    size={18}
+                    className="text-foreground"
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
                 </View>
               </Pressable>
             </View>
@@ -178,15 +206,20 @@ const Index = () => {
 
           {/* Notifications Preferences */}
           <View className="gap-4">
-            <Text className="text-xs uppercase text-gray-500 tracking-wider">
+            <Text className="text-xs uppercase text-muted-foreground tracking-wider">
               Notifications
             </Text>
-            <View className="bg-white rounded-2xl overflow-hidden divide-y">
+            <View className="bg-card rounded-2xl overflow-hidden divide-y">
               {/* Master enable */}
               <View className="flex-row items-center justify-between p-4">
                 <View className="flex-row items-center gap-3">
-                  <Bell size={20} color="#111" />
-                  <Text className="text-base">Enable notifications</Text>
+                  <Bell
+                    size={20}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
+                  <Text className="text-base text-foreground">
+                    Enable notifications
+                  </Text>
                 </View>
                 <Switch
                   value={generalEnabled}
@@ -206,8 +239,10 @@ const Index = () => {
               {/* Reminders */}
               <View className="flex-row items-center justify-between p-4">
                 <View className="flex-1 pr-4">
-                  <Text className="text-base">Payment reminders</Text>
-                  <Text className="text-xs text-gray-500 mt-1">
+                  <Text className="text-base text-foreground">
+                    Payment reminders
+                  </Text>
+                  <Text className="text-xs text-muted-foreground mt-1">
                     Get nudges so everyone pays their part.
                   </Text>
                 </View>
@@ -230,7 +265,9 @@ const Index = () => {
               {/* News */}
               <View className="flex-row items-center justify-between p-4">
                 <View className="flex-1 pr-4">
-                  <Text className="text-base">Product news & tips</Text>
+                  <Text className="text-base text-foreground">
+                    Product news & tips
+                  </Text>
                   <Text className="text-xs text-gray-500 mt-1">
                     Occasional updates to help you get more out of Pagalo.
                   </Text>
@@ -260,19 +297,24 @@ const Index = () => {
                 }}
               >
                 <View className="flex-row items-center gap-3">
-                  <Text className="text-base">View notifications</Text>
+                  <Text className="text-base text-foreground">
+                    View notifications
+                  </Text>
                 </View>
-                <ChevronRight size={18} color="#111" />
+                <ChevronRight
+                  size={18}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
               </Pressable>
             </View>
           </View>
 
           {/* Account */}
           <View className="gap-4">
-            <Text className="text-xs uppercase text-gray-500 tracking-wider">
+            <Text className="text-xs uppercase text-muted-foreground tracking-wider">
               Account
             </Text>
-            <View className="bg-white rounded-2xl overflow-hidden">
+            <View className="bg-card rounded-2xl overflow-hidden">
               <Pressable
                 className="flex-row items-center justify-between p-4"
                 onPress={handleSignOut}
@@ -281,26 +323,32 @@ const Index = () => {
                   <LogOut size={20} color="#dc2626" />
                   <Text className="text-base text-red-600">Sign out</Text>
                 </View>
-                <ChevronRight size={20} color="#111" />
+                <ChevronRight
+                  size={20}
+                  color={colorScheme === "dark" ? "white" : "black"}
+                />
               </Pressable>
             </View>
           </View>
 
           {/* About */}
           <View className="gap-4 mb-4">
-            <Text className="text-xs uppercase text-gray-500 tracking-wider">
+            <Text className="text-xs uppercase text-muted-foreground tracking-wider">
               About
             </Text>
-            <View className="bg-white rounded-2xl overflow-hidden">
+            <View className="bg-card rounded-2xl overflow-hidden">
               <View className="flex-row items-center justify-between p-4">
                 <View className="flex-row items-center gap-3">
-                  <Info size={20} color="#111" />
-                  <Text className="text-base">Version</Text>
+                  <Info
+                    size={20}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
+                  <Text className="text-base text-foreground">Version</Text>
                 </View>
-                <Text className="text-gray-600 text-sm">{version}</Text>
+                <Text className="text-muted-foreground text-sm">{version}</Text>
               </View>
               <View className="flex-row items-center justify-between px-4 pb-4">
-                <Text className="text-xs text-gray-400">
+                <Text className="text-xs text-muted-foreground">
                   Build ID: {Constants?.nativeBuildVersion ?? "dev"}
                 </Text>
               </View>
@@ -313,4 +361,3 @@ const Index = () => {
 };
 
 export default Index;
-

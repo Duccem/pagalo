@@ -2,6 +2,7 @@ import PeopleSheet from "@/components/receipt/people-sheet";
 import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import * as schema from "@/lib/db/schema";
+import { useColorScheme } from "@/lib/use-color-scheme";
 import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
@@ -9,15 +10,11 @@ import { router, useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { ArrowLeft, BrushCleaning, Check } from "lucide-react-native";
 import React from "react";
-import {
-  FlatList,
-  Pressable,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
 const Split = () => {
+  const { colorScheme } = useColorScheme();
   const params = useLocalSearchParams<{ invoice: string }>();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
@@ -100,37 +97,43 @@ const Split = () => {
               router.back();
             }}
           >
-            <ArrowLeft size={30} color={"#000"} />
-            <Text className="text-xl">Back</Text>
+            <ArrowLeft
+              size={30}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+            <Text className="text-xl text-foreground">Back</Text>
           </TouchableOpacity>
           <Button action={saveAssignments} styles={{ padding: 10 }}>
             <Check color={"white"} size={25} />
           </Button>
         </View>
         <View className="flex-row justify-between items-center w-full mt-5">
-          <Text className="text-4xl font-bold">Assign items</Text>
-          <Pressable
-            className={`border border-green-400 px-4 py-2 rounded-2xl ${
-              evenly === 1 ? "bg-green-400 " : "bg-white "
-            }`}
-            onPress={changeEvenly}
-          >
-            <Text
-              className={` text-lg ${
-                evenly === 1 ? "text-white" : "text-black"
-              }`}
-            >
-              Split evenly
-            </Text>
-          </Pressable>
+          <Text className="text-4xl font-bold text-foreground">
+            Assign items
+          </Text>
+          <View className="flex-row items-center">
+            <Text className="text-foreground text-lg mr-3">Split evenly</Text>
+            <View>
+              <BouncyCheckbox
+                isChecked={evenly === 1}
+                onPress={changeEvenly}
+                size={26}
+                fillColor="#4ade80"
+                unFillColor={colorScheme === "dark" ? "#1c1c1c" : "#ffffff"}
+                useBuiltInState={false}
+                iconStyle={{ borderRadius: 8, borderColor: "#22c55e" }}
+                innerIconStyle={{ borderWidth: 2, borderRadius: 8 }}
+              />
+            </View>
+          </View>
         </View>
         <FlatList
           className="w-full mt-8  flex-1"
           data={items}
           renderItem={({ item }) => (
-            <View className="bg-white my-2 rounded-2xl px-4 py-4">
+            <View className="bg-card my-2 rounded-2xl px-4 py-4">
               <View className="flex-row justify-between items-center">
-                <Text className="text-xl font-semibold">
+                <Text className="text-xl font-semibold text-foreground">
                   {item.name} - ${item.price.toFixed(2)}
                 </Text>
                 <View className="flex-row items-center gap-2">

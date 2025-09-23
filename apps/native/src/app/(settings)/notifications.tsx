@@ -7,9 +7,11 @@ import {
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { ArrowLeft, Inbox } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 const NotificationsScreen = () => {
+  const { colorScheme } = useColorScheme();
   const list = useMockNotificationList();
   // Seed with some defaults on first empty mount (one-time)
   if (list.length === 0) {
@@ -38,17 +40,22 @@ const NotificationsScreen = () => {
               router.back();
             }}
           >
-            <ArrowLeft size={30} color={"#000"} />
-            <Text className="text-xl">Back</Text>
+            <ArrowLeft
+              size={30}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+            <Text className="text-xl text-foreground">Back</Text>
           </TouchableOpacity>
-          <Text className="text-lg font-medium">Notifications</Text>
+          <Text className="text-lg font-medium text-foreground">
+            Notifications
+          </Text>
         </View>
 
         <View className="gap-4 flex-1">
           <Text className="text-xs uppercase text-gray-500 tracking-wider">
             Notificaciones
           </Text>
-          <View className="flex-1 bg-white rounded-2xl overflow-hidden">
+          <View className="flex-1 bg-card rounded-2xl overflow-hidden">
             {list.length === 0 ? (
               <View className="flex-1 items-center justify-center p-6 gap-4">
                 <Inbox size={42} color="#999" />
@@ -66,17 +73,20 @@ const NotificationsScreen = () => {
                 keyExtractor={(i) => i.id}
                 contentContainerStyle={{ padding: 12, gap: 10 }}
                 renderItem={({ item }) => (
-                  <View className="bg-gray-50 rounded-xl p-4 gap-1">
+                  <View className="bg-background rounded-xl p-4 gap-1">
                     <View className="flex-row justify-between items-center">
-                      <Text className="text-xs font-semibold" numberOfLines={1}>
+                      <Text
+                        className="text-xs font-semibold text-foreground"
+                        numberOfLines={1}
+                      >
                         {item.title}
                       </Text>
-                      <Text className="text-[10px] text-gray-400 ml-2">
+                      <Text className="text-[10px] text-muted-foreground ml-2">
                         {timeAgo(item.createdAt)}
                       </Text>
                     </View>
                     <Text
-                      className="text-[11px] text-gray-600"
+                      className="text-[11px] text-muted-foreground"
                       numberOfLines={3}
                     >
                       {item.body}

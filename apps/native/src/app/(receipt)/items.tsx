@@ -1,6 +1,7 @@
 import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import * as schema from "@/lib/db/schema";
+import { useColorScheme } from "@/lib/use-color-scheme";
 import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
@@ -18,6 +19,7 @@ import {
 } from "react-native";
 
 const Items = () => {
+  const { colorScheme } = useColorScheme();
   const params = useLocalSearchParams<{ invoice: string }>();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
@@ -99,27 +101,30 @@ const Items = () => {
               router.back();
             }}
           >
-            <ArrowLeft size={30} color={"#000"} />
-            <Text className="text-xl">Back</Text>
+            <ArrowLeft
+              size={30}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+            <Text className="text-xl text-foreground">Back</Text>
           </TouchableOpacity>
           <Button action={saveTotal} styles={{ padding: 10 }}>
             <Check color={"white"} size={25} />
           </Button>
         </View>
         <View className="w-full flex-1 justify-start items-center px-2">
-          <Text className="text-4xl w-full text-start font-bold my-12">
+          <Text className="text-4xl w-full text-start font-bold my-6 text-foreground">
             Add Items
           </Text>
 
           <View className="flex-row gap-2 w-full">
             <TextInput
-              className="border bg-white border-gray-300 w-3/5 rounded-2xl px-4 py-3 "
+              className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-3/5 rounded-2xl px-4 py-3 "
               placeholder="eg. Pizza"
               value={name}
               onChangeText={setName}
             />
             <TextInput
-              className="border bg-white border-gray-300 w-1/5 rounded-2xl px-5 "
+              className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-1/5 rounded-2xl px-5 "
               placeholder="$0"
               keyboardType="numeric"
               value={price ? price.toString() : ""}
@@ -132,40 +137,46 @@ const Items = () => {
 
           <View className="w-full flex-row justify-between items-center gap-2 my-5">
             <View className="w-2/5 gap-2">
-              <Text className="text-lg font-medium">Tax:</Text>
+              <Text className="text-lg font-medium text-foreground">Tax:</Text>
 
               <View className="relative">
                 <TextInput
-                  className="border bg-white border-gray-300 w-full rounded-2xl px-5 py-4 pl-8"
+                  className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-full rounded-2xl px-5 py-4 pl-8"
                   placeholder="$0"
                   value={tax ?? "0"}
                   onChangeText={(text) => setTax(text)}
                   keyboardType="numeric"
                 />
                 <View className="absolute left-2 top-4">
-                  <DollarSign size={20} color={"black"} />
+                  <DollarSign
+                    size={20}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
                 </View>
               </View>
             </View>
             <View className="w-2/5 gap-2">
-              <Text className="text-lg font-medium">Tip:</Text>
+              <Text className="text-lg font-medium text-foreground">Tip:</Text>
 
               <View className="relative">
                 <TextInput
-                  className="border bg-white border-gray-300 w-full rounded-2xl px-5 py-4 pl-8"
+                  className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-full rounded-2xl px-5 py-4 pl-8"
                   placeholder="$0"
                   value={tip ?? "0"}
                   onChangeText={(text) => setTip(text)}
                   keyboardType="numeric"
                 />
                 <View className="absolute left-2 top-4">
-                  <DollarSign size={20} color={"black"} />
+                  <DollarSign
+                    size={20}
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
                 </View>
               </View>
             </View>
           </View>
           <View className="w-full">
-            <Text className="text-2xl font-medium">
+            <Text className="text-2xl font-medium text-foreground">
               Total: ${totalPrice.toFixed(2)}
             </Text>
           </View>
@@ -174,10 +185,12 @@ const Items = () => {
             data={items}
             renderItem={(item) => {
               return (
-                <View className="flex-row justify-between items-center bg-white rounded-2xl py-4 my-2 px-4">
+                <View className="flex-row justify-between items-center bg-card rounded-2xl py-4 my-2 px-4">
                   <View className="flex-row gap-4 items-center">
-                    <Text className="text-lg">{item.item.name}</Text>
-                    <Text className="text-lg">
+                    <Text className="text-lg text-foreground">
+                      {item.item.name}
+                    </Text>
+                    <Text className="text-lg text-muted-foreground">
                       ${item.item.price.toFixed(2)}
                     </Text>
                   </View>

@@ -1,6 +1,7 @@
 import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import * as schema from "@/lib/db/schema";
+import { useColorScheme } from "@/lib/use-color-scheme";
 import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Clipboard from "expo-clipboard";
@@ -26,6 +27,7 @@ import {
 } from "react-native";
 
 const People = () => {
+  const { colorScheme } = useColorScheme();
   const params = useLocalSearchParams<{ invoice: string }>();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
@@ -102,8 +104,11 @@ const People = () => {
               router.back();
             }}
           >
-            <ArrowLeft size={30} color={"#000"} />
-            <Text className="text-xl">Back</Text>
+            <ArrowLeft
+              size={30}
+              color={colorScheme === "dark" ? "white" : "black"}
+            />
+            <Text className="text-xl text-foreground">Back</Text>
           </TouchableOpacity>
           <Button
             className=""
@@ -118,7 +123,7 @@ const People = () => {
         </View>
         <View className="flex-1 justify-center items-center w-full gap-6 mt-10">
           <View className="gap-2">
-            <Text className="text-4xl w-full text-start font-bold">
+            <Text className="text-4xl w-full text-start font-bold text-foreground">
               Who's Splitting?
             </Text>
             <Text className="text-start text-lg text-muted-foreground">
@@ -127,7 +132,7 @@ const People = () => {
           </View>
           <View className="flex-row gap-2">
             <TextInput
-              className="border bg-white border-gray-300 w-4/5 rounded-2xl px-5 py-3"
+              className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-4/5 rounded-2xl px-5 py-3"
               placeholder="eg. Jose"
               value={name}
               onChangeText={setName}
@@ -150,9 +155,11 @@ const People = () => {
             data={items}
             renderItem={(item) => {
               return (
-                <View className="flex-row justify-between items-center bg-white my-2 rounded-2xl px-5 py-4">
+                <View className="flex-row justify-between items-center bg-card my-2 rounded-2xl px-5 py-4">
                   <View className="flex-row gap-4 items-center">
-                    <Text className="text-lg">{item.item.name}</Text>
+                    <Text className="text-lg text-foreground">
+                      {item.item.name}
+                    </Text>
                   </View>
                   <TouchableOpacity
                     className="bg-red-400  rounded-2xl px-4 py-3 justify-center items-center"
