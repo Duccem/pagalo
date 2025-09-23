@@ -1,11 +1,12 @@
-import { Redirect, Tabs } from "expo-router";
+import { AnimationScreen } from "@/components/shared/animation-splash";
 import { TabBar } from "@/components/shared/tab-bar";
 import { authClient } from "@/lib/auth-client";
+import { Redirect, Tabs } from "expo-router";
 
 export default function TabLayout() {
   const { isPending, data } = authClient.useSession();
 
-  if (isPending) return null;
+  if (isPending) return <AnimationScreen appReady={true} finish={() => {}} />;
   if (!data?.session) {
     return <Redirect href={"/(auth)/welcome"} />;
   }

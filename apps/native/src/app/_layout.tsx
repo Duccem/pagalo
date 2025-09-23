@@ -9,26 +9,49 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import "../../global.css";
 
+import { AnimationScreen } from "@/components/shared/animation-splash";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import * as SplashScreen from "expo-splash-screen";
 import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { ActivityIndicator, useColorScheme } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import migrations from "../../drizzle/migrations";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
   const expoDb = openDatabaseSync("pagalo");
   const db = drizzle(expoDb);
-  const { success: _s } = useMigrations(db, migrations);
+  const { success } = useMigrations(db, migrations);
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+  const [appReady, setAppReady] = useState(false);
+  const [animationFinished, setAnimationFinished] = useState(false);
 
-  if (!loaded) {
+  useEffect(() => {
+    if (loaded && success) {
+      SplashScreen.hide();
+
+      setAppReady(true);
+    }
+  }, [loaded]);
+
+  if (!appReady && !animationFinished) {
     // Async font loading only occurs in development.
-    return null;
+    return (
+      <AnimationScreen
+        appReady={appReady}
+        finish={(isCanceled: boolean) => {
+          if (!isCanceled) {
+            setAnimationFinished(true);
+          }
+        }}
+      />
+    );
   }
 
   return (

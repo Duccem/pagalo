@@ -14,7 +14,7 @@ const ScreenView = ({ children }: { children: React.ReactNode }) => {
     <GestureHandlerRootView className="flex-1 w-full">
       <SafeAreaProvider>
         <SafeAreaView
-          className="flex-1  bg-background"
+          className="flex-1  bg-background "
           edges={["top", "bottom"]}
         >
           <KeyboardAvoidingView className="flex-1" behavior={"padding"}>

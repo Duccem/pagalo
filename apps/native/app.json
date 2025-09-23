@@ -7,12 +7,25 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./src/assets/favicon.png"
+      "favicon": "./src/assets/images/icon-2.png"
     },
     "plugins": [
       "expo-router",
       "expo-secure-store",
       "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          "resizeMode": "contain",
+          "backgroundColor": "#4ade80",
+          "image": "./src/assets/images/splash2.png",
+          "dark": {
+            "backgroundColor": "#4ade80",
+            "image": "./src/assets/images/splash2.png"
+          },
+          "imageWidth": 200
+        }
+      ],
       [
         "expo-image-picker",
         {
@@ -34,7 +47,10 @@
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true,
-          "granularPermissions": ["audio", "photo"]
+          "granularPermissions": [
+            "audio",
+            "photo"
+          ]
         }
       ],
       "expo-sqlite"
@@ -45,26 +61,43 @@
     },
     "newArchEnabled": true,
     "orientation": "portrait",
-    "icon": "./src/assets/icon.png",
+    "icon": "./src/assets/images/icon-2.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./src/assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ducen.pagalo"
     },
+    "splash": {
+      "image": "./src/assets/images/splash2.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4ade80"
+    },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/images/icon-2.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.ducen.pagalo",
-      "edgeToEdgeEnabled": false
+      "edgeToEdgeEnabled": false,
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_VISUAL_USER_SELECTED",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.READ_MEDIA_AUDIO",
+        "android.permission.READ_MEDIA_IMAGES"
+      ]
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "b324c13c-400b-4a0e-8936-f261345f6174"
+      }
     }
   }
 }
-

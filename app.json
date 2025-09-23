@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "b324c13c-400b-4a0e-8936-f261345f6174"
+      }
+    },
+    "android": {
+      "package": "com.ducen29.pagalo"
+    }
+  }
+}
