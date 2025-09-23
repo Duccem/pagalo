@@ -194,7 +194,6 @@ const Items = () => {
             }}
           />
         </View>
-        <View className="absolute bottom-0 gap-6 w-full px-2 bg-gray-100"></View>
       </View>
     </ScreenView>
   );

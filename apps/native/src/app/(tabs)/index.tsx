@@ -1,21 +1,21 @@
+import ScreenView from "@/components/shared/screen-view";
+import Button from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import * as schema from "@/lib/db/schema";
+import { eq, getTableColumns, sql } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
+import { Bell, Receipt, Settings, Users } from "lucide-react-native";
 import {
   FlatList,
+  Image,
+  Pressable,
   Text,
   TouchableOpacity,
   View,
-  Image,
-  Pressable,
 } from "react-native";
-import * as schema from "@/lib/db/schema";
-import ScreenView from "@/components/shared/screen-view";
-import { Bell, Receipt, Settings, Users } from "lucide-react-native";
-import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
-import { authClient } from "@/lib/auth-client";
-import Button from "@/components/ui/button";
-import { eq, getTableColumns, sql } from "drizzle-orm";
 
 export default function HomeScreen() {
   const { data: session } = authClient.useSession();
@@ -39,12 +39,6 @@ export default function HomeScreen() {
       </View>
     );
   }
-  const remove = async () => {
-    await database.delete(schema.invoice);
-    await database.delete(schema.member);
-    await database.delete(schema.item);
-    await database.delete(schema.memberItem);
-  };
   return (
     <ScreenView>
       <View className="flex-1 items-center justify-start  gap-6 w-fulls">
@@ -59,10 +53,16 @@ export default function HomeScreen() {
             />
           </View>
           <View className="flex-row items-end gap-2">
-            <Button variant="white">
+            <Button
+              variant="white"
+              action={() => router.push("/(settings)/notifications")}
+            >
               <Bell className="text-black size-6" />
             </Button>
-            <Button variant="white" action={remove}>
+            <Button
+              variant="white"
+              action={() => router.push("/(settings)/settings")}
+            >
               <Settings className="text-black size-6" />
             </Button>
           </View>

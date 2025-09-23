@@ -35,12 +35,14 @@ const Button = ({
   action,
   variant = "primary",
   className,
+  disabled = false,
 }: {
   children: React.ReactNode;
   styles?: ViewStyle;
   action?: () => void;
   variant?: "primary" | "outline" | "black" | "white";
   className?: string;
+  disabled?: boolean;
 }) => {
   const background = useSharedValue(0);
 
@@ -68,6 +70,7 @@ const Button = ({
       onPressOut={handleRelease}
       onPress={action}
       className={className}
+      disabled={disabled}
     >
       <Animated.View
         style={[

@@ -14,7 +14,7 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       redirectURI:
-        "https://2jphk0dv-3000.use2.devtunnels.ms//api/auth/callback/google",
+        "https://2jphk0dv-3000.use2.devtunnels.ms/api/auth/callback/google",
     },
   },
   trustedOrigins: [

@@ -1,11 +1,4 @@
-import {
-  index,
-  integer,
-  primaryKey,
-  real,
-  sqliteTable,
-  text,
-} from "drizzle-orm/sqlite-core";
+import { integer, real, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const invoice = sqliteTable("invoice", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -48,5 +41,10 @@ export const memberItem = sqliteTable("member_item", {
   itemId: integer("item_id")
     .notNull()
     .references(() => item.id, { onDelete: "cascade" }),
+});
+
+export const preferences = sqliteTable("preferences", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
 });
 

@@ -5,7 +5,7 @@ import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { ListFilter, Receipt, Users } from "lucide-react-native";
+import { Receipt, Users } from "lucide-react-native";
 import { FlatList, Pressable, Text, View } from "react-native";
 
 export default function TabTwoScreen() {
@@ -29,12 +29,6 @@ export default function TabTwoScreen() {
           <Text className="w-full text-start text-2xl font-light">
             History of bills
           </Text>
-        </View>
-        <View className="flex-row justify-between">
-          <Pressable className="px-3 py-2 rounded-full bg-white gap-2 flex-row items-center">
-            <ListFilter size={20} color={"black"} />
-            <Text className="text-black text-lg">filter</Text>
-          </Pressable>
         </View>
         {!data && error && (
           <View className="flex-1 items-center justify-center">
