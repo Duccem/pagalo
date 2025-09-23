@@ -1,6 +1,6 @@
+import { expo } from "@better-auth/expo";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { expo } from "@better-auth/expo";
 import { db } from "../db";
 import * as schema from "../db/schema/auth";
 
@@ -14,7 +14,7 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
       redirectURI:
-        "https://filiberto-uncasemated-penni.ngrok-free.dev/api/auth/callback/google",
+        "https://2jphk0dv-3000.use2.devtunnels.ms//api/auth/callback/google",
     },
   },
   trustedOrigins: [

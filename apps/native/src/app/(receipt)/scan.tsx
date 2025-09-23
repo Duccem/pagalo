@@ -1,10 +1,19 @@
 import Button from "@/components/ui/button";
+import * as schema from "@/lib/db/schema";
+import { supabase } from "@/lib/supabase/client";
+import { decode } from "base64-arraybuffer";
+import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
-  CameraView,
-  CameraType,
-  useCameraPermissions,
   CameraCapturedPicture,
+  CameraType,
+  CameraView,
+  useCameraPermissions,
 } from "expo-camera";
+import * as Haptics from "expo-haptics";
+import { Image } from "expo-image";
+import * as ImagePicker from "expo-image-picker";
+import { router } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import {
   ArrowLeft,
   FolderOpenDot,
@@ -21,15 +30,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
-import { Image } from "expo-image";
-import * as ImagePicker from "expo-image-picker";
-import { supabase } from "@/lib/supabase/client";
-import { decode } from "base64-arraybuffer";
-import { useSQLiteContext } from "expo-sqlite";
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import * as schema from "@/lib/db/schema";
 
 export default function Scan() {
   const db = useSQLiteContext();
@@ -176,9 +176,10 @@ export default function Scan() {
             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
             router.back();
           }}
+          variant="white"
           styles={{ borderRadius: 50 }}
         >
-          <ArrowLeft color={"white"} size={25} />
+          <ArrowLeft color={"black"} size={25} />
         </Button>
         {photo && (
           <Button
@@ -186,18 +187,23 @@ export default function Scan() {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
               setPhoto(undefined);
             }}
+            variant="white"
             styles={{ borderRadius: 50 }}
           >
-            <X color={"white"} size={25} />
+            <X color={"black"} size={25} />
           </Button>
         )}
       </View>
 
       <View className="absolute bottom-6 w-full px-8 flex-row justify-center">
         {photo && (
-          <Button action={uploadImage} styles={{ borderRadius: 50 }}>
-            <Upload color={"white"} size={25} />
-            <Text className="text-lg text-white">Upload</Text>
+          <Button
+            action={uploadImage}
+            styles={{ borderRadius: 50 }}
+            variant="white"
+          >
+            <Upload color={"black"} size={25} />
+            <Text className="text-lg text-black">Upload</Text>
           </Button>
         )}
         {!photo && (
@@ -206,22 +212,25 @@ export default function Scan() {
               action={toggleCameraFacing}
               className="p-4 rounded-full"
               styles={{ borderRadius: 50 }}
+              variant="white"
             >
-              <SwitchCamera color={"white"} size={25} />
+              <SwitchCamera color={"black"} size={25} />
             </Button>
             <Button
               action={takePicture}
               className="p-4 rounded-full"
               styles={{ borderRadius: 50 }}
+              variant="white"
             >
-              <ScanEye color={"white"} size={25} />
+              <ScanEye color={"black"} size={25} />
             </Button>
             <Button
               action={pickImage}
               className="p-4 rounded-full"
               styles={{ borderRadius: 50 }}
+              variant="white"
             >
-              <FolderOpenDot color={"white"} size={25} />
+              <FolderOpenDot color={"black"} size={25} />
             </Button>
           </>
         )}

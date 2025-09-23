@@ -1,11 +1,10 @@
+import { serve } from "@hono/node-server";
 import "dotenv/config";
-import { aiRouter } from "./routers/ai";
-import { authRouter } from "./routers/auth";
-import { imageRouter } from "./routers/image";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { serve } from "@hono/node-server";
+import { aiRouter } from "./routers/ai";
+import { authRouter } from "./routers/auth";
 
 const app = new Hono().basePath("/api");
 
@@ -26,7 +25,6 @@ app.get("/", (c) => {
 
 app.route("/", authRouter);
 app.route("/", aiRouter);
-app.route("/", imageRouter);
 
 serve(
   {

@@ -1,21 +1,21 @@
-import ScreenView from "@/components/screen-view";
-import React, { useMemo } from "react";
+import PeopleSheet from "@/components/receipt/people-sheet";
+import ScreenView from "@/components/shared/screen-view";
+import Button from "@/components/ui/button";
+import * as schema from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import * as Haptics from "expo-haptics";
+import { router, useLocalSearchParams } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
+import { ArrowLeft, BrushCleaning, Check } from "lucide-react-native";
+import React from "react";
 import {
   FlatList,
-  StyleSheet,
+  Pressable,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import { ArrowLeft, BrushCleaning } from "lucide-react-native";
-import { router, useLocalSearchParams } from "expo-router";
-import * as Haptics from "expo-haptics";
-import PeopleSheet from "@/components/people-sheet";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useSQLiteContext } from "expo-sqlite";
-import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
-import * as schema from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
 
 const Split = () => {
   const params = useLocalSearchParams<{ invoice: string }>();
@@ -43,22 +43,6 @@ const Split = () => {
   const changeEvenly = () => {
     setEvenly((current) => (current === 0 ? 1 : 0));
   };
-  const canContinue = useMemo(() => {
-    if (!items || !persons) return false;
-    if (evenly === 1 && persons.length > 0) return true;
-    return items.every((item) => {
-      const assignedPersons = personItems
-        ? personItems
-            .filter((pi) => pi.itemId === item.id)
-            .map((pi) => {
-              const person = persons.find((p) => p.id === pi.memberId);
-              return person ? person.name : null;
-            })
-            .filter((p): p is string => p !== null)
-        : [];
-      return assignedPersons.length > 0;
-    });
-  }, [items, persons, evenly, personItems]);
   const saveAssignments = async () => {
     if (!items || !persons) return;
     const totalByPerson: { id: number; total: number }[] = [];
@@ -108,7 +92,7 @@ const Split = () => {
   return (
     <ScreenView>
       <View className="flex-1 justify-start items-center relative px-6">
-        <View className="w-full ">
+        <View className="w-full flex-row justify-between items-center">
           <TouchableOpacity
             className="flex-row items-center gap-4"
             onPress={() => {
@@ -119,13 +103,15 @@ const Split = () => {
             <ArrowLeft size={30} color={"#000"} />
             <Text className="text-xl">Back</Text>
           </TouchableOpacity>
+          <Button action={saveAssignments} styles={{ padding: 10 }}>
+            <Check color={"white"} size={25} />
+          </Button>
         </View>
         <View className="flex-row justify-between items-center w-full mt-5">
           <Text className="text-4xl font-bold">Assign items</Text>
-          <TouchableOpacity
-            activeOpacity={1}
-            className={`border border-black px-4 py-2 rounded-2xl ${
-              evenly === 1 ? "bg-black " : "bg-white "
+          <Pressable
+            className={`border border-green-400 px-4 py-2 rounded-2xl ${
+              evenly === 1 ? "bg-green-400 " : "bg-white "
             }`}
             onPress={changeEvenly}
           >
@@ -136,30 +122,29 @@ const Split = () => {
             >
               Split evenly
             </Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
         <FlatList
-          className="w-full mt-8 mb-32 flex-1"
+          className="w-full mt-8  flex-1"
           data={items}
           renderItem={({ item }) => (
-            <View className="border-b border-black py-4">
+            <View className="bg-white my-2 rounded-2xl px-4 py-4">
               <View className="flex-row justify-between items-center">
                 <Text className="text-xl font-semibold">
                   {item.name} - ${item.price.toFixed(2)}
                 </Text>
                 <View className="flex-row items-center gap-2">
-                  <TouchableOpacity
-                    className="rounded-full p-2 border border-black border-dashed"
-                    activeOpacity={1}
-                    onPress={async () => {
+                  <Button
+                    action={async () => {
                       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                       await database
                         .delete(schema.memberItem)
                         .where(eq(schema.memberItem.itemId, item.id));
                     }}
+                    styles={{ padding: 5, borderRadius: 9999 }}
                   >
-                    <BrushCleaning color={"black"} size={25} />
-                  </TouchableOpacity>
+                    <BrushCleaning color={"white"} size={25} />
+                  </Button>
                   <PeopleSheet
                     initialPeople={persons.filter((p) =>
                       personItems
@@ -187,7 +172,7 @@ const Split = () => {
                   />
                 </View>
               </View>
-              <View className="flex-row flex-wrap mt-2">
+              <View className="flex-row flex-wrap">
                 {personItems
                   .filter((pi) => pi.itemId === item.id)
                   .map((person) => (
@@ -208,26 +193,12 @@ const Split = () => {
               </View>
             </View>
           )}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(_item, index) => index.toString()}
         />
-        <TouchableOpacity
-          className={`absolute flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl ${
-            canContinue ? "" : "bg-gray-500"
-          }`}
-          style={{ bottom: useSafeAreaInsets().bottom + 16 }}
-          onPress={saveAssignments}
-          disabled={!canContinue}
-        >
-          <Text className="text-2xl text-white">
-            {canContinue ? "Continue" : "Split the bill"}
-          </Text>
-        </TouchableOpacity>
       </View>
     </ScreenView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default Split;
 

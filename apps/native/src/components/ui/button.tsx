@@ -1,9 +1,9 @@
 import React from "react";
-import { Pressable, View, ViewStyle } from "react-native";
+import { Pressable, ViewStyle } from "react-native";
 import Animated, {
+  useAnimatedStyle,
   useSharedValue,
   withTiming,
-  useAnimatedStyle,
 } from "react-native-reanimated";
 
 const variantStyles = {
@@ -13,9 +13,9 @@ const variantStyles = {
     borderColor: "#4ade80",
   },
   outline: {
-    backgroundColor: "#f3f4f6",
+    backgroundColor: "#fff",
     activeBackgroundColor: "#E5E5E5",
-    borderColor: "#000000",
+    borderColor: "#4ade80",
   },
   black: {
     backgroundColor: "#000000",

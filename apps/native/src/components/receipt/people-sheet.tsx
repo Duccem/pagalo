@@ -1,15 +1,9 @@
-import React, { useCallback, useEffect, useRef } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetModalProvider,
-  BottomSheetFlashList,
-  BottomSheetFlatList,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetFlatList, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Plus } from "lucide-react-native";
+import React, { useCallback, useEffect, useRef } from "react";
+import { Text, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { rem } from "nativewind";
+import Button from "../ui/button";
 
 const PeopleSheet = ({
   people,
@@ -48,18 +42,18 @@ const PeopleSheet = ({
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
   }, []);
-  const handleSheetChanges = useCallback((index: number) => {}, []);
+  const handleSheetChanges = useCallback((_index: number) => {}, []);
   useEffect(() => {
     setSelectedPeople(initialPeople);
   }, [initialPeople]);
   return (
     <>
-      <TouchableOpacity
-        onPress={handlePresentModalPress}
-        className="p-2 border border-dashed border-black rounded-full"
+      <Button
+        action={handlePresentModalPress}
+        styles={{ borderRadius: 9999, padding: 5 }}
       >
-        <Plus color="#000" size={25} />
-      </TouchableOpacity>
+        <Plus color="#fff" size={25} />
+      </Button>
       <BottomSheetModal
         ref={bottomSheetModalRef}
         onChange={handleSheetChanges}
@@ -80,8 +74,8 @@ const PeopleSheet = ({
           estimatedItemSize={43.3}
           data={people}
           renderItem={({ item }: any) => (
-            <View className="w-full border border-black rounded-2xl px-4 py-3 my-2 flex-row items-center justify-between">
-              <Text className="text-lg">{item.name}</Text>
+            <View className="w-full bg-green-400 rounded-2xl px-4 py-3 my-2 flex-row items-center justify-between">
+              <Text className="text-lg text-white">{item.name}</Text>
               <View>
                 <BouncyCheckbox
                   isChecked={selectedPeople.some((p) => p.id === item.id)}
@@ -97,7 +91,7 @@ const PeopleSheet = ({
               </View>
             </View>
           )}
-          keyExtractor={(item: any, index: number) => index.toString()}
+          keyExtractor={(_item: any, index: number) => index.toString()}
         />
       </BottomSheetModal>
     </>

@@ -11,6 +11,13 @@
     "**/.turbo": true,
     "**/.cache": true
   },
-  "postman.settings.dotenv-detection-notification-visibility": false
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.fixAll": "always",
+    "source.biome": "always",
+    "source.sortImports": "always",
+    "source.removeUnused": "always",
+    "source.addMissingImports": "always"
+  }
 }
 

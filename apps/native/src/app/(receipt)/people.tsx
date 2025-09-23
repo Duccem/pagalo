@@ -1,29 +1,29 @@
-import ScreenView from "@/components/screen-view";
-import React, { useState } from "react";
+import ScreenView from "@/components/shared/screen-view";
+import Button from "@/components/ui/button";
+import * as schema from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import * as Clipboard from "expo-clipboard";
+import * as Haptics from "expo-haptics";
+import { router, useLocalSearchParams } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
+import {
+  ArrowLeft,
+  Check,
+  ClipboardPaste,
+  Plus,
+  Trash,
+} from "lucide-react-native";
+import { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
   FlatList,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  ArrowLeft,
-  ClipboardPaste,
-  Minus,
-  Plus,
-  Trash,
-} from "lucide-react-native";
-import { router, useLocalSearchParams } from "expo-router";
-import * as Haptics from "expo-haptics";
-import { useSQLiteContext } from "expo-sqlite";
-import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
-import * as schema from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
-import * as Clipboard from "expo-clipboard";
 
 const People = () => {
   const params = useLocalSearchParams<{ invoice: string }>();
@@ -94,7 +94,7 @@ const People = () => {
   return (
     <ScreenView>
       <View className="flex-1 justify-start items-center relative px-6">
-        <View className="w-full ">
+        <View className="w-full flex-row justify-between items-center mb-4">
           <TouchableOpacity
             className="flex-row items-center gap-4"
             onPress={() => {
@@ -105,6 +105,16 @@ const People = () => {
             <ArrowLeft size={30} color={"#000"} />
             <Text className="text-xl">Back</Text>
           </TouchableOpacity>
+          <Button
+            className=""
+            action={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+              router.push(`/(receipt)/split?invoice=${params.invoice}`);
+            }}
+            styles={{ padding: 10 }}
+          >
+            <Check color={"white"} size={25} />
+          </Button>
         </View>
         <View className="flex-1 justify-center items-center w-full gap-6 mt-10">
           <View className="gap-2">
@@ -117,39 +127,30 @@ const People = () => {
           </View>
           <View className="flex-row gap-2">
             <TextInput
-              className="border border-black w-4/5 rounded-2xl px-4 py-3"
+              className="border bg-white border-gray-300 w-4/5 rounded-2xl px-5 py-3"
               placeholder="eg. Jose"
               value={name}
               onChangeText={setName}
             />
 
-            <TouchableOpacity
-              className="bg-black w-1/5 rounded-2xl px-4 py-3 justify-center items-center"
-              onPress={addItem}
-              activeOpacity={1}
-            >
+            <Button action={addItem}>
               <Plus size={25} color={"#fff"} />
-            </TouchableOpacity>
+            </Button>
           </View>
-          <TouchableOpacity
-            className="bg-black w-full rounded-2xl px-4 py-3 justify-center items-center flex-row gap-4"
-            activeOpacity={1}
-            onPress={pasteFromClipboard}
-            disabled={extractingParticipants}
-          >
+          <Button action={pasteFromClipboard} className="w-full">
             {extractingParticipants ? (
               <ActivityIndicator color={"white"} size={25} />
             ) : (
               <ClipboardPaste size={25} color={"#fff"} />
             )}
             <Text className="text-lg text-white">Paste names list</Text>
-          </TouchableOpacity>
+          </Button>
           <FlatList
-            className="w-full mt-8 mb-32 flex-1"
+            className="w-full mt-8  flex-1"
             data={items}
             renderItem={(item) => {
               return (
-                <View className="flex-row justify-between items-center border-b border-black py-4">
+                <View className="flex-row justify-between items-center bg-white my-2 rounded-2xl px-5 py-4">
                   <View className="flex-row gap-4 items-center">
                     <Text className="text-lg">{item.item.name}</Text>
                   </View>
@@ -164,23 +165,12 @@ const People = () => {
                 </View>
               );
             }}
-          ></FlatList>
+          />
         </View>
-        <TouchableOpacity
-          className="absolute bottom-0 flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-            router.push(`/(receipt)/split?invoice=${params.invoice}`);
-          }}
-        >
-          <Text className="text-2xl text-white">Continue</Text>
-        </TouchableOpacity>
       </View>
     </ScreenView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default People;
 

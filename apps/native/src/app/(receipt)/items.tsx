@@ -1,23 +1,21 @@
-import ScreenView from "@/components/screen-view";
+import ScreenView from "@/components/shared/screen-view";
+import Button from "@/components/ui/button";
+import * as schema from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
 import { router, useLocalSearchParams } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { ArrowLeft, DollarSign, Minus, Plus, Trash } from "lucide-react-native";
-import { rem } from "nativewind";
+import { ArrowLeft, Check, DollarSign, Plus, Trash } from "lucide-react-native";
 import React, { useEffect, useMemo } from "react";
 import {
-  StyleSheet,
+  Alert,
+  FlatList,
   Text,
   TextInput,
   TouchableOpacity,
   View,
-  ScrollView,
-  FlatList,
-  Alert,
 } from "react-native";
-import * as schema from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
 
 const Items = () => {
   const params = useLocalSearchParams<{ invoice: string }>();
@@ -93,7 +91,7 @@ const Items = () => {
   return (
     <ScreenView>
       <View className="flex-1 justify-start items-center relative px-6">
-        <View className="w-full ">
+        <View className="w-full flex-row justify-between items-center">
           <TouchableOpacity
             className="flex-row items-center gap-4"
             onPress={() => {
@@ -104,39 +102,79 @@ const Items = () => {
             <ArrowLeft size={30} color={"#000"} />
             <Text className="text-xl">Back</Text>
           </TouchableOpacity>
+          <Button action={saveTotal} styles={{ padding: 10 }}>
+            <Check color={"white"} size={25} />
+          </Button>
         </View>
         <View className="w-full flex-1 justify-start items-center px-2">
           <Text className="text-4xl w-full text-start font-bold my-12">
             Add Items
           </Text>
-          <View className="flex-row gap-2">
+
+          <View className="flex-row gap-2 w-full">
             <TextInput
-              className="border border-black w-3/5 rounded-2xl px-4 py-3 "
+              className="border bg-white border-gray-300 w-3/5 rounded-2xl px-4 py-3 "
               placeholder="eg. Pizza"
               value={name}
               onChangeText={setName}
             />
             <TextInput
-              className="border border-black w-1/5 rounded-2xl px-4 "
+              className="border bg-white border-gray-300 w-1/5 rounded-2xl px-5 "
               placeholder="$0"
               keyboardType="numeric"
               value={price ? price.toString() : ""}
               onChangeText={(text) => setPrice(Number(text))}
             />
-            <TouchableOpacity
-              className="bg-black w-1/5 rounded-2xl px-4 justify-center items-center"
-              onPress={addItem}
-              activeOpacity={1}
-            >
+            <Button action={addItem}>
               <Plus size={25} color={"#fff"} />
-            </TouchableOpacity>
+            </Button>
+          </View>
+
+          <View className="w-full flex-row justify-between items-center gap-2 my-5">
+            <View className="w-2/5 gap-2">
+              <Text className="text-lg font-medium">Tax:</Text>
+
+              <View className="relative">
+                <TextInput
+                  className="border bg-white border-gray-300 w-full rounded-2xl px-5 py-4 pl-8"
+                  placeholder="$0"
+                  value={tax ?? "0"}
+                  onChangeText={(text) => setTax(text)}
+                  keyboardType="numeric"
+                />
+                <View className="absolute left-2 top-4">
+                  <DollarSign size={20} color={"black"} />
+                </View>
+              </View>
+            </View>
+            <View className="w-2/5 gap-2">
+              <Text className="text-lg font-medium">Tip:</Text>
+
+              <View className="relative">
+                <TextInput
+                  className="border bg-white border-gray-300 w-full rounded-2xl px-5 py-4 pl-8"
+                  placeholder="$0"
+                  value={tip ?? "0"}
+                  onChangeText={(text) => setTip(text)}
+                  keyboardType="numeric"
+                />
+                <View className="absolute left-2 top-4">
+                  <DollarSign size={20} color={"black"} />
+                </View>
+              </View>
+            </View>
+          </View>
+          <View className="w-full">
+            <Text className="text-2xl font-medium">
+              Total: ${totalPrice.toFixed(2)}
+            </Text>
           </View>
           <FlatList
-            className="w-full mt-8 mb-32 flex-1"
+            className="w-full mt-8 flex-1 gap-2"
             data={items}
             renderItem={(item) => {
               return (
-                <View className="flex-row justify-between items-center border-b border-black py-4">
+                <View className="flex-row justify-between items-center bg-white rounded-2xl py-4 my-2 px-4">
                   <View className="flex-row gap-4 items-center">
                     <Text className="text-lg">{item.item.name}</Text>
                     <Text className="text-lg">
@@ -154,61 +192,13 @@ const Items = () => {
                 </View>
               );
             }}
-          ></FlatList>
+          />
         </View>
-        <View className="absolute bottom-0 gap-6 w-full px-2 bg-gray-100">
-          <View className="w-full flex-row justify-between items-center gap-2">
-            <View className="w-2/5 gap-2">
-              <Text className="text-lg font-medium">Tax:</Text>
-
-              <View className="relative">
-                <TextInput
-                  className="border border-black w-full rounded-2xl px-4 py-4 pl-8"
-                  placeholder="$0"
-                  value={tax ?? "0"}
-                  onChangeText={(text) => setTax(text)}
-                  keyboardType="numeric"
-                />
-                <View className="absolute left-2 top-4">
-                  <DollarSign size={20} color={"black"} />
-                </View>
-              </View>
-            </View>
-            <View className="w-2/5 gap-2">
-              <Text className="text-lg font-medium">Tax:</Text>
-
-              <View className="relative">
-                <TextInput
-                  className="border border-black w-full rounded-2xl px-4 py-4 pl-8"
-                  placeholder="$0"
-                  value={tip ?? "0"}
-                  onChangeText={(text) => setTip(text)}
-                  keyboardType="numeric"
-                />
-                <View className="absolute left-2 top-4">
-                  <DollarSign size={20} color={"black"} />
-                </View>
-              </View>
-            </View>
-          </View>
-          <View>
-            <Text className="text-2xl font-medium">
-              Total: ${totalPrice.toFixed(2)}
-            </Text>
-          </View>
-          <TouchableOpacity
-            className="flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
-            onPress={saveTotal}
-          >
-            <Text className="text-2xl text-white">Continue</Text>
-          </TouchableOpacity>
-        </View>
+        <View className="absolute bottom-0 gap-6 w-full px-2 bg-gray-100"></View>
       </View>
     </ScreenView>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default Items;
 

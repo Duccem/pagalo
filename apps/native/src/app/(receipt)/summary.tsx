@@ -1,5 +1,12 @@
-import ScreenView from "@/components/screen-view";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import ScreenView from "@/components/shared/screen-view";
+import Button from "@/components/ui/button";
+import * as schema from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import * as Clipboard from "expo-clipboard";
+import * as Haptics from "expo-haptics";
+import { router, useLocalSearchParams } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import {
   ArrowLeft,
   Divide,
@@ -9,16 +16,9 @@ import {
   Trash,
   Users,
 } from "lucide-react-native";
-import * as Haptics from "expo-haptics";
-import { router, useLocalSearchParams } from "expo-router";
-import { useSQLiteContext } from "expo-sqlite";
-import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
-import * as schema from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import * as Clipboard from "expo-clipboard";
 import Toast from "react-native-simple-toast";
-import Button from "@/components/ui/button";
 
 const Details = () => {
   const params = useLocalSearchParams<{ id: string }>();
@@ -99,22 +99,17 @@ const Details = () => {
             <Text className="text-xl">Back</Text>
           </TouchableOpacity>
           <View className="flex-row items-center gap-4">
-            <Button
-              action={deleteInvoice}
-              variant="white"
-              styles={{ padding: 10 }}
-            >
-              <Trash color={"black"} size={25} />
+            <Button action={deleteInvoice} styles={{ padding: 10 }}>
+              <Trash color={"white"} size={25} />
             </Button>
             <Button
               action={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                 router.push("/(tabs)");
               }}
-              variant="white"
               styles={{ padding: 10 }}
             >
-              <Home color={"black"} size={25} />
+              <Home color={"white"} size={25} />
             </Button>
           </View>
         </View>
@@ -208,7 +203,7 @@ const Details = () => {
                     onPress={async (isChecked: boolean) => {
                       savePayments(item.id, isChecked);
                     }}
-                    fillColor="black"
+                    fillColor="#4ade80"
                   />
                 </View>
               </View>

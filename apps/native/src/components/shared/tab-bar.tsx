@@ -1,7 +1,7 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { useState } from "react";
-import { LayoutChangeEvent, View } from "react-native";
 import * as Haptics from "expo-haptics";
+import { useEffect, useState } from "react";
+import { LayoutChangeEvent, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -30,16 +30,22 @@ export const TabBar = ({
     };
   });
 
+  useEffect(() => {
+    tabPositionX.value = withSpring(buttonWidth * state.index, {
+      duration: 300,
+    });
+  }, [state.index]);
+
   return (
     <View
-      className="absolute bottom-5 right-10 left-10 flex flex-row justify-between items-center bg-green-400 mx-5 py-5  rounded-2xl shadow-lg flex-1"
+      className="absolute bottom-5 right-0 left-0 flex flex-row justify-between items-center bg-green-400 mx-5 py-5  rounded-2xl shadow-lg flex-1"
       onLayout={onTabBarLayout}
     >
       <Animated.View
         className={"rounded-2xl bg-white absolute mx-3"}
         style={[
           {
-            width: buttonWidth - 25,
+            width: buttonWidth - 20,
             height: dimensions.height - 15,
           },
           animatedStyle,

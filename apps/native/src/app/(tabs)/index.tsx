@@ -9,7 +9,7 @@ import {
   Pressable,
 } from "react-native";
 import * as schema from "@/lib/db/schema";
-import ScreenView from "@/components/screen-view";
+import ScreenView from "@/components/shared/screen-view";
 import { Bell, Receipt, Settings, Users } from "lucide-react-native";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";

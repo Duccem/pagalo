@@ -9,15 +9,13 @@ import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import "../../global.css";
 
-import { useColorScheme } from "@/hooks/useColorScheme";
-import { Suspense, useEffect } from "react";
-import { ActivityIndicator, Platform } from "react-native";
-import { SQLiteProvider, openDatabaseSync } from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
-import migrations from "../../drizzle/migrations";
+import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
+import { Suspense } from "react";
+import { ActivityIndicator, useColorScheme } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
-import * as NavigationBar from "expo-navigation-bar";
+import migrations from "../../drizzle/migrations";
 
 export default function RootLayout() {
   const expoDb = openDatabaseSync("pagalo");
@@ -27,13 +25,6 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-
-  useEffect(() => {
-    if (Platform.OS === "android") {
-      // Set the navigation bar style
-      NavigationBar.setBackgroundColorAsync("#000000");
-    }
-  }, []);
 
   if (!loaded) {
     // Async font loading only occurs in development.
@@ -58,7 +49,7 @@ export default function RootLayout() {
               <Stack.Screen name="(receipt)" options={{ headerShown: false }} />
               <Stack.Screen name="+not-found" />
             </Stack>
-            <StatusBar style="auto" />
+            <StatusBar style="auto" backgroundColor="#f3f4f6" />
           </Animated.View>
         </ThemeProvider>
       </SQLiteProvider>

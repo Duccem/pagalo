@@ -1,12 +1,12 @@
-import ScreenView from "@/components/screen-view";
+import ScreenView from "@/components/shared/screen-view";
+import * as schema from "@/lib/db/schema";
+import { eq, getTableColumns, sql } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { ListFilter, Receipt, Users } from "lucide-react-native";
 import { FlatList, Pressable, Text, View } from "react-native";
-import * as schema from "@/lib/db/schema";
-import { eq, getTableColumns, sql } from "drizzle-orm";
-import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
@@ -43,7 +43,7 @@ export default function TabTwoScreen() {
         )}
         {data && (
           <FlatList
-            data={data}
+            data={data.filter((inv) => inv.vendor != null && inv.date != null)}
             renderItem={(item) => {
               return (
                 <Pressable

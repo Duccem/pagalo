@@ -1,6 +1,12 @@
+import ScreenView from "@/components/shared/screen-view";
+import Button from "@/components/ui/button";
+import * as schema from "@/lib/db/schema";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
+import { useSQLiteContext } from "expo-sqlite";
 import { ArrowLeft, Calendar, Key } from "lucide-react-native";
 import { useState } from "react";
 import {
@@ -11,11 +17,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import * as Haptics from "expo-haptics";
-import ScreenView from "@/components/screen-view";
-import { useSQLiteContext } from "expo-sqlite";
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import * as schema from "@/lib/db/schema";
 
 export default function Manual() {
   const db = useSQLiteContext();
@@ -76,7 +77,7 @@ export default function Manual() {
             <Text className="text-lg font-medium">Restaurant name:</Text>
             <View className="relative h-fit w-full">
               <TextInput
-                className="border border-black w-full rounded-2xl pr-4 pl-12 py-3"
+                className="border bg-white border-gray-300 w-full rounded-2xl px-5 pl-12 py-3"
                 placeholder="eg. Joe's Pizza"
                 value={vendor}
                 onChangeText={setVendor}
@@ -90,7 +91,7 @@ export default function Manual() {
           <View className="w-full gap-2">
             <Text className="text-lg font-medium">Date:</Text>
             <TouchableOpacity
-              className="flex-row items-center gap-4  w-full border border-black pr-4 pl-12 py-2 justify-start rounded-2xl relative"
+              className="flex-row items-center gap-4  w-full border bg-white border-gray-300 pr-4 pl-12 py-2 justify-start rounded-2xl relative"
               onPress={showDatepicker}
             >
               <Text className="text-lg">
@@ -140,12 +141,9 @@ export default function Manual() {
           </View>
         </View>
 
-        <TouchableOpacity
-          className="absolute bottom-0 flex-row items-center gap-4  w-full bg-black p-4 justify-center rounded-2xl"
-          onPress={create}
-        >
+        <Button className="absolute bottom-2 w-full " action={create}>
           <Text className="text-2xl text-white">Continue</Text>
-        </TouchableOpacity>
+        </Button>
       </View>
     </ScreenView>
   );

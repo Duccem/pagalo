@@ -1,9 +1,8 @@
+import Button from "@/components/ui/button";
+import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { Camera, NotebookPen, Scan } from "lucide-react-native";
-import { Text } from "react-native";
-import { View } from "react-native";
-import * as Haptics from "expo-haptics";
-import Button from "@/components/ui/button";
+import { Text, View } from "react-native";
 
 export default function TabTwoScreen() {
   return (
