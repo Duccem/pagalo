@@ -9,7 +9,15 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "pnpm": "10.15.0",
+      "node": "22.8.0",
+      "env": {
+        "EXPO_USE_FAST_RESOLVER": "true"
+      }
     },
     "production": {
       "autoIncrement": true
