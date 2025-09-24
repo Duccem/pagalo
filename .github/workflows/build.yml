@@ -5,26 +5,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 🏗 Setup repo
-        uses: actions/checkout@v2
-
-      - name: 🏗 Setup Node
-        uses: actions/setup-node@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Install Java
+        uses: actions/setup-java@v2
         with:
-          node-version: 20.19.0
-
-      - name: 🏗 Setup Expo and EAS
-        uses: expo/expo-github-action@v7
+          java-version: "11"
+          distribution: "adopt"
+      - uses: pnpm/action-setup@v4
         with:
-          token: ${{ secrets.EXPO_TOKEN }}
-          expo-version: latest
-          eas-version: latest
-
-      - name: 🏗 Setup EAS local builds
-        run: npm i -g eas-cli-local-build-plugin
-
-      - name: 📦 Install dependencies
-        run: npm install
+          version: 10
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.19.0"
+          cache: "pnpm"
+      - name: Install Dependencies
+        run: pnpm install
       - name: Generate Native Directories (if not committed)
         run: npx expo prebuild --clean
       - name: Build Android Release APK
