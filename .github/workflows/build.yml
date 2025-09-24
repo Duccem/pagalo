@@ -7,21 +7,20 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      - name: Install Java
-        uses: actions/setup-java@v2
-        with:
-          java-version: "11"
-          distribution: "adopt"
       - uses: pnpm/action-setup@v4
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20.19.0"
           cache: "pnpm"
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
       - name: Install Dependencies
         run: pnpm install
-      - name: Build Android Release APK
-        run: cd src/apps/native/android && ./gradlew assembleRelease
+      - name: Run EAS Local Build (Android)
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }} # Ensure your Expo token is a GitHub Secret
+        run: eas build --local --platform android --profile development
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
