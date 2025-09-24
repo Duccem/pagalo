@@ -1,11 +1,9 @@
-import { serve } from "@hono/node-server";
 import "dotenv/config";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { aiRouter } from "./routers/ai";
 import { authRouter } from "./routers/auth";
-
 const app = new Hono().basePath("/api");
 
 app.use(logger());
@@ -26,13 +24,5 @@ app.get("/", (c) => {
 app.route("/", authRouter);
 app.route("/", aiRouter);
 
-serve(
-  {
-    fetch: app.fetch,
-    port: 3000,
-  },
-  (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`);
-  }
-);
+export default app;
 

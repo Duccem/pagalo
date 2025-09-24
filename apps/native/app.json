@@ -66,7 +66,7 @@
       "bundleIdentifier": "com.ducen.pagalo"
     },
     "splash": {
-      "image": "./src/assets/images/splash2.png",
+      "image": "./src/assets/adaptive-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#4ade80"
     },
