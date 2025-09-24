@@ -13,14 +13,19 @@ jobs:
         with:
           node-version: "20.19.0"
           cache: "pnpm"
-      - name: Install EAS CLI
-        run: npm install -g eas-cli
+      - name: 🏗 Setup Expo and EAS
+        uses: expo/expo-github-action@v7
+        with:
+          token: ${{ secrets.EXPO_TOKEN }}
+          expo-version: latest
+          eas-version: latest
+
+      - name: 🏗 Setup EAS local builds
+        run: yarn global add eas-cli-local-build-plugin
       - name: Install Dependencies
         run: pnpm install
       - name: Run EAS Local Build (Android)
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }} # Ensure your Expo token is a GitHub Secret
-        run: eas build --local --platform android --profile development
+        run: eas build --local --non-interactive --platform android --profile development
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
