@@ -22,7 +22,7 @@ jobs:
       - name: Install Expo CLI
         run: pnpm add -g expo-cli
       - name: Expo Prebuild
-        run: expo prebuild --platform android
+        run: pnpm --filter native exec expo prebuild --clean --platform android
 
       - name: Build Android App
         run: |
