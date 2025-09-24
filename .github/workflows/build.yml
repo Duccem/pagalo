@@ -21,9 +21,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
       - name: Generate Native Directories (if not committed)
-        run: pnpm exec expo prebuild --clean --non-interactive
-      - name: Build Android Release APK
-        run: cd src/apps/native/android && ./gradlew assembleRelease
+        run: pnpm exec expo build:android --non-interactive
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
