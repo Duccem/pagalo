@@ -1,3 +1,5 @@
+import { aiRouter } from "@/routers/ai";
+import { authRouter } from "@/routers/auth";
 import "dotenv/config";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -18,6 +20,9 @@ app.use(
 app.get("/", (c) => {
   return c.text("OK");
 });
+
+app.route("/", authRouter);
+app.route("/", aiRouter);
 
 export default app;
 
