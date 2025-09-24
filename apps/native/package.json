@@ -1,7 +1,7 @@
 {
   "name": "native",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "index.ts",
   "scripts": {
     "dev": "expo start --android",
     "android": "expo run:android",
@@ -77,3 +77,4 @@
   },
   "private": true
 }
+
