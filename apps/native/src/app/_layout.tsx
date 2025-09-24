@@ -19,8 +19,6 @@ import { ActivityIndicator, useColorScheme } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import migrations from "../../drizzle/migrations";
 
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
   const expoDb = openDatabaseSync("pagalo");
   const db = drizzle(expoDb);

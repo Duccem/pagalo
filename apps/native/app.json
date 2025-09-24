@@ -7,7 +7,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./src/assets/images/icon-2.png"
+      "favicon": "./src/assets/adaptive-icon.png"
     },
     "plugins": [
       "expo-router",
@@ -18,10 +18,10 @@
         {
           "resizeMode": "contain",
           "backgroundColor": "#4ade80",
-          "image": "./src/assets/images/splash2.png",
+          "image": "./src/assets/adaptive-icon.png",
           "dark": {
             "backgroundColor": "#4ade80",
-            "image": "./src/assets/images/splash2.png"
+            "image": "./src/assets/adaptive-icon.png"
           },
           "imageWidth": 200
         }
@@ -47,10 +47,7 @@
           "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true,
-          "granularPermissions": [
-            "audio",
-            "photo"
-          ]
+          "granularPermissions": ["audio", "photo"]
         }
       ],
       "expo-sqlite"
@@ -61,11 +58,9 @@
     },
     "newArchEnabled": true,
     "orientation": "portrait",
-    "icon": "./src/assets/images/icon-2.png",
+    "icon": "./src/assets/adaptive-icon.png",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.ducen.pagalo"
@@ -77,8 +72,9 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/icon-2.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "monochromeImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#4ade80"
       },
       "package": "com.ducen.pagalo",
       "edgeToEdgeEnabled": false,
@@ -101,3 +97,4 @@
     }
   }
 }
+
