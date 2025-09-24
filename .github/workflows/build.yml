@@ -8,8 +8,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10.15.0
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -21,9 +19,8 @@ jobs:
           token: ${{ secrets.EXPO_TOKEN }}
           expo-version: latest
           eas-version: latest
-
       - name: 🏗 Setup EAS local builds
-        run: yarn global add eas-cli-local-build-plugin
+        run: pnpm add -g eas-cli-local-build-plugin
       - name: Install Dependencies
         run: pnpm install
       - name: Run EAS Local Build (Android)
