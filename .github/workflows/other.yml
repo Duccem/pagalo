@@ -26,12 +26,12 @@ jobs:
 
       - name: Build Android App
         run: |
-          cd src/apps/native/android
+          cd apps/native/android
           ./gradlew assembleDebug
 
       - name: Upload Android Artifact
         uses: actions/upload-artifact@v4
         with:
           name: android-debug-apk
-          path: src/apps/native/android/app/build/outputs/apk/debug/app-debug.apk
+          path: apps/native/android/app/build/outputs/apk/debug/app-debug.apk
 
