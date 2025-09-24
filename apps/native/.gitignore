@@ -16,7 +16,6 @@ expo-env.d.ts
 .cache
 
 ios
-android
 
 # macOS
 .DS_Store
