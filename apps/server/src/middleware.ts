@@ -1,9 +1,6 @@
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function middleware(req: NextRequest) {
-  console.log("Request Origin:", req.headers.keys());
-  console.log(await cookies());
+export function middleware() {
   const res = NextResponse.next();
 
   res.headers.append("Access-Control-Allow-Credentials", "true");

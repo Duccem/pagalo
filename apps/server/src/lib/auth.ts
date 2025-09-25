@@ -10,12 +10,12 @@ export const auth = betterAuth<BetterAuthOptions>({
 
     schema: schema,
   }),
-  trustedOrigins: ["*"],
+  trustedOrigins: [process.env.CORS_ORIGIN || "", "*"],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-      redirectURI: "https://pagalo-server.vercel.app/api/auth/callback/google",
+      redirectURI: `${process.env.BETTER_AUTH_URL}/api/auth/callback/google`,
     },
   },
   emailAndPassword: {
@@ -29,5 +29,11 @@ export const auth = betterAuth<BetterAuthOptions>({
     },
   },
   plugins: [expo()],
+  hooks: {
+    before: async (ctx) => {
+      console.log("Request Origin:", ctx.request?.headers);
+      // You can add additional logic here if needed
+    },
+  },
 });
 
