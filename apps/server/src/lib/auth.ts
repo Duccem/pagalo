@@ -10,7 +10,12 @@ export const auth = betterAuth<BetterAuthOptions>({
 
     schema: schema,
   }),
-  trustedOrigins: [process.env.CORS_ORIGIN || "", "*", "pagalo://"],
+  trustedOrigins: [
+    process.env.CORS_ORIGIN || "",
+    "*",
+    "pagalo://",
+    "exp://192.168.1.102:8081",
+  ],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
