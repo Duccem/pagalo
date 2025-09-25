@@ -8,7 +8,7 @@ export const authClient = createAuthClient({
     expoClient({
       storagePrefix: "pagalo",
       storage: SecureStore,
-      scheme: "exp://192.168.1.102:8081",
+      scheme: process.env.EXPO_PUBLIC_SCHEME,
     }),
   ],
 });

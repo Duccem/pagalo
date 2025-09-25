@@ -20,8 +20,7 @@ export const auth = betterAuth<BetterAuthOptions>({
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
-      redirectURI:
-        "https://2jphk0dv-3000.use2.devtunnels.ms/api/auth/callback/google",
+      redirectURI: "https://pagalo-server.vercel.app/api/auth/callback/google",
     },
   },
   emailAndPassword: {
