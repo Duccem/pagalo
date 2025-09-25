@@ -56,7 +56,8 @@
         "useImportType": "off"
       },
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noUnknownAtRules": "off"
       },
       "complexity": {
         "useArrowFunction": "off"

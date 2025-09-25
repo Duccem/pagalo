@@ -4,9 +4,8 @@ import * as SecureStore from "expo-secure-store";
 // Known / legacy keys we used or likely generated previously.
 // better-auth with storagePrefix:"pagalo" may produce namespaced keys; we try common variations.
 const CANDIDATE_KEYS = [
-  "pref_currency",
-  "pagalo_pref_currency",
   "pagalo_session",
+  "pagalo_cookie",
   "pagalo_token",
   "pagalo_refresh_token",
   "pagalo_access_token",
@@ -39,7 +38,9 @@ export async function clearSecureStore(
 }
 
 export async function listSecureStoreKeys() {
-  const result = SecureStore.getItem("pagalo_cookie");
-  console.log(result);
+  const cookie = SecureStore.getItem("pagalo_cookie");
+  const session = SecureStore.getItem("pagalo_session");
+  console.log(cookie);
+  console.log(session);
 }
 

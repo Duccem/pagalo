@@ -1,14 +1,21 @@
 import { expo } from "@better-auth/expo";
-import { betterAuth } from "better-auth";
+import { betterAuth, type BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "../db";
 import * as schema from "../db/schema/auth";
 
-export const auth = betterAuth({
+export const auth = betterAuth<BetterAuthOptions>({
   database: drizzleAdapter(db, {
     provider: "pg",
-    schema,
+
+    schema: schema,
   }),
+  trustedOrigins: [
+    process.env.CORS_ORIGIN || "",
+    "pagalo://",
+    "exp://s9pku04-ducen29-8081.exp.direct",
+    "exp://192.168.1.102:8081",
+  ],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -17,12 +24,9 @@ export const auth = betterAuth({
         "https://2jphk0dv-3000.use2.devtunnels.ms/api/auth/callback/google",
     },
   },
-  trustedOrigins: [
-    process.env.CORS_ORIGIN || "",
-    "pagalo://",
-    "exp://s9pku04-ducen29-8081.exp.direct",
-    "exp://192.168.1.102:8081",
-  ],
+  emailAndPassword: {
+    enabled: true,
+  },
   advanced: {
     defaultCookieAttributes: {
       sameSite: "none",

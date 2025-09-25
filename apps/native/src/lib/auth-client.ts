@@ -8,7 +8,7 @@ export const authClient = createAuthClient({
     expoClient({
       storagePrefix: "pagalo",
       storage: SecureStore,
-      scheme: "exp://s9pku04-ducen29-8081.exp.direct",
+      scheme: "exp://192.168.1.102:8081",
     }),
   ],
 });

@@ -19,6 +19,8 @@ dist/
 .alchemy
 /.next/
 .vercel
+prisma/generated/
+
 
 # deps
 node_modules/
@@ -51,5 +53,3 @@ lerna-debug.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.vercel
