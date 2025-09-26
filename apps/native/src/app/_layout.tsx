@@ -76,7 +76,10 @@ export default function RootLayout() {
               />
               <Stack.Screen name="+not-found" />
             </Stack>
-            <StatusBar style="auto" backgroundColor="#f3f4f6" />
+            <StatusBar
+              style={colorScheme === "dark" ? "dark" : "light"}
+              backgroundColor="transparent"
+            />
           </Animated.View>
         </ThemeProvider>
       </SQLiteProvider>

@@ -103,8 +103,9 @@ export default function ShareMessageScreen() {
 
               <View className="bg-card border-gray-200  rounded-2xl p-4">
                 <TextInput
-                  multiline
-                  className="text-base text-foreground placeholder:text-foreground"
+                  multiline={true}
+                  numberOfLines={4}
+                  className="text-base text-foreground "
                   placeholder="Write the message..."
                   value={value}
                   onChangeText={setValue}
@@ -112,9 +113,6 @@ export default function ShareMessageScreen() {
                   textAlignVertical="top"
                   style={{ minHeight: 140 }}
                   maxLength={200}
-                  editable={!disabled}
-                  returnKeyType="done"
-                  blurOnSubmit
                 />
                 <View className="flex-row justify-between mt-2">
                   <Text className="text-xs text-muted-foreground">

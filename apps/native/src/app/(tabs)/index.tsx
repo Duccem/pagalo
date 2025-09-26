@@ -25,12 +25,8 @@ export default function HomeScreen() {
   const database = drizzle(db, { schema });
   const { data, error } = useLiveQuery(
     database
-      .select({
-        ...getTableColumns(schema.invoice),
-        participantCount: sql<number>`count(${schema.member.id})`,
-      })
+      .select()
       .from(schema.invoice)
-      .leftJoin(schema.member, eq(schema.member.invoiceId, schema.invoice.id))
       .where(eq(schema.invoice.state, "pending"))
       .limit(5)
   );
@@ -126,7 +122,7 @@ export default function HomeScreen() {
           </Pressable>
         </View>
         <FlatList
-          data={data.filter((i) => i.vendor !== null && i.date !== null)}
+          data={data}
           className="w-full px-6 mb-20"
           renderItem={(item) => (
             <TouchableOpacity
@@ -157,16 +153,6 @@ export default function HomeScreen() {
                 <Text className="text-xl text-foreground">
                   ${item.item?.total?.toFixed(2)}
                 </Text>
-                <View className="flex-row items-center gap-1">
-                  <Text className="text-foreground">
-                    {item.item.participantCount ?? 0}
-                  </Text>
-                  <Users
-                    className="size-2 text-foreground"
-                    size={15}
-                    color={colorScheme === "dark" ? "white" : "black"}
-                  />
-                </View>
               </View>
             </TouchableOpacity>
           )}

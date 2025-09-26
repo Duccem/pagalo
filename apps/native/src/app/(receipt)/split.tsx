@@ -36,7 +36,22 @@ const Split = () => {
       .from(schema.memberItem)
       .where(eq(schema.memberItem.invoiceId, Number(params.invoice)))
   );
+  // Load the invoice to initialize the "evenly" flag from DB
+  const { data: invoiceData } = useLiveQuery(
+    database
+      .select()
+      .from(schema.invoice)
+      .where(eq(schema.invoice.id, Number(params.invoice)))
+  );
   const [evenly, setEvenly] = React.useState<number>(0);
+  // Initialize evenly state only once from DB
+  const initializedEvenly = React.useRef(false);
+  React.useEffect(() => {
+    if (!initializedEvenly.current && invoiceData && invoiceData[0]) {
+      setEvenly(invoiceData[0].evenly ?? 0);
+      initializedEvenly.current = true;
+    }
+  }, [invoiceData]);
   const changeEvenly = () => {
     setEvenly((current) => (current === 0 ? 1 : 0));
   };
@@ -45,10 +60,12 @@ const Split = () => {
     const totalByPerson: { id: number; total: number }[] = [];
 
     if (evenly === 1) {
-      const splitAmount =
-        items.reduce((a, b) => a + b.price * b.quantity, 0) / persons.length;
-      for (const person of persons) {
-        totalByPerson.push({ id: person.id, total: splitAmount });
+      if (persons.length > 0) {
+        const splitAmount =
+          items.reduce((a, b) => a + b.price * b.quantity, 0) / persons.length;
+        for (const person of persons) {
+          totalByPerson.push({ id: person.id, total: splitAmount });
+        }
       }
     } else {
       for (const person of persons) {
@@ -64,6 +81,7 @@ const Split = () => {
               })
               .filter((p): p is number => p !== null)
           : [];
+        if (assignedPersons.length === 0) continue;
         const splitAmount =
           (item.price * item.quantity) / assignedPersons.length;
         for (const personId of assignedPersons) {
@@ -82,6 +100,11 @@ const Split = () => {
           .set({ total: personTotal.total })
           .where(eq(schema.member.id, personTotal.id));
       }
+      // Persist evenly flag on the invoice
+      await tx
+        .update(schema.invoice)
+        .set({ evenly })
+        .where(eq(schema.invoice.id, Number(params.invoice)));
     });
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     router.push(`/(receipt)/summary?id=${params.invoice}`);
@@ -204,4 +227,3 @@ const Split = () => {
 };
 
 export default Split;
-

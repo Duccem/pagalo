@@ -8,6 +8,7 @@ export const invoice = sqliteTable("invoice", {
   tip: real("tip").notNull(),
   date: text("date").notNull().default(new Date().toISOString()),
   state: text("state").notNull().default("pending"), // pending, paid, cancelled
+  evenly: integer("evenly").notNull().default(0), // 0 = no, 1 = yes
 });
 
 export const item = sqliteTable("item", {

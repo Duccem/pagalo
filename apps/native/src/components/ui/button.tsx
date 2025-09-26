@@ -40,9 +40,9 @@ function useVariantStyles(isDark: boolean): Record<VariantKey, VariantStyle> {
       },
       white: {
         // Ajustado para que se parezca a la card en dark mode (HSL 0 0% 11%)
-        backgroundColor: "#1c1c1c",
+        backgroundColor: "#393939",
         activeBackgroundColor: "#262626",
-        borderColor: "#1c1c1c",
+        borderColor: "#393939",
       },
     } as const;
   }

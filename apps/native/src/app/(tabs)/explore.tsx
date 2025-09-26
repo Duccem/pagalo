@@ -13,12 +13,8 @@ export default function TabTwoScreen() {
   const database = drizzle(db, { schema });
   const { data, error } = useLiveQuery(
     database
-      .select({
-        ...getTableColumns(schema.invoice),
-        participantCount: sql<number>`count(${schema.member.id})`,
-      })
+      .select()
       .from(schema.invoice)
-      .leftJoin(schema.member, eq(schema.member.invoiceId, schema.invoice.id))
       .where(eq(schema.invoice.state, "pending"))
       .limit(5)
   );
@@ -37,11 +33,11 @@ export default function TabTwoScreen() {
         )}
         {data && (
           <FlatList
-            data={data.filter((inv) => inv.vendor != null && inv.date != null)}
+            data={data}
             renderItem={(item) => {
               return (
                 <Pressable
-                  className="w-full bg-card px-4 py-3 my-4 rounded-2xl flex-row justify-between items-center shadow-lg"
+                  className="w-full bg-card px-4 py-3 my-2 rounded-2xl flex-row justify-between items-center shadow-lg"
                   onPress={() => {
                     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
                     router.push(`/(receipt)/summary?id=${item.item.id}`);
@@ -78,10 +74,6 @@ export default function TabTwoScreen() {
                     <Text className="text-xl text-foreground">
                       ${item.item?.total?.toFixed(2)}
                     </Text>
-                    <View className="flex-row items-center gap-1">
-                      <Text>{item.item.participantCount ?? 0}</Text>
-                      <Users className="size-2 text-foreground" size={15} />
-                    </View>
                   </View>
                 </Pressable>
               );

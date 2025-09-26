@@ -1,6 +1,7 @@
 import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import * as schema from "@/lib/db/schema";
+import { useShareMessagePreference } from "@/lib/preferences";
 import { useColorScheme } from "@/lib/use-color-scheme";
 import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
@@ -26,6 +27,7 @@ const Details = () => {
   const params = useLocalSearchParams<{ id: string }>();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
+  const { shareMessage } = useShareMessagePreference();
   const { data, error } = useLiveQuery(
     database
       .select()
@@ -58,15 +60,27 @@ const Details = () => {
   };
 
   const copyToClipboard = async () => {
-    const text = `Receipt Summary \n\nTotal: $${data[0]?.total.toFixed(
-      2
-    )} \nTax: $${data[0]?.tax.toFixed(2)} \nTip: $${data[0]?.tip.toFixed(
-      2
-    )} \n\nPeople: \n${people
-      .map((person) => `${person.name}: $${person.total.toFixed(2)}`)
-      .join("\n")}
-    `;
-    await Clipboard.setStringAsync(text);
+    // Build the body of the summary depending on evenly flag
+    let body: string;
+    if (data?.[0]?.evenly) {
+      body = `Receipt Summary \n\nTotal: $${data[0]?.total.toFixed(
+        2
+      )} \nTax: $${data[0]?.tax.toFixed(2)} \nTip: $${data[0]?.tip.toFixed(
+        2
+      )} \n\nEach person pays: $${(
+        (data[0]?.total ?? 0) / Math.max(people?.length ?? 0, 1)
+      ).toFixed(2)}`;
+    } else {
+      body = `Receipt Summary \n\nTotal: $${data[0]?.total.toFixed(
+        2
+      )} \nTax: $${data[0]?.tax.toFixed(2)} \nTip: $${data[0]?.tip.toFixed(
+        2
+      )} \n\nPeople: \n${people
+        ?.map((person) => `${person.name}: $${person.total.toFixed(2)}`)
+        .join("\n")}`;
+    }
+    const text = `${shareMessage}\n\n${body}`;
+    await Clipboard.setStringAsync(text.trim());
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     Toast.show("Copied to clipboard", Toast.SHORT);
   };
@@ -207,7 +221,7 @@ const Details = () => {
             className="w-full flex-1 gap-4"
             keyExtractor={(item) => item.name}
             renderItem={({ item }) => (
-              <View className="w-full flex-row justify-between items-center p-4 bg-card shadow-lg rounded-2xl my-1">
+              <View className="w-full flex-row justify-between items-center p-4 bg-card shadow-none rounded-2xl my-1">
                 <View className="flex-row items-center gap-4">
                   <Text className="text-2xl font-medium text-foreground">
                     {item.name}
