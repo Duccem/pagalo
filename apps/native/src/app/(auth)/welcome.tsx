@@ -26,6 +26,8 @@ export default function Welcome() {
         provider: "google",
         callbackURL: "/(tabs)",
       });
+      // Refresh session to get updated user info
+      await authClient.getSession();
       router.replace("/(tabs)");
     } catch (e: any) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

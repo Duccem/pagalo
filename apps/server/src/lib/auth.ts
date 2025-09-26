@@ -15,6 +15,7 @@ export const auth = betterAuth<BetterAuthOptions>({
     "*",
     "pagalo://",
     "exp://192.168.1.102:8081",
+    "exp://s9pku04-ducen29-8081.exp.direct",
   ],
   socialProviders: {
     google: {

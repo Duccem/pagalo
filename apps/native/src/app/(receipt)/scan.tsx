@@ -151,6 +151,7 @@ export default function Scan() {
         total: data.total || 0,
         tax: data.tax || 0,
         tip: data.tip || 0,
+        state: "pending",
       })
       .returning();
     await database.insert(schema.item).values(

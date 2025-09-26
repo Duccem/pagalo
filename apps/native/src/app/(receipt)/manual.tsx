@@ -47,6 +47,7 @@ export default function Manual() {
         tip: 0,
         tax: 0,
         vendor,
+        state: "pending",
       })
       .returning();
     router.push(`/(receipt)/items?invoice=${invoice[0].id}`);
