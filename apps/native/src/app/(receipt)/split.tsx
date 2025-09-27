@@ -130,24 +130,24 @@ const Split = () => {
             <Check color={"white"} size={25} />
           </Button>
         </View>
-        <View className="flex-row justify-between items-center w-full mt-5">
+        <View className="flex-row justify-between items-center w-full my-5">
           <Text className="text-4xl font-bold text-foreground">
             Assign items
           </Text>
-          <View className="flex-row items-center">
-            <Text className="text-foreground text-lg mr-3">Split evenly</Text>
-            <View>
-              <BouncyCheckbox
-                isChecked={evenly === 1}
-                onPress={changeEvenly}
-                size={26}
-                fillColor="#4ade80"
-                unFillColor={colorScheme === "dark" ? "#1c1c1c" : "#ffffff"}
-                useBuiltInState={false}
-                iconStyle={{ borderRadius: 8, borderColor: "#22c55e" }}
-                innerIconStyle={{ borderWidth: 2, borderRadius: 8 }}
-              />
-            </View>
+        </View>
+        <View className="flex-row items-center justify-start w-full">
+          <Text className="text-foreground text-lg mr-3">Split evenly</Text>
+          <View>
+            <BouncyCheckbox
+              isChecked={evenly === 1}
+              onPress={changeEvenly}
+              size={26}
+              fillColor="#4ade80"
+              unFillColor={colorScheme === "dark" ? "#1c1c1c" : "#ffffff"}
+              useBuiltInState={false}
+              iconStyle={{ borderRadius: 8, borderColor: "#22c55e" }}
+              innerIconStyle={{ borderWidth: 2, borderRadius: 8 }}
+            />
           </View>
         </View>
         <FlatList
@@ -157,7 +157,9 @@ const Split = () => {
             <View className="bg-card my-2 rounded-2xl px-4 py-4">
               <View className="flex-row justify-between items-center">
                 <Text className="text-xl font-semibold text-foreground">
-                  {item.name} - ${item.price.toFixed(2)}
+                  {item.name.slice(0, 14)}
+                  {item.name.length > 14 ? "..." : ""} - $
+                  {item.price.toFixed(2)}
                 </Text>
                 <View className="flex-row items-center gap-2">
                   <Button
@@ -195,6 +197,7 @@ const Split = () => {
                           .where(eq(schema.memberItem.id, personItem.id));
                       }
                     }}
+                    item={item.name}
                   />
                 </View>
               </View>

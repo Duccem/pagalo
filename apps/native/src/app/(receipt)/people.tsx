@@ -158,7 +158,8 @@ const People = () => {
                 <View className="flex-row justify-between items-center bg-card my-2 rounded-2xl px-5 py-4">
                   <View className="flex-row gap-4 items-center">
                     <Text className="text-lg text-foreground">
-                      {item.item.name}
+                      {item.item.name.slice(0, 17)}
+                      {item.item.name.length > 17 ? "..." : ""}
                     </Text>
                   </View>
                   <TouchableOpacity

@@ -1,17 +1,10 @@
-import { AnimationScreen } from "@/components/shared/animation-splash";
 import { TabBar } from "@/components/shared/tab-bar";
-import { authClient } from "@/lib/auth-client";
-import { Redirect, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
+("react");
 
 export default function TabLayout() {
-  const { isPending, data, error } = authClient.useSession();
-
-  if (isPending) return <AnimationScreen appReady={true} finish={() => {}} />;
-  if (!data?.session || error) {
-    return <Redirect href={"/(auth)/welcome"} />;
-  }
   return (
-    <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="new">
+    <Tabs tabBar={(props) => <TabBar {...props} />}>
       <Tabs.Screen
         name="index"
         options={{

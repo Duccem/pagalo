@@ -1,8 +1,8 @@
 import { useColorScheme } from "@/lib/use-color-scheme";
 import { BottomSheetFlatList, BottomSheetModal } from "@gorhom/bottom-sheet";
-import { Plus } from "lucide-react-native";
+import { Plus, X } from "lucide-react-native";
 import React, { useCallback, useEffect, useRef } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Button from "../ui/button";
 
@@ -11,6 +11,7 @@ const PeopleSheet = ({
   setPeople,
   removePeople,
   initialPeople = [],
+  item,
 }: {
   people: { id: number; invoiceId: number; name: string; total: number }[];
   setPeople: (people: {
@@ -31,6 +32,7 @@ const PeopleSheet = ({
     name: string;
     total: number;
   }[];
+  item: string;
 }) => {
   const { colorScheme } = useColorScheme();
   const [selectedPeople, setSelectedPeople] =
@@ -48,6 +50,9 @@ const PeopleSheet = ({
   useEffect(() => {
     setSelectedPeople(initialPeople);
   }, [initialPeople]);
+  const closeSheet = () => {
+    bottomSheetModalRef.current?.close();
+  };
   return (
     <>
       <Button
@@ -62,42 +67,50 @@ const PeopleSheet = ({
           backgroundColor: colorScheme === "dark" ? "#1c1c1e" : "white",
         }}
         onChange={handleSheetChanges}
-        snapPoints={["75%"]}
-        bottomInset={0}
+        snapPoints={["50%", "90%"]}
         handleStyle={{
           display: "none",
         }}
         style={{
           paddingLeft: 20,
           paddingRight: 20,
-          position: "relative",
           paddingTop: 20,
         }}
       >
-        <BottomSheetFlatList
-          className="w-full "
-          estimatedItemSize={43.3}
-          data={people}
-          renderItem={({ item }: any) => (
-            <View className="w-full bg-green-400 rounded-2xl px-4 py-3 my-2 flex-row items-center justify-between">
-              <Text className="text-lg text-white">{item.name}</Text>
-              <View>
-                <BouncyCheckbox
-                  isChecked={selectedPeople.some((p) => p.id === item.id)}
-                  onPress={(isChecked: boolean) => {
-                    if (isChecked) {
-                      setPeople(item);
-                    } else {
-                      removePeople(item);
-                    }
-                  }}
-                  fillColor="black"
-                />
+        <View className="min-h-full">
+          <View className="flex-row justify-between items-center mb-4">
+            <Text className="text-2xl text-foreground mb-4 w-2/3">
+              Who's sharing <Text className="font-bold">{item}</Text>?
+            </Text>
+            <TouchableOpacity onPress={closeSheet}>
+              <X />
+            </TouchableOpacity>
+          </View>
+          <BottomSheetFlatList
+            className="w-full h-full"
+            estimatedItemSize={100}
+            data={people}
+            renderItem={({ item }: any) => (
+              <View className="w-full bg-green-400 rounded-2xl px-4 py-3 my-2 flex-row items-center justify-between">
+                <Text className="text-lg text-white">{item.name}</Text>
+                <View>
+                  <BouncyCheckbox
+                    isChecked={selectedPeople.some((p) => p.id === item.id)}
+                    onPress={(isChecked: boolean) => {
+                      if (isChecked) {
+                        setPeople(item);
+                      } else {
+                        removePeople(item);
+                      }
+                    }}
+                    fillColor="black"
+                  />
+                </View>
               </View>
-            </View>
-          )}
-          keyExtractor={(_item: any, index: number) => index.toString()}
-        />
+            )}
+            keyExtractor={(_item: any, index: number) => index.toString()}
+          />
+        </View>
       </BottomSheetModal>
     </>
   );

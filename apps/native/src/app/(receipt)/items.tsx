@@ -37,7 +37,7 @@ const Items = () => {
       .limit(1)
   );
   const [name, setName] = React.useState<string>("");
-  const [price, setPrice] = React.useState<number>(0);
+  const [price, setPrice] = React.useState<string>("");
 
   const [tax, setTax] = React.useState<string>(invoice[0]?.tax?.toFixed(2));
   const [tip, setTip] = React.useState<string>(invoice[0]?.tip?.toFixed(2));
@@ -58,12 +58,12 @@ const Items = () => {
     }
     await database.insert(schema.item).values({
       name,
-      price,
+      price: Number(price),
       invoiceId: Number(params.invoice),
       quantity: 1,
     });
     setName("");
-    setPrice(0);
+    setPrice("");
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
 
@@ -118,17 +118,17 @@ const Items = () => {
 
           <View className="flex-row gap-2 w-full">
             <TextInput
-              className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-3/5 rounded-2xl px-4 py-3 "
+              className="border bg-card border-gray-200 text-foreground  w-3/5 rounded-2xl px-4 py-3 "
               placeholder="eg. Pizza"
               value={name}
               onChangeText={setName}
             />
             <TextInput
-              className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-1/5 rounded-2xl px-5 "
+              className="border bg-card border-gray-200 text-foreground  w-1/5 rounded-2xl px-5 "
               placeholder="$0"
               keyboardType="numeric"
-              value={price ? price.toString() : ""}
-              onChangeText={(text) => setPrice(Number(text))}
+              value={price}
+              onChangeText={(text) => setPrice(text)}
             />
             <Button action={addItem}>
               <Plus size={25} color={"#fff"} />
@@ -141,7 +141,7 @@ const Items = () => {
 
               <View className="relative">
                 <TextInput
-                  className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-full rounded-2xl px-5 py-4 pl-8"
+                  className="border bg-card border-gray-200 text-foreground  w-full rounded-2xl px-5 py-4 pl-8"
                   placeholder="$0"
                   value={tax ?? "0"}
                   onChangeText={(text) => setTax(text)}
@@ -160,7 +160,7 @@ const Items = () => {
 
               <View className="relative">
                 <TextInput
-                  className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-full rounded-2xl px-5 py-4 pl-8"
+                  className="border bg-card border-gray-200 text-foreground  w-full rounded-2xl px-5 py-4 pl-8"
                   placeholder="$0"
                   value={tip ?? "0"}
                   onChangeText={(text) => setTip(text)}
@@ -187,8 +187,9 @@ const Items = () => {
               return (
                 <View className="flex-row justify-between items-center bg-card rounded-2xl py-4 my-2 px-4">
                   <View className="flex-row gap-4 items-center">
-                    <Text className="text-lg text-foreground">
-                      {item.item.name}
+                    <Text className="text-lg text-foreground ">
+                      {item.item.name.slice(0, 17)}
+                      {item.item.name.length > 17 ? "..." : ""}
                     </Text>
                     <Text className="text-lg text-muted-foreground">
                       ${item.item.price.toFixed(2)}

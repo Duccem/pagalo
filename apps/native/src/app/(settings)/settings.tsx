@@ -29,6 +29,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import * as SecureStore from "expo-secure-store";
 
 const Index = () => {
   const { isPending, data } = authClient.useSession();
@@ -58,6 +59,10 @@ const Index = () => {
     } catch {
       Alert.alert("Error", "Could not sign out. Please try again.");
     }
+  };
+
+  const saveTheme = async (newTheme: "light" | "dark") => {
+    await SecureStore.setItemAsync("theme", newTheme);
   };
 
   return (
@@ -145,6 +150,7 @@ const Index = () => {
                   onValueChange={() => {
                     Haptics.selectionAsync();
                     toggleColorScheme();
+                    saveTheme(isDarkColorScheme ? "light" : "dark");
                   }}
                 />
               </View>

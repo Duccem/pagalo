@@ -15,9 +15,12 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import * as SplashScreen from "expo-splash-screen";
 import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
 import { Suspense, useEffect, useState } from "react";
-import { ActivityIndicator, useColorScheme } from "react-native";
+import { ActivityIndicator } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import migrations from "../../drizzle/migrations";
+import { useColorScheme } from "@/lib/use-color-scheme";
+import * as SecureStore from "expo-secure-store";
+import { authClient } from "@/lib/auth-client";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -25,20 +28,27 @@ export default function RootLayout() {
   const expoDb = openDatabaseSync("pagalo");
   const db = drizzle(expoDb);
   const { success } = useMigrations(db, migrations);
-  const colorScheme = useColorScheme();
+  const { colorScheme, setColorScheme } = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+  const { isPending, data } = authClient.useSession();
   const [appReady, setAppReady] = useState(false);
   const [animationFinished, setAnimationFinished] = useState(false);
 
   useEffect(() => {
-    if (loaded && success) {
+    const loadTHeme = async () => {
+      const storedTheme = await SecureStore.getItemAsync("theme");
+      if (storedTheme === "light" || storedTheme === "dark") {
+        setColorScheme(storedTheme);
+      }
+    };
+    if (loaded && success && !isPending) {
       SplashScreen.hide();
-
+      loadTHeme();
       setAppReady(true);
     }
-  }, [loaded]);
+  }, [loaded, isPending, success]);
 
   if (!appReady && !animationFinished) {
     // Async font loading only occurs in development.
@@ -66,14 +76,19 @@ export default function RootLayout() {
         >
           <Animated.View style={{ flex: 1 }} entering={FadeIn.duration(300)}>
             <Stack>
-              <Stack.Screen name="index" options={{ headerShown: false }} />
+              <Stack.Protected guard={!!data?.session}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(receipt)"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="(settings)"
+                  options={{ headerShown: false }}
+                />
+              </Stack.Protected>
               <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="(receipt)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(settings)"
-                options={{ headerShown: false }}
-              />
+
               <Stack.Screen name="+not-found" />
             </Stack>
             <StatusBar
