@@ -13,7 +13,8 @@ export const auth = betterAuth<BetterAuthOptions>({
   trustedOrigins: [
     process.env.CORS_ORIGIN || "",
     "*",
-    "pagalo://",
+    process.env.EXPO_SCHEME || "",
+    `${process.env.EXPO_SCHEME || ""}*`,
     "exp://192.168.1.102:8081",
     "exp://s9pku04-ducen29-8081.exp.direct",
   ],

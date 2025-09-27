@@ -9,7 +9,7 @@
     "prebuild": "expo prebuild",
     "web": "expo start --web",
     "migrate": "drizzle-kit generate",
-    "build": "eas build --platform android --profile preview"
+    "build": "eas build --platform android --profile preview --non-interactive"
   },
   "dependencies": {
     "@better-auth/expo": "^1.3.7",
