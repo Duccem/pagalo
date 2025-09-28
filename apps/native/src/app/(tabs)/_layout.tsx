@@ -1,6 +1,5 @@
 import { TabBar } from "@/components/shared/tab-bar";
 import { Tabs } from "expo-router";
-("react");
 
 export default function TabLayout() {
   return (

@@ -50,6 +50,11 @@ export default function RootLayout() {
     }
   }, [loaded, isPending, success]);
 
+  useEffect(() => {
+    console.log("Auth session changed");
+    console.log(data?.session);
+  }, [data]);
+
   if (!appReady && !animationFinished) {
     // Async font loading only occurs in development.
     return (
@@ -76,7 +81,7 @@ export default function RootLayout() {
         >
           <Animated.View style={{ flex: 1 }} entering={FadeIn.duration(300)}>
             <Stack>
-              <Stack.Protected guard={!!data?.session}>
+              <Stack.Protected guard={!!data}>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen
                   name="(receipt)"
