@@ -9,6 +9,7 @@ export const authClient = createAuthClient({
       storagePrefix: "pagalo",
       storage: SecureStore,
       scheme: process.env.EXPO_PUBLIC_SCHEME,
+      disableCache: true,
     }),
   ],
 });

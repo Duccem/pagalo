@@ -2,13 +2,14 @@ import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import * as schema from "@/lib/db/schema";
-import { eq, getTableColumns, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { Bell, Receipt, Settings, Users } from "lucide-react-native";
+import { Bell, Receipt, Settings } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
+import { useEffect } from "react";
 import {
   FlatList,
   Image,
@@ -20,7 +21,7 @@ import {
 
 export default function HomeScreen() {
   const { colorScheme } = useColorScheme();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
   const { data, error } = useLiveQuery(
@@ -30,6 +31,13 @@ export default function HomeScreen() {
       .where(eq(schema.invoice.state, "pending"))
       .limit(5)
   );
+
+  useEffect(() => {
+    if (!session && !isPending) {
+      router.replace("/(auth)/welcome");
+    }
+  }, [session, isPending]);
+
   if (error) {
     return (
       <View className="flex-1 items-center justify-center">

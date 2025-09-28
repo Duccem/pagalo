@@ -4,7 +4,6 @@ import {
   ThemeProvider,
 } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import "react-native-reanimated";
 import "../../global.css";
@@ -20,11 +19,14 @@ import Animated, { FadeIn } from "react-native-reanimated";
 import migrations from "../../drizzle/migrations";
 import { useColorScheme } from "@/lib/use-color-scheme";
 import * as SecureStore from "expo-secure-store";
-import { authClient } from "@/lib/auth-client";
+import RootRouter from "@/components/routers/root";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [appReady, setAppReady] = useState(false);
+  const [animationFinished, setAnimationFinished] = useState(false);
+
   const expoDb = openDatabaseSync("pagalo");
   const db = drizzle(expoDb);
   const { success } = useMigrations(db, migrations);
@@ -32,9 +34,6 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
-  const { isPending, data } = authClient.useSession();
-  const [appReady, setAppReady] = useState(false);
-  const [animationFinished, setAnimationFinished] = useState(false);
 
   useEffect(() => {
     const loadTHeme = async () => {
@@ -43,17 +42,12 @@ export default function RootLayout() {
         setColorScheme(storedTheme);
       }
     };
-    if (loaded && success && !isPending) {
+    if (loaded && success) {
       SplashScreen.hide();
       loadTHeme();
       setAppReady(true);
     }
-  }, [loaded, isPending, success]);
-
-  useEffect(() => {
-    console.log("Auth session changed");
-    console.log(data?.session);
-  }, [data]);
+  }, [loaded, success]);
 
   if (!appReady && !animationFinished) {
     // Async font loading only occurs in development.
@@ -79,23 +73,11 @@ export default function RootLayout() {
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-          <Animated.View style={{ flex: 1 }} entering={FadeIn.duration(300)}>
-            <Stack>
-              <Stack.Protected guard={!!data}>
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="(receipt)"
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="(settings)"
-                  options={{ headerShown: false }}
-                />
-              </Stack.Protected>
-              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-
-              <Stack.Screen name="+not-found" />
-            </Stack>
+          <Animated.View
+            style={{ flex: 1, position: "relative" }}
+            entering={FadeIn.duration(300)}
+          >
+            <RootRouter />
             <StatusBar
               style={colorScheme === "dark" ? "dark" : "light"}
               backgroundColor="transparent"

@@ -3,7 +3,7 @@ import { authClient } from "@/lib/auth-client";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -15,28 +15,34 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Welcome() {
+  const { data: session } = authClient.useSession();
   const [loading, setLoading] = React.useState(false);
-  const [lastError, setLastError] = React.useState<string | null>(null);
+  useEffect(() => {
+    if (session) {
+      router.replace("/(tabs)");
+    }
+  }, [session]);
   const handleLogin = async () => {
     if (loading) return;
-    setLastError(null);
     setLoading(true);
-    try {
-      await authClient.signIn.social({
+    await authClient.signIn.social(
+      {
         provider: "google",
         callbackURL: "/(tabs)",
-      });
-      await authClient.getSession();
-      router.replace("/(tabs)");
-    } catch (e: any) {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      const msg = e?.message || "Fallo el inicio de sesión";
-      setLastError(msg);
-      Alert.alert("Login error", msg);
-      console.warn("Auth signIn error", e);
-    } finally {
-      setLoading(false);
-    }
+      },
+      {
+        onSuccess: async () => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          setLoading(false);
+        },
+        onError: (error) => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          Alert.alert("Login error", error.error.message);
+          console.warn("Auth signIn error", error.error.message);
+          setLoading(false);
+        },
+      }
+    );
   };
   return (
     <SafeAreaView className="flex h-full items-center justify-center bg-gray-200 py-5 flex-1">
@@ -76,11 +82,6 @@ export default function Welcome() {
             {loading ? "Iniciando..." : "Continuar con Google"}
           </Text>
         </TouchableOpacity>
-        {lastError && (
-          <Text className="text-red-600 text-xs mt-3 text-center">
-            {lastError}
-          </Text>
-        )}
       </View>
     </SafeAreaView>
   );
