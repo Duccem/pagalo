@@ -18,6 +18,7 @@ import {
   Trash,
   Users,
 } from "lucide-react-native";
+import { useEffect } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Toast from "react-native-simple-toast";
@@ -58,6 +59,22 @@ const Details = () => {
       .where(eq(schema.member.id, id));
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
+
+  useEffect(() => {
+    const changeToPaid = async () => {
+      if (!people || people.length === 0 || !data || data.length === 0) return;
+      if (
+        people.every((p) => p.status === "payed") &&
+        data?.[0].state !== "paid"
+      ) {
+        await database
+          .update(schema.invoice)
+          .set({ state: "paid" })
+          .where(eq(schema.invoice.id, Number(params.id)));
+      }
+    };
+    changeToPaid();
+  }, [people]);
 
   const copyToClipboard = async () => {
     // Build the body of the summary depending on evenly flag

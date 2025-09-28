@@ -1,23 +1,16 @@
 import ScreenView from "@/components/shared/screen-view";
 import * as schema from "@/lib/db/schema";
-import { eq, getTableColumns, sql } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
 import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { Receipt, Users } from "lucide-react-native";
+import { Receipt } from "lucide-react-native";
 import { FlatList, Pressable, Text, View } from "react-native";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
-  const { data, error } = useLiveQuery(
-    database
-      .select()
-      .from(schema.invoice)
-      .where(eq(schema.invoice.state, "pending"))
-      .limit(5)
-  );
+  const { data, error } = useLiveQuery(database.select().from(schema.invoice));
   return (
     <ScreenView>
       <View className="px-6 gap-8">
