@@ -132,7 +132,7 @@ const People = () => {
           </View>
           <View className="flex-row gap-2">
             <TextInput
-              className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-4/5 rounded-2xl px-5 py-3"
+              className="border bg-card border-gray-200 text-foreground  w-4/5 rounded-2xl px-5 py-3"
               placeholder="eg. Jose"
               value={name}
               onChangeText={setName}

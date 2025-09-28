@@ -1,6 +1,7 @@
 import google from "@/assets/google.png";
 import { authClient } from "@/lib/auth-client";
 import * as Haptics from "expo-haptics";
+import { router } from "expo-router";
 import LottieView from "lottie-react-native";
 import React from "react";
 import {
@@ -25,6 +26,7 @@ export default function Welcome() {
         provider: "google",
         callbackURL: "/(tabs)",
       });
+      router.replace("/(tabs)");
     } catch (e: any) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
       const msg = e?.message || "Fallo el inicio de sesión";
