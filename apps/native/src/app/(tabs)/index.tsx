@@ -7,7 +7,7 @@ import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
 import { Redirect, router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
-import { Bell, Receipt, Settings } from "lucide-react-native";
+import { Receipt, Settings } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
 import { useMoneyFormatter } from "@/lib/money";
 import {
