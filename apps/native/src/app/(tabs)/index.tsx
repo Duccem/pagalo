@@ -5,7 +5,7 @@ import * as schema from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
-import { Redirect, router } from "expo-router";
+import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Receipt, Settings } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
@@ -22,7 +22,7 @@ import {
 
 export default function HomeScreen() {
   const { colorScheme } = useColorScheme();
-  const { data: session, isPending } = authClient.useSession();
+  const { data: session } = authClient.useSession();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
   const showComingSoon = (feature: string) => {
@@ -39,11 +39,6 @@ export default function HomeScreen() {
       .limit(5)
   );
   const { format } = useMoneyFormatter();
-
-  if (isPending) return null;
-  if (!session) {
-    return <Redirect href={"/(auth)/welcome"} />;
-  }
 
   if (error) {
     return (

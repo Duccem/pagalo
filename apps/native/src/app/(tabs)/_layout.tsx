@@ -1,7 +1,13 @@
 import { TabBar } from "@/components/shared/tab-bar";
-import { Tabs } from "expo-router";
+import { authClient } from "@/lib/auth-client";
+import { Tabs, Redirect } from "expo-router";
 
 export default function TabLayout() {
+  const { data: session, isPending } = authClient.useSession();
+  if (isPending) return null;
+  if (!session) {
+    return <Redirect href={"/(auth)/welcome"} />;
+  }
   return (
     <Tabs tabBar={(props) => <TabBar {...props} />}>
       <Tabs.Screen
