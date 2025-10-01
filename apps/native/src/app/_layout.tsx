@@ -30,7 +30,7 @@ export default function RootLayout() {
   const [appReady, setAppReady] = useState(false);
 
   const { success } = useMigrate();
-  const { colorScheme, loadTHeme, themeLoaded } = useColorScheme();
+  const { colorScheme, loadTHeme } = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
@@ -47,10 +47,10 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (loaded && themeLoaded && success) {
+    if (loaded && success) {
       setAppReady(true);
     }
-  }, [loaded, success, themeLoaded]);
+  }, [loaded, success]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appReady) {
