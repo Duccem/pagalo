@@ -68,15 +68,6 @@ export default function HomeScreen() {
           <View className="flex-row items-end gap-2">
             <Button
               variant="white"
-              action={() => router.push("/(settings)/notifications")}
-            >
-              <Bell
-                className="text-foreground size-6"
-                color={colorScheme === "dark" ? "white" : "black"}
-              />
-            </Button>
-            <Button
-              variant="white"
               action={() => router.push("/(settings)/settings")}
             >
               <Settings
