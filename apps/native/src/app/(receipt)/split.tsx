@@ -12,6 +12,7 @@ import { ArrowLeft, BrushCleaning, Check } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { useMoneyFormatter } from "@/lib/money";
 
 const Split = () => {
   const { colorScheme } = useColorScheme();
@@ -44,6 +45,7 @@ const Split = () => {
       .where(eq(schema.invoice.id, Number(params.invoice)))
   );
   const [evenly, setEvenly] = React.useState<number>(0);
+  const { format } = useMoneyFormatter(invoiceData?.[0]?.currency as any);
   // Initialize evenly state only once from DB
   const initializedEvenly = React.useRef(false);
   React.useEffect(() => {
@@ -158,8 +160,7 @@ const Split = () => {
               <View className="flex-row justify-between items-center">
                 <Text className="text-xl font-semibold text-foreground">
                   {item.name.slice(0, 14)}
-                  {item.name.length > 14 ? "..." : ""} - $
-                  {item.price.toFixed(2)}
+                  {item.name.length > 14 ? "..." : ""} - {format(item.price)}
                 </Text>
                 <View className="flex-row items-center gap-2">
                   <Button

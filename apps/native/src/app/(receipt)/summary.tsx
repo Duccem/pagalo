@@ -3,6 +3,7 @@ import Button from "@/components/ui/button";
 import * as schema from "@/lib/db/schema";
 import { useShareMessagePreference } from "@/lib/preferences";
 import { useColorScheme } from "@/lib/use-color-scheme";
+import { useMoneyFormatter } from "@/lib/money";
 import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Clipboard from "expo-clipboard";
@@ -36,6 +37,7 @@ const Details = () => {
       .where(eq(schema.invoice.id, Number(params.id)))
       .limit(1)
   );
+  const { format } = useMoneyFormatter(data?.[0]?.currency as any);
   const { data: people } = useLiveQuery(
     database
       .select()
@@ -80,20 +82,20 @@ const Details = () => {
     // Build the body of the summary depending on evenly flag
     let body: string;
     if (data?.[0]?.evenly) {
-      body = `Receipt Summary \n\nTotal: $${data[0]?.total.toFixed(
-        2
-      )} \nTax: $${data[0]?.tax.toFixed(2)} \nTip: $${data[0]?.tip.toFixed(
-        2
-      )} \n\nEach person pays: $${(
-        (data[0]?.total ?? 0) / Math.max(people?.length ?? 0, 1)
-      ).toFixed(2)}`;
+      const perPerson =
+        (data?.[0]?.total ?? 0) / Math.max(people?.length ?? 0, 1);
+      body = `Receipt Summary \n\nTotal: ${format(
+        data?.[0]?.total
+      )} \nTax: ${format(data?.[0]?.tax)} \nTip: ${format(
+        data?.[0]?.tip
+      )} \n\nEach person pays: ${format(perPerson)}`;
     } else {
-      body = `Receipt Summary \n\nTotal: $${data[0]?.total.toFixed(
-        2
-      )} \nTax: $${data[0]?.tax.toFixed(2)} \nTip: $${data[0]?.tip.toFixed(
-        2
+      body = `Receipt Summary \n\nTotal: ${format(
+        data?.[0]?.total
+      )} \nTax: ${format(data?.[0]?.tax)} \nTip: ${format(
+        data?.[0]?.tip
       )} \n\nPeople: \n${people
-        ?.map((person) => `${person.name}: $${person.total.toFixed(2)}`)
+        ?.map((person) => `${person.name}: ${format(person.total)}`)
         .join("\n")}`;
     }
     const text = `${shareMessage}\n\n${body}`;
@@ -164,19 +166,19 @@ const Details = () => {
             <View className="w rounded-2xl">
               <Text className="text-xl font-medium text-foreground">Total</Text>
               <Text className="text-lg font-bold text-muted-foreground">
-                ${data[0]?.total.toFixed(2)}
+                {format(data[0]?.total)}
               </Text>
             </View>
             <View className="w rounded-2xl">
               <Text className="text-xl font-medium text-foreground">Tax</Text>
               <Text className="text-lg font-bold text-muted-foreground">
-                ${data[0]?.tax.toFixed(2)}
+                {format(data[0]?.tax)}
               </Text>
             </View>
             <View className="w rounded-2xl">
               <Text className="text-xl font-medium text-foreground">Tip</Text>
               <Text className="text-lg font-bold text-muted-foreground">
-                ${data[0]?.tip.toFixed(2)}
+                {format(data[0]?.tip)}
               </Text>
             </View>
           </View>
@@ -244,7 +246,7 @@ const Details = () => {
                     {item.name}
                   </Text>
                   <Text className="text-2xl font-medium text-foreground">
-                    ${item.total.toFixed(2)}{" "}
+                    {format(item.total)}{" "}
                   </Text>
                 </View>
                 <View>

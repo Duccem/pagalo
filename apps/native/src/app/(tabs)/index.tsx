@@ -9,6 +9,7 @@ import { Redirect, router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Bell, Receipt, Settings } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
+import { useMoneyFormatter } from "@/lib/money";
 import {
   FlatList,
   Image,
@@ -37,6 +38,7 @@ export default function HomeScreen() {
       .where(eq(schema.invoice.state, "pending"))
       .limit(5)
   );
+  const { format } = useMoneyFormatter();
 
   if (isPending) return null;
   if (!session) {
@@ -170,7 +172,7 @@ export default function HomeScreen() {
               </View>
               <View className="gap-1 items-end">
                 <Text className="text-xl text-foreground">
-                  ${item.item?.total?.toFixed(2)}
+                  {format(item.item?.total)}
                 </Text>
               </View>
             </TouchableOpacity>

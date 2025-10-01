@@ -6,11 +6,13 @@ import { router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Receipt } from "lucide-react-native";
 import { FlatList, Pressable, Text, View } from "react-native";
+import { useMoneyFormatter } from "@/lib/money";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
   const { data, error } = useLiveQuery(database.select().from(schema.invoice));
+  const { format } = useMoneyFormatter();
   return (
     <ScreenView>
       <View className="px-6 gap-8">
@@ -65,7 +67,7 @@ export default function TabTwoScreen() {
                   </View>
                   <View className="gap-1 items-end">
                     <Text className="text-xl text-foreground">
-                      ${item.item?.total?.toFixed(2)}
+                      {format(item.item?.total)}
                     </Text>
                   </View>
                 </Pressable>

@@ -9,6 +9,7 @@ export const invoice = sqliteTable("invoice", {
   date: text("date").notNull().default(new Date().toISOString()),
   state: text("state").notNull().default("pending"), // pending, paid, cancelled
   evenly: integer("evenly").notNull().default(0), // 0 = no, 1 = yes
+  currency: text("currency").notNull().default("USD"),
 });
 
 export const item = sqliteTable("item", {

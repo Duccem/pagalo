@@ -17,7 +17,7 @@ export const AnimationScreen = (_params: {
     >
       <View className="flex-1 justify-center items-center bg-primary w-full">
         <Image
-          source={require("@/assets/images/Logo white.png")}
+          source={require("@/assets/images/logo-white.png")}
           className="w-[200px]"
           resizeMethod="scale"
           resizeMode="contain"

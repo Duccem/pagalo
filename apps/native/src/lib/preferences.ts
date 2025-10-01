@@ -5,6 +5,12 @@ import { preferences } from "./db/schema";
 import { useDatabase } from "./db/use-database";
 
 export const SUPPORTED_CURRENCIES = ["USD", "MXN", "VES", "EUR"] as const;
+export const SUPPORTED_CURRENCIES_LABELS = {
+  USD: "$",
+  EUR: "€",
+  MXN: "$",
+  VES: "Bs.",
+};
 export type SupportedCurrency = (typeof SUPPORTED_CURRENCIES)[number];
 const DEFAULT_CURRENCY: SupportedCurrency = "USD";
 

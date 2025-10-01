@@ -57,6 +57,13 @@
       "when": 1758911567535,
       "tag": "0007_gray_callisto",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1759289403037,
+      "tag": "0008_curved_northstar",
+      "breakpoints": true
     }
   ]
 }

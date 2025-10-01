@@ -19,10 +19,10 @@
           "resizeMode": "contain",
           "imageWidth": 200,
           "backgroundColor": "#4ade80",
-          "image": "./src/assets/images/splash-screen.png",
+          "image": "./src/assets/images/logo-black.png",
           "dark": {
             "backgroundColor": "#4ade80",
-            "image": "./src/assets/images/splash-screen.png"
+            "image": "./src/assets/images/logo-white.png"
           }
         }
       ],
@@ -74,7 +74,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "monochromeImage": "./src/assets/images/ios-tinted.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#343434"
       },
       "package": "com.ducen.pagalo",
       "edgeToEdgeEnabled": true,

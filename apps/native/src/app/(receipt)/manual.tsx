@@ -2,6 +2,7 @@ import ScreenView from "@/components/shared/screen-view";
 import Button from "@/components/ui/button";
 import * as schema from "@/lib/db/schema";
 import { useColorScheme } from "@/lib/use-color-scheme";
+import { useCurrencyPreference } from "@/lib/preferences";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format } from "date-fns";
 import { drizzle } from "drizzle-orm/expo-sqlite";
@@ -26,6 +27,8 @@ export default function Manual() {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [showPicker, setShowPicker] = useState(false);
   const [vendor, setVendor] = useState<string>("");
+  const { currency: preferredCurrency } = useCurrencyPreference();
+
   const showMode = () => {
     setShowPicker(true);
   };
@@ -49,6 +52,7 @@ export default function Manual() {
         vendor,
         state: "pending",
         evenly: 0,
+        currency: preferredCurrency ?? "USD",
       })
       .returning();
     router.push(`/(receipt)/items?invoice=${invoice[0].id}`);

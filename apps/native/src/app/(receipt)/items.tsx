@@ -17,6 +17,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useMoneyFormatter } from "@/lib/money";
 
 const Items = () => {
   const { colorScheme } = useColorScheme();
@@ -41,6 +42,7 @@ const Items = () => {
 
   const [tax, setTax] = React.useState<string>(invoice[0]?.tax?.toFixed(2));
   const [tip, setTip] = React.useState<string>(invoice[0]?.tip?.toFixed(2));
+  const { symbol, format } = useMoneyFormatter(invoice?.[0]?.currency as any);
 
   const totalPrice = useMemo(() => {
     if (!items || !invoice) return 0;
@@ -125,7 +127,7 @@ const Items = () => {
             />
             <TextInput
               className="border bg-card border-gray-200 text-foreground  w-1/5 rounded-2xl px-5 "
-              placeholder="$0"
+              placeholder={`${symbol}0`}
               keyboardType="numeric"
               value={price}
               onChangeText={(text) => setPrice(text)}
@@ -142,7 +144,7 @@ const Items = () => {
               <View className="relative">
                 <TextInput
                   className="border bg-card border-gray-200 text-foreground  w-full rounded-2xl px-5 py-4 pl-8"
-                  placeholder="$0"
+                  placeholder={`${symbol}0`}
                   value={tax ?? "0"}
                   onChangeText={(text) => setTax(text)}
                   keyboardType="numeric"
@@ -161,7 +163,7 @@ const Items = () => {
               <View className="relative">
                 <TextInput
                   className="border bg-card border-gray-200 text-foreground  w-full rounded-2xl px-5 py-4 pl-8"
-                  placeholder="$0"
+                  placeholder={`${symbol}0`}
                   value={tip ?? "0"}
                   onChangeText={(text) => setTip(text)}
                   keyboardType="numeric"
@@ -177,7 +179,7 @@ const Items = () => {
           </View>
           <View className="w-full">
             <Text className="text-2xl font-medium text-foreground">
-              Total: ${totalPrice.toFixed(2)}
+              Total: {format(totalPrice)}
             </Text>
           </View>
           <FlatList
@@ -192,7 +194,7 @@ const Items = () => {
                       {item.item.name.length > 17 ? "..." : ""}
                     </Text>
                     <Text className="text-lg text-muted-foreground">
-                      ${item.item.price.toFixed(2)}
+                      {format(item.item.price)}
                     </Text>
                   </View>
                   <TouchableOpacity
