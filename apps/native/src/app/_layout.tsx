@@ -9,22 +9,14 @@ import "react-native-reanimated";
 import "../../global.css";
 
 import { AnimationScreen } from "@/components/shared/animation-splash";
-import * as SplashScreen from "expo-splash-screen";
 import { SQLiteProvider } from "expo-sqlite";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { useColorScheme } from "@/lib/use-color-scheme";
 import RootRouter from "@/components/routers/root";
 import { SessionProvider } from "@/components/shared/session-provider";
 import { useMigrate } from "@/lib/db/use-database";
-
-SplashScreen.preventAutoHideAsync();
-
-SplashScreen.setOptions({
-  duration: 400,
-  fade: true,
-});
 
 export default function RootLayout() {
   const [appReady, setAppReady] = useState(false);
@@ -52,12 +44,6 @@ export default function RootLayout() {
     }
   }, [loaded, success]);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (appReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [appReady]);
-
   if (!appReady && !loaded && !success) {
     return (
       <AnimationScreen
@@ -80,7 +66,6 @@ export default function RootLayout() {
           <Animated.View
             style={{ flex: 1, position: "relative" }}
             entering={FadeIn.duration(300)}
-            onLayout={onLayoutRootView}
           >
             <SessionProvider>
               <RootRouter />
