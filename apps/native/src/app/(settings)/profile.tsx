@@ -52,13 +52,14 @@ const ProfileScreen = () => {
       });
       if (!result.canceled) {
         setUploading(true);
+        const formatFile = result.assets[0].uri.split(".").pop() || "jpg";
         await supabase.storage
           .from("pagalo-receipts")
           .upload(
             `avatars/${result.assets[0].fileName}`,
             decode(result.assets[0].base64 ?? ""),
             {
-              contentType: `${result.assets[0].mimeType}`,
+              contentType: `image/${formatFile}`,
             }
           );
         const url = supabase.storage
