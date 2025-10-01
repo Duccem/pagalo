@@ -54,7 +54,8 @@ export default function TabTwoScreen() {
                     </View>
                     <View className=" gap-1">
                       <Text className="text-xl text-foreground">
-                        {item.item.vendor}
+                        {item.item.vendor.slice(0, 17)}
+                        {item.item.vendor.length > 17 ? "..." : ""}
                       </Text>
                       <Text className="text-sm text-muted-foreground">
                         {new Date(item.item.date).toLocaleDateString("en-US", {

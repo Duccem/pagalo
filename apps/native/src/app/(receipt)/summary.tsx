@@ -161,6 +161,9 @@ const Details = () => {
         </View>
 
         <View className="w-full flex-1 justify-start items-center px-2 gap-6">
+          <Text className="text-3xl font-bold text-foreground text-start w-full">
+            {data[0]?.vendor}
+          </Text>
           <View className="w-full  flex-row justify-between items-center">
             <Text className="text-2xl text-start font-bold text-foreground">
               Split summary

@@ -44,27 +44,23 @@ const ProfileScreen = () => {
         return;
       }
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ["images"],
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 0.8,
-        base64: false,
+        quality: 1,
+        base64: true,
       });
       if (!result.canceled) {
         setUploading(true);
-        const formatFile = result.assets[0].uri.split(".").pop() || "jpg";
+        const file = result.assets[0];
         await supabase.storage
           .from("pagalo-receipts")
-          .upload(
-            `avatars/${result.assets[0].fileName}`,
-            decode(result.assets[0].base64 ?? ""),
-            {
-              contentType: `image/${formatFile}`,
-            }
-          );
+          .upload(`avatars/${file.fileName}`, decode(file.base64 ?? ""), {
+            contentType: file.mimeType ?? "image/jpeg",
+          });
         const url = supabase.storage
           .from("pagalo-receipts")
-          .getPublicUrl(`avatars/${result.assets[0].fileName}`).data.publicUrl;
+          .getPublicUrl(`avatars/${file.fileName}`).data.publicUrl;
         setImage(url);
         setUploading(false);
       }
