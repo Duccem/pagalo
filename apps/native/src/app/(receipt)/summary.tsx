@@ -37,7 +37,7 @@ const Details = () => {
       .where(eq(schema.invoice.id, Number(params.id)))
       .limit(1)
   );
-  const { format } = useMoneyFormatter(data?.[0]?.currency as any);
+  const { format } = useMoneyFormatter();
   const { data: people } = useLiveQuery(
     database
       .select()
@@ -72,6 +72,14 @@ const Details = () => {
         await database
           .update(schema.invoice)
           .set({ state: "paid" })
+          .where(eq(schema.invoice.id, Number(params.id)));
+      } else if (
+        people.some((p) => p.status === "pending") &&
+        data?.[0].state !== "pending"
+      ) {
+        await database
+          .update(schema.invoice)
+          .set({ state: "pending" })
           .where(eq(schema.invoice.id, Number(params.id)));
       }
     };
