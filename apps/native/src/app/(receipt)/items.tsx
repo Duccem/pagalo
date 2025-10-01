@@ -42,7 +42,7 @@ const Items = () => {
 
   const [tax, setTax] = React.useState<string>(invoice[0]?.tax?.toFixed(2));
   const [tip, setTip] = React.useState<string>(invoice[0]?.tip?.toFixed(2));
-  const { symbol, format } = useMoneyFormatter(invoice?.[0]?.currency as any);
+  const { symbol, format } = useMoneyFormatter();
 
   const totalPrice = useMemo(() => {
     if (!items || !invoice) return 0;

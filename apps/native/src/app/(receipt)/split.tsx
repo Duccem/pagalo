@@ -45,7 +45,7 @@ const Split = () => {
       .where(eq(schema.invoice.id, Number(params.invoice)))
   );
   const [evenly, setEvenly] = React.useState<number>(0);
-  const { format } = useMoneyFormatter(invoiceData?.[0]?.currency as any);
+  const { format } = useMoneyFormatter();
   // Initialize evenly state only once from DB
   const initializedEvenly = React.useRef(false);
   React.useEffect(() => {
