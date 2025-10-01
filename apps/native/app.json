@@ -16,7 +16,7 @@
       [
         "expo-splash-screen",
         {
-          "imageWidth": 200,
+          "imageWidth": 190,
           "resizeMode": "contain",
           "image": "./src/assets/images/logo-black.png",
           "dark": {

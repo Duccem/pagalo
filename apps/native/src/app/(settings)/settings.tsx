@@ -1,6 +1,5 @@
 import ScreenView from "@/components/shared/screen-view";
 import { authClient } from "@/lib/auth-client";
-import { pushMockNotification } from "@/lib/notifications-mock";
 import {
   useCurrencyPreference,
   useNotificationPreferences,
@@ -12,7 +11,6 @@ import * as Haptics from "expo-haptics";
 import { Redirect, router } from "expo-router";
 import {
   ArrowLeft,
-  Bell,
   ChevronRight,
   Info,
   LogOut,
@@ -38,14 +36,7 @@ const Index = () => {
   const { currency, loading: loadingCurrency } = useCurrencyPreference();
   const { shareMessage, loading: loadingShareMessage } =
     useShareMessagePreference();
-  const {
-    generalEnabled,
-    setGeneralEnabled,
-    remindersEnabled,
-    setRemindersEnabled,
-    newsEnabled,
-    setNewsEnabled,
-  } = useNotificationPreferences();
+  const _not = useNotificationPreferences();
   if (isPending) return null;
   if (!data) {
     return <Redirect href={"/(auth)/welcome"} />;
@@ -211,12 +202,11 @@ const Index = () => {
           </View>
 
           {/* Notifications Preferences */}
-          <View className="gap-4">
+          {/* <View className="gap-4">
             <Text className="text-xs uppercase text-muted-foreground tracking-wider">
               Notifications
             </Text>
             <View className="bg-card rounded-2xl overflow-hidden divide-y">
-              {/* Master enable */}
               <View className="flex-row items-center justify-between p-4">
                 <View className="flex-row items-center gap-3">
                   <Bell
@@ -242,7 +232,6 @@ const Index = () => {
                   }}
                 />
               </View>
-              {/* Reminders */}
               <View className="flex-row items-center justify-between p-4">
                 <View className="flex-1 pr-4">
                   <Text className="text-base text-foreground">
@@ -268,7 +257,6 @@ const Index = () => {
                   disabled={!generalEnabled}
                 />
               </View>
-              {/* News */}
               <View className="flex-row items-center justify-between p-4">
                 <View className="flex-1 pr-4">
                   <Text className="text-base text-foreground">
@@ -294,7 +282,6 @@ const Index = () => {
                   disabled={!generalEnabled}
                 />
               </View>
-              {/* View notifications */}
               <Pressable
                 className="flex-row items-center justify-between p-4"
                 onPress={() => {
@@ -313,7 +300,7 @@ const Index = () => {
                 />
               </Pressable>
             </View>
-          </View>
+          </View> */}
 
           {/* Account */}
           <View className="gap-4">
