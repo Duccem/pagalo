@@ -33,6 +33,7 @@ export default function Welcome() {
       {
         onSuccess: async () => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          await authClient.getSession();
           setLoading(false);
         },
         onError: (error) => {

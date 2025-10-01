@@ -7,7 +7,7 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./src/assets/adaptive-icon.png"
+      "favicon": "./src/assets/images/adaptive-icon.png"
     },
     "plugins": [
       "expo-router",
@@ -18,10 +18,10 @@
         {
           "resizeMode": "contain",
           "backgroundColor": "#4ade80",
-          "image": "./src/assets/adaptive-icon.png",
+          "image": "./src/assets/images/splash-screen.png",
           "dark": {
             "backgroundColor": "#4ade80",
-            "image": "./src/assets/adaptive-icon.png"
+            "image": "./src/assets/images/splash-screen.png"
           },
           "imageWidth": 200
         }
@@ -58,7 +58,7 @@
     },
     "newArchEnabled": true,
     "orientation": "portrait",
-    "icon": "./src/assets/adaptive-icon.png",
+    "icon": "./src/assets/images/ios-dark.png",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -67,8 +67,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/adaptive-icon.png",
-        "monochromeImage": "./src/assets/adaptive-icon.png",
+        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "monochromeImage": "./src/assets/images/ios-tinted.png",
         "backgroundColor": "#4ade80"
       },
       "package": "com.ducen.pagalo",

@@ -36,7 +36,7 @@ export default function HomeScreen() {
     if (!session && !isPending) {
       router.replace("/(auth)/welcome");
     }
-  }, [session, isPending]);
+  }, [isPending]);
 
   if (error) {
     return (

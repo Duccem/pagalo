@@ -1,15 +1,10 @@
-import LottieView from "lottie-react-native";
-import { useRef } from "react";
+import { View, Image } from "react-native";
 import Animated, { FadeOut } from "react-native-reanimated";
 
-export const AnimationScreen = ({
-  finish,
-  appReady,
-}: {
+export const AnimationScreen = (_params: {
   finish: (isCancelled: boolean) => void;
   appReady: boolean;
 }) => {
-  const animation = useRef<LottieView>(null);
   return (
     <Animated.View
       exiting={FadeOut.duration(300)}
@@ -17,20 +12,17 @@ export const AnimationScreen = ({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f3f4f6",
+        backgroundColor: "#4ade80",
       }}
     >
-      <LottieView
-        style={{
-          width: 300,
-          height: 300,
-        }}
-        source={require("@/assets/animations/Face ID.json")}
-        autoPlay
-        loop={!appReady}
-        ref={animation}
-        onAnimationFinish={finish}
-      />
+      <View className="flex-1 justify-center items-center bg-primary w-full">
+        <Image
+          source={require("@/assets/images/Logo white.png")}
+          className="w-[200px]"
+          resizeMethod="scale"
+          resizeMode="contain"
+        />
+      </View>
     </Animated.View>
   );
 };
