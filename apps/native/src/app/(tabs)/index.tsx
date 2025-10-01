@@ -5,11 +5,10 @@ import * as schema from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useSQLiteContext } from "expo-sqlite";
 import { Bell, Receipt, Settings } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
-import { useEffect } from "react";
 import {
   FlatList,
   Image,
@@ -32,11 +31,10 @@ export default function HomeScreen() {
       .limit(5)
   );
 
-  useEffect(() => {
-    if (!session && !isPending) {
-      router.replace("/(auth)/welcome");
-    }
-  }, [isPending]);
+  if (isPending) return null;
+  if (!session) {
+    return <Redirect href={"/(auth)/welcome"} />;
+  }
 
   if (error) {
     return (
@@ -52,7 +50,7 @@ export default function HomeScreen() {
           <View className="rounded-2xl overflow-hidden bg-green-400 size-16">
             <Image
               src={
-                session?.user.image ?? "https://ui-avatars.com/api/?name=User"
+                session?.user?.image ?? "https://ui-avatars.com/api/?name=User"
               }
               resizeMethod="auto"
               className="h-full w-full"
@@ -84,7 +82,7 @@ export default function HomeScreen() {
             Welcome back
           </Text>
           <Text className="text-2xl font-light  w-full text-start text-foreground">
-            {session?.user.name ?? session?.user.email ?? "User"}
+            {session?.user?.name ?? session?.user?.email ?? "User"}
           </Text>
         </View>
         <View className="w-full px-6 flex-row gap-3 items-center">

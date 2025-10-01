@@ -17,13 +17,13 @@
         "expo-splash-screen",
         {
           "resizeMode": "contain",
+          "imageWidth": 200,
           "backgroundColor": "#4ade80",
           "image": "./src/assets/images/splash-screen.png",
           "dark": {
             "backgroundColor": "#4ade80",
             "image": "./src/assets/images/splash-screen.png"
-          },
-          "imageWidth": 200
+          }
         }
       ],
       [
@@ -63,13 +63,18 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.ducen.pagalo"
+      "bundleIdentifier": "com.ducen.pagalo",
+      "icon": {
+        "light": "./src/assets/images/ios-light.png",
+        "dark": "./src/assets/images/ios-dark.png",
+        "tinted": "./src/assets/images/ios-tinted.png"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "monochromeImage": "./src/assets/images/ios-tinted.png",
-        "backgroundColor": "#4ade80"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.ducen.pagalo",
       "edgeToEdgeEnabled": true,

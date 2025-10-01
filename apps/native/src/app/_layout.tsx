@@ -9,56 +9,60 @@ import "react-native-reanimated";
 import "../../global.css";
 
 import { AnimationScreen } from "@/components/shared/animation-splash";
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import * as SplashScreen from "expo-splash-screen";
-import { openDatabaseSync, SQLiteProvider } from "expo-sqlite";
-import { Suspense, useEffect, useState } from "react";
+import { SQLiteProvider } from "expo-sqlite";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
-import migrations from "../../drizzle/migrations";
 import { useColorScheme } from "@/lib/use-color-scheme";
-import * as SecureStore from "expo-secure-store";
 import RootRouter from "@/components/routers/root";
+import { SessionProvider } from "@/components/shared/session-provider";
+import { useMigrate } from "@/lib/db/use-database";
 
 SplashScreen.preventAutoHideAsync();
 
+SplashScreen.setOptions({
+  duration: 400,
+  fade: true,
+});
+
 export default function RootLayout() {
   const [appReady, setAppReady] = useState(false);
-  const [animationFinished, setAnimationFinished] = useState(false);
 
-  const expoDb = openDatabaseSync("pagalo");
-  const db = drizzle(expoDb);
-  const { success } = useMigrations(db, migrations);
-  const { colorScheme, setColorScheme } = useColorScheme();
+  const { success } = useMigrate();
+  const { colorScheme, loadTHeme, themeLoaded } = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
   useEffect(() => {
-    const loadTHeme = async () => {
-      const storedTheme = await SecureStore.getItemAsync("theme");
-      if (storedTheme === "light" || storedTheme === "dark") {
-        setColorScheme(storedTheme);
+    const prepare = async () => {
+      try {
+        await loadTHeme();
+      } catch (error) {
+        console.warn(error);
       }
     };
-    if (loaded && success) {
-      SplashScreen.hide();
-      loadTHeme();
+    prepare();
+  }, []);
+
+  useEffect(() => {
+    if (loaded && themeLoaded && success) {
       setAppReady(true);
     }
-  }, [loaded, success]);
+  }, [loaded, success, themeLoaded]);
 
-  if (!appReady && !animationFinished) {
-    // Async font loading only occurs in development.
+  const onLayoutRootView = useCallback(async () => {
+    if (appReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appReady]);
+
+  if (!appReady && !loaded && !success) {
     return (
       <AnimationScreen
         appReady={appReady}
-        finish={(isCanceled: boolean) => {
-          if (!isCanceled) {
-            setAnimationFinished(true);
-          }
-        }}
+        finish={(_isCanceled: boolean) => {}}
       />
     );
   }
@@ -76,8 +80,11 @@ export default function RootLayout() {
           <Animated.View
             style={{ flex: 1, position: "relative" }}
             entering={FadeIn.duration(300)}
+            onLayout={onLayoutRootView}
           >
-            <RootRouter />
+            <SessionProvider>
+              <RootRouter />
+            </SessionProvider>
             <StatusBar
               style={colorScheme === "dark" ? "dark" : "light"}
               backgroundColor="transparent"

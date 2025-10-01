@@ -170,7 +170,7 @@ const ProfileScreen = () => {
             <Button disabled={submitting || !name.trim()} action={submit}>
               {submitting ? (
                 <View className="flex-row items-center gap-2">
-                  <Loader2 size={18} color="#fff" />
+                  <ActivityIndicator />
                   <Text className="text-white font-semibold">Saving...</Text>
                 </View>
               ) : (

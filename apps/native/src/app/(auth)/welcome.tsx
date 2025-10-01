@@ -1,9 +1,9 @@
 import google from "@/assets/google.png";
 import { authClient } from "@/lib/auth-client";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
+import { Redirect } from "expo-router";
 import LottieView from "lottie-react-native";
-import React, { useEffect } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -15,13 +15,9 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Welcome() {
-  const { data: session } = authClient.useSession();
-  const [loading, setLoading] = React.useState(false);
-  useEffect(() => {
-    if (session) {
-      router.replace("/(tabs)");
-    }
-  }, [session]);
+  const { data: session, isPending } = authClient.useSession();
+  const [loading, setLoading] = useState(false);
+
   const handleLogin = async () => {
     if (loading) return;
     setLoading(true);
@@ -45,6 +41,12 @@ export default function Welcome() {
       }
     );
   };
+
+  if (isPending) return null;
+  if (session) {
+    return <Redirect href={"/(tabs)"} />;
+  }
+
   return (
     <SafeAreaView className="flex h-full items-center justify-center bg-gray-200 py-5 flex-1">
       <View className="flex items-center justify-center p-5">

@@ -38,11 +38,11 @@ export const TabBar = ({
 
   return (
     <View
-      className="absolute bottom-5 right-0 left-0 flex flex-row justify-between items-center bg-green-400 mx-5 py-5  rounded-2xl shadow-lg flex-1"
+      className="absolute bottom-5 right-0 left-0 flex flex-row justify-between items-center bg-green-400 dark:bg-card mx-5 py-5  rounded-2xl shadow-lg flex-1"
       onLayout={onTabBarLayout}
     >
       <Animated.View
-        className={"rounded-2xl bg-white absolute mx-3"}
+        className={"rounded-2xl bg-card dark:bg-primary absolute mx-3"}
         style={[
           {
             width: buttonWidth - 20,
