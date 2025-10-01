@@ -17,6 +17,7 @@ export const auth = betterAuth<BetterAuthOptions>({
     `${process.env.EXPO_SCHEME || ""}*`,
     "exp://192.168.1.102:8081",
     "exp://192.168.1.104:8081",
+    "exp://192.168.1.103:8081",
     "exp://s9pku04-ducen29-8081.exp.direct",
   ],
   socialProviders: {
