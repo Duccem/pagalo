@@ -12,6 +12,7 @@ import { useColorScheme } from "nativewind";
 import {
   FlatList,
   Image,
+  Alert,
   Pressable,
   Text,
   TouchableOpacity,
@@ -23,6 +24,12 @@ export default function HomeScreen() {
   const { data: session, isPending } = authClient.useSession();
   const db = useSQLiteContext();
   const database = drizzle(db, { schema });
+  const showComingSoon = (feature: string) => {
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    Alert.alert("Coming soon", `${feature} will be usable soon`, [
+      { text: "Ok" },
+    ]);
+  };
   const { data, error } = useLiveQuery(
     database
       .select()
@@ -95,25 +102,31 @@ export default function HomeScreen() {
                 source={require("@/assets/images/recepcion.png")}
                 className="size-12"
               />
-              <Text className="text-sm text-foreground">Split bill</Text>
+              <Text className="text-sm text-foreground">Bill</Text>
             </View>
           </Pressable>
-          <Pressable className="flex-1 w-1/3">
+          <Pressable
+            className="flex-1 w-1/3"
+            onPress={() => showComingSoon("Spent recording")}
+          >
             <View className="bg-card rounded-2xl px-4 py-3 items-center gap-3">
               <Image
                 source={require("@/assets/images/presupuesto.png")}
                 className="size-12"
               />
-              <Text className="text-sm text-foreground">Record spend</Text>
+              <Text className="text-sm text-foreground">Spent</Text>
             </View>
           </Pressable>
-          <Pressable className="flex-1 w-1/3">
+          <Pressable
+            className="flex-1 w-1/3"
+            onPress={() => showComingSoon("Budget setup")}
+          >
             <View className="bg-card rounded-2xl px-4 py-3 items-center gap-3">
               <Image
                 source={require("@/assets/images/hucha.png")}
                 className="size-12"
               />
-              <Text className="text-sm text-foreground">Setup budget</Text>
+              <Text className="text-sm text-foreground">Budget</Text>
             </View>
           </Pressable>
         </View>

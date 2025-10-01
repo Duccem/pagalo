@@ -7,7 +7,7 @@ import { decode } from "base64-arraybuffer";
 import * as Haptics from "expo-haptics";
 import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
-import { ArrowLeft, Loader2 } from "lucide-react-native";
+import { ArrowLeft } from "lucide-react-native";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -148,7 +148,7 @@ const ProfileScreen = () => {
                 Name
               </Text>
               <TextInput
-                className="border bg-card border-gray-200 text-foreground placeholder:text-foreground  rounded-2xl p-4 text-base"
+                className="border bg-card border-gray-200 text-foreground   rounded-2xl p-4 text-base"
                 placeholder="Your name"
                 value={name}
                 onChangeText={setName}

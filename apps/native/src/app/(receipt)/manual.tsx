@@ -86,7 +86,7 @@ export default function Manual() {
             </Text>
             <View className="relative h-fit w-full">
               <TextInput
-                className="border bg-card border-gray-200 text-foreground placeholder:text-foreground w-full rounded-2xl px-5 pl-12 py-3"
+                className="border bg-card border-gray-200 text-foreground  w-full rounded-2xl px-5 pl-12 py-3"
                 placeholder="eg. Joe's Pizza"
                 value={vendor}
                 onChangeText={setVendor}
