@@ -16,16 +16,16 @@ const NotificationsScreen = () => {
   // Seed with some defaults on first empty mount (one-time)
   if (list.length === 0) {
     pushMockNotification(
-      "Bienvenido a Pagalo",
-      "Gracias por usar Pagalo. Aquí verás avisos y recordatorios."
+      "Welcome to Pagalo",
+      "Thanks for using Pagalo. You'll see notices and reminders here."
     );
     pushMockNotification(
-      "Recordatorio de pago",
-      "No olvides completar tu pago pendiente este mes."
+      "Payment reminder",
+      "Don't forget to complete your pending payment this month."
     );
     pushMockNotification(
-      "Nueva función",
-      "Explora las nuevas opciones para dividir gastos en grupo."
+      "New feature",
+      "Explore the new options to split expenses with friends."
     );
   }
 
@@ -53,18 +53,17 @@ const NotificationsScreen = () => {
 
         <View className="gap-4 flex-1">
           <Text className="text-xs uppercase text-gray-500 tracking-wider">
-            Notificaciones
+            Notifications
           </Text>
           <View className="flex-1 bg-card rounded-2xl overflow-hidden">
             {list.length === 0 ? (
               <View className="flex-1 items-center justify-center p-6 gap-4">
                 <Inbox size={42} color="#999" />
                 <Text className="text-sm text-gray-500 text-center">
-                  No hay notificaciones.
+                  No notifications.
                 </Text>
                 <Text className="text-[11px] text-gray-400 text-center px-4">
-                  Activa y genera ejemplos desde la pantalla principal de
-                  Settings.
+                  Enable and generate examples from the main Settings screen.
                 </Text>
               </View>
             ) : (

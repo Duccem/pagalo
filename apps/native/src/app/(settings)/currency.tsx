@@ -32,7 +32,7 @@ export default function CurrencyScreen() {
             />
           </TouchableOpacity>
           <Text className="text-xl font-semibold text-foreground">
-            Selecciona moneda
+            Select currency
           </Text>
         </View>
         <ScrollView className="flex-1" contentContainerStyle={{ gap: 12 }}>
@@ -64,7 +64,7 @@ export default function CurrencyScreen() {
             );
           })}
           {loading && (
-            <Text className="text-center text-gray-500 text-sm">Cargando…</Text>
+            <Text className="text-center text-gray-500 text-sm">Loading…</Text>
           )}
         </ScrollView>
       </View>

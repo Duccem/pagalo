@@ -7,8 +7,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 /*
- * Definición de estilos de variantes dependientes del esquema de color.
- * Mantiene compatibilidad con las variantes existentes y mejora contraste en dark mode.
+ * Variant styles depending on color scheme.
+ * Keeps compatibility with existing variants and improves dark mode contrast.
  */
 
 type VariantKey = "primary" | "outline" | "black" | "white";
@@ -27,26 +27,26 @@ function useVariantStyles(isDark: boolean): Record<VariantKey, VariantStyle> {
         borderColor: "#4ade80",
       },
       outline: {
-        // Fondo transparente para integrarse con el background oscuro
+        // Transparent background to blend with dark backgrounds
         backgroundColor: "rgba(255,255,255,0.04)",
         activeBackgroundColor: "rgba(255,255,255,0.08)",
-        borderColor: "#4ade80", // mantiene acento de marca
+        borderColor: "#4ade80", // keep brand accent
       },
       black: {
-        // Evitamos #000 puro para diferenciar del fondo (#121212 aprox.)
+        // Avoid pure #000 to differentiate from base background (~#121212)
         backgroundColor: "#1e1e1e",
         activeBackgroundColor: "#2a2a2a",
         borderColor: "#262626",
       },
       white: {
-        // Ajustado para que se parezca a la card en dark mode (HSL 0 0% 11%)
+        // Adjusted to resemble card color in dark mode (HSL 0 0% 11%)
         backgroundColor: "#393939",
         activeBackgroundColor: "#262626",
         borderColor: "#393939",
       },
     } as const;
   }
-  // Light mode (valores anteriores)
+  // Light mode (previous values)
   return {
     primary: {
       backgroundColor: "#4ade80",
