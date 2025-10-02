@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "only-chef",
-  description: "only-chef",
+  title: "PartY",
+  description: "The ultimate bill splitting app for effortless group payments.",
 };
 
 export default async function RootLayout({
