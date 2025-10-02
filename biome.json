@@ -61,6 +61,12 @@
       },
       "complexity": {
         "useArrowFunction": "off"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "a11y": {
+        "useValidAnchor": "off"
       }
     }
   },
