@@ -4,6 +4,7 @@ import { BottomSheetFlatList, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { DollarSign, X } from "lucide-react-native";
 import { useCallback, useRef } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import { t } from "@/lib/i18n";
 
 type Props = {
   value?: SupportedCurrency;
@@ -12,7 +13,11 @@ type Props = {
 };
 
 // A bottom sheet selector for invoice currency using @gorhom/bottom-sheet
-const CurrencySheet = ({ value, onChange, label = "Currency" }: Props) => {
+const CurrencySheet = ({
+  value,
+  onChange,
+  label = t("settings.currency"),
+}: Props) => {
   const { colorScheme } = useColorScheme();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -53,7 +58,11 @@ const CurrencySheet = ({ value, onChange, label = "Currency" }: Props) => {
         >
           {item}
         </Text>
-        {selected ? <Text className="text-white">Selected</Text> : <View />}
+        {selected ? (
+          <Text className="text-white">{t("common.selected")}</Text>
+        ) : (
+          <View />
+        )}
       </TouchableOpacity>
     );
   };
@@ -86,7 +95,7 @@ const CurrencySheet = ({ value, onChange, label = "Currency" }: Props) => {
         <View className="min-h-full">
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-2xl text-foreground mb-4">
-              Select currency
+              {t("settings.currency")}
             </Text>
             <TouchableOpacity onPress={close}>
               <X color={colorScheme === "dark" ? "#fff" : "#000"} />

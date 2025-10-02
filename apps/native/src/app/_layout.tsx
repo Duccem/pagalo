@@ -17,6 +17,8 @@ import { useColorScheme } from "@/lib/use-color-scheme";
 import RootRouter from "@/components/routers/root";
 import { SessionProvider } from "@/components/shared/session-provider";
 import { useMigrate } from "@/lib/db/use-database";
+// Initialize i18n as early as possible
+import "@/lib/i18n";
 
 export default function RootLayout() {
   const [appReady, setAppReady] = useState(false);

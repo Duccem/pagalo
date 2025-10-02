@@ -7,6 +7,7 @@ import { useSQLiteContext } from "expo-sqlite";
 import { Receipt } from "lucide-react-native";
 import { FlatList, Pressable, Text, View } from "react-native";
 import { useMoneyFormatter } from "@/lib/money";
+import { t } from "@/lib/i18n";
 
 export default function TabTwoScreen() {
   const db = useSQLiteContext();
@@ -18,7 +19,7 @@ export default function TabTwoScreen() {
       <View className="px-6 gap-8">
         <View>
           <Text className="w-full text-start text-2xl font-light text-foreground">
-            History of bills
+            {t("home.historyOfBills")}
           </Text>
         </View>
         {!data && error && (
@@ -76,7 +77,7 @@ export default function TabTwoScreen() {
             }}
             ListEmptyComponent={() => (
               <View className="w-full h-40 items-center justify-center">
-                <Text className="text-gray-400">No data</Text>
+                <Text className="text-gray-400">{t("common.noData")}</Text>
               </View>
             )}
             keyExtractor={(_item, index) => index.toString()}

@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import Button from "@/components/ui/button";
+import { t } from "@/lib/i18n";
 
 export default function SignUp() {
   const router = useRouter();
@@ -27,11 +28,14 @@ export default function SignUp() {
   const onSubmit = async () => {
     if (loading) return;
     if (!email || !password) {
-      Alert.alert("Required fields", "Enter email and password.");
+      Alert.alert(t("auth.requiredFields"), t("auth.requiredFieldsMsg"));
       return;
     }
     if (password !== confirm) {
-      Alert.alert("Passwords don't match", "Check your password.");
+      Alert.alert(
+        t("auth.passwordsDontMatch"),
+        t("auth.passwordsDontMatchMsg")
+      );
       return;
     }
     try {
@@ -47,8 +51,8 @@ export default function SignUp() {
       router.replace("/(tabs)");
     } catch (e: any) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      const msg = e?.error?.message || e?.message || "Error signing up";
-      Alert.alert("Couldn't sign up", msg);
+      const msg = e?.error?.message || e?.message || t("auth.signUpErrorTitle");
+      Alert.alert(t("auth.signUpErrorTitle"), msg);
     } finally {
       setLoading(false);
     }
@@ -90,7 +94,7 @@ export default function SignUp() {
             }}
           >
             <ArrowLeft size={30} color={"black"} />
-            <Text className="text-xl text-foreground">Back</Text>
+            <Text className="text-xl text-foreground">{t("common.back")}</Text>
           </TouchableOpacity>
         </View>
         <View className="w-full justify-center items-center size-24">
@@ -102,15 +106,13 @@ export default function SignUp() {
         </View>
 
         <View className="mt-8 gap-4 w-full">
-          <Text className="text-2xl font-bold">Create account</Text>
-          <Text className="text-gray-600">
-            Sign up with your email and a strong password.
-          </Text>
+          <Text className="text-2xl font-bold">{t("auth.signUpHeader")}</Text>
+          <Text className="text-gray-600">{t("auth.signUpSubtext")}</Text>
           <View className="gap-2">
-            <Text className="text-sm text-gray-700">Name</Text>
+            <Text className="text-sm text-gray-700">{t("auth.name")}</Text>
             <TextInput
               className="bg-white border rounded-xl px-4 py-3"
-              placeholder="Your name"
+              placeholder={t("placeholders.yourName")}
               autoCapitalize="words"
               value={name}
               onChangeText={setName}
@@ -118,10 +120,10 @@ export default function SignUp() {
             />
           </View>
           <View className="gap-2">
-            <Text className="text-sm text-gray-700">Email</Text>
+            <Text className="text-sm text-gray-700">{t("auth.email")}</Text>
             <TextInput
               className="bg-white border rounded-xl px-4 py-3"
-              placeholder="you@email.com"
+              placeholder={t("placeholders.email")}
               autoCapitalize="none"
               keyboardType="email-address"
               value={email}
@@ -130,10 +132,10 @@ export default function SignUp() {
             />
           </View>
           <View className="gap-2">
-            <Text className="text-sm text-gray-700">Password</Text>
+            <Text className="text-sm text-gray-700">{t("auth.password")}</Text>
             <TextInput
               className="bg-white border rounded-xl px-4 py-3"
-              placeholder="••••••••"
+              placeholder={t("placeholders.password")}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
@@ -141,10 +143,12 @@ export default function SignUp() {
             />
           </View>
           <View className="gap-2">
-            <Text className="text-sm text-gray-700">Confirm password</Text>
+            <Text className="text-sm text-gray-700">
+              {t("auth.confirmPassword")}
+            </Text>
             <TextInput
               className="bg-white border rounded-xl px-4 py-3"
-              placeholder="••••••••"
+              placeholder={t("placeholders.password")}
               secureTextEntry
               value={confirm}
               onChangeText={setConfirm}
@@ -153,7 +157,7 @@ export default function SignUp() {
           </View>
           <Button disabled={loading} action={onSubmit}>
             <Text className="text-white font-semibold">
-              {loading ? "Creating…" : "Create account"}
+              {loading ? t("auth.creating") : t("auth.createAccount")}
             </Text>
           </Button>
           <Button variant="outline" action={oauthLogin}>
@@ -167,16 +171,22 @@ export default function SignUp() {
               />
             )}
             <Text className="text-black font-semibold">
-              {loadingOauth ? "Starting..." : "Continue with Google"}
+              {loadingOauth
+                ? t("actions.starting")
+                : t("actions.continueWithGoogle")}
             </Text>
           </Button>
 
           <View className="flex-row gap-2 justify-center mt-2">
-            <Text className="text-gray-700">Already have an account?</Text>
+            <Text className="text-gray-700">
+              {t("auth.alreadyHaveAccount")}
+            </Text>
             <TouchableOpacity
               onPress={() => router.push("/(auth)/sign-in" as any)}
             >
-              <Text className="text-blue-600 font-semibold">Sign in</Text>
+              <Text className="text-blue-600 font-semibold">
+                {t("auth.signIn")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

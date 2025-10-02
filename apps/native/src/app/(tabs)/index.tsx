@@ -19,6 +19,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { t } from "@/lib/i18n";
 
 export default function HomeScreen() {
   const { colorScheme } = useColorScheme();
@@ -27,8 +28,8 @@ export default function HomeScreen() {
   const database = drizzle(db, { schema });
   const showComingSoon = (feature: string) => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
-    Alert.alert("Coming soon", `${feature} will be usable soon`, [
-      { text: "Ok" },
+    Alert.alert(t("comingSoon.title"), t("comingSoon.message", { feature }), [
+      { text: t("common.ok") },
     ]);
   };
   const { data, error } = useLiveQuery(
@@ -74,10 +75,10 @@ export default function HomeScreen() {
         </View>
         <View className="flex-col w-full px-6 ">
           <Text className="text-3xl font-normal text-foreground w-full text-start ">
-            Welcome back
+            {t("home.welcomeBack")}
           </Text>
           <Text className="text-2xl font-light  w-full text-start text-foreground">
-            {session?.user?.name ?? session?.user?.email ?? "User"}
+            {session?.user?.name ?? session?.user?.email ?? t("common.user")}
           </Text>
         </View>
         <View className="w-full px-6 flex-row gap-3 items-center">
@@ -90,41 +91,43 @@ export default function HomeScreen() {
                 source={require("@/assets/images/recepcion.png")}
                 className="size-12"
               />
-              <Text className="text-sm text-foreground">Bill</Text>
+              <Text className="text-sm text-foreground">{t("home.bill")}</Text>
             </View>
           </Pressable>
           <Pressable
             className="flex-1 w-1/3"
-            onPress={() => showComingSoon("Spent recording")}
+            onPress={() => showComingSoon(t("home.spent"))}
           >
             <View className="bg-card rounded-2xl px-4 py-3 items-center gap-3">
               <Image
                 source={require("@/assets/images/presupuesto.png")}
                 className="size-12"
               />
-              <Text className="text-sm text-foreground">Spent</Text>
+              <Text className="text-sm text-foreground">{t("home.spent")}</Text>
             </View>
           </Pressable>
           <Pressable
             className="flex-1 w-1/3"
-            onPress={() => showComingSoon("Budget setup")}
+            onPress={() => showComingSoon(t("home.budget"))}
           >
             <View className="bg-card rounded-2xl px-4 py-3 items-center gap-3">
               <Image
                 source={require("@/assets/images/hucha.png")}
                 className="size-12"
               />
-              <Text className="text-sm text-foreground">Budget</Text>
+              <Text className="text-sm text-foreground">
+                {t("home.budget")}
+              </Text>
             </View>
           </Pressable>
         </View>
         <View className="flex-row justify-between w-full px-6">
           <Text className="text-lg text-muted-foreground font-light ">
-            Active bills
+            {t("home.activeBills")}
           </Text>
           <Pressable onPress={() => router.push("/(tabs)/explore")}>
             <Text className="text-sm text-muted-foreground font-light">
-              view all
+              {t("home.viewAll")}
             </Text>
           </Pressable>
         </View>
@@ -166,7 +169,7 @@ export default function HomeScreen() {
           )}
           ListEmptyComponent={() => (
             <View className="w-full h-40 items-center justify-center">
-              <Text className="text-gray-400">No data</Text>
+              <Text className="text-gray-400">{t("common.noData")}</Text>
             </View>
           )}
         />

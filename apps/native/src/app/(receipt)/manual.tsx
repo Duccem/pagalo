@@ -19,6 +19,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { t } from "@/lib/i18n";
 
 export default function Manual() {
   const { colorScheme } = useColorScheme();
@@ -37,7 +38,7 @@ export default function Manual() {
   };
   const create = async () => {
     if (!vendor || !date) {
-      Alert.alert("Error", "Please fill in all fields");
+      Alert.alert(t("common.error"), t("errors.fillAllFields"));
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
       return;
     }
@@ -72,26 +73,26 @@ export default function Manual() {
               size={30}
               color={colorScheme === "dark" ? "white" : "black"}
             />
-            <Text className="text-xl text-foreground">Back</Text>
+            <Text className="text-xl text-foreground">{t("common.back")}</Text>
           </TouchableOpacity>
         </View>
         <View className="flex-1 justify-center items-center w-full gap-12">
           <View className="items-center gap-2">
             <Text className="text-4xl font-medium text-center text-foreground">
-              Manual entry
+              {t("manual.title")}
             </Text>
             <Text className="text-center text-lg text-muted-foreground">
-              Enter your receipt details manually
+              {t("manual.subtitle")}
             </Text>
           </View>
           <View className="w-full gap-2">
             <Text className="text-lg font-medium text-foreground">
-              Restaurant name:
+              {t("manual.restaurantName")}
             </Text>
             <View className="relative h-fit w-full">
               <TextInput
                 className="border bg-card border-gray-200 text-foreground  w-full rounded-2xl px-5 pl-12 py-3"
-                placeholder="eg. Joe's Pizza"
+                placeholder={t("manual.restaurantPlaceholder")}
                 value={vendor}
                 onChangeText={setVendor}
               />
@@ -106,13 +107,15 @@ export default function Manual() {
           </View>
 
           <View className="w-full gap-2">
-            <Text className="text-lg font-medium text-foreground">Date:</Text>
+            <Text className="text-lg font-medium text-foreground">
+              {t("common.date")}
+            </Text>
             <TouchableOpacity
               className="flex-row items-center gap-4  w-full border bg-card border-gray-200 pr-4 pl-12 py-2 justify-start rounded-2xl relative"
               onPress={showDatepicker}
             >
               <Text className="text-lg text-foreground">
-                {date ? format(date, "Pp") : "Select date"}
+                {date ? format(date, "Pp") : t("common.selectDate")}
               </Text>
               <View className="absolute left-4 top-1/3">
                 <Calendar
@@ -128,7 +131,6 @@ export default function Manual() {
                 visible={showPicker}
                 transparent={true}
                 onRequestClose={() => {
-                  Alert.alert("Modal has been closed.");
                   setShowPicker(!showPicker);
                 }}
               >
@@ -163,7 +165,7 @@ export default function Manual() {
         </View>
 
         <Button className="absolute bottom-2 w-full " action={create}>
-          <Text className="text-2xl text-white">Continue</Text>
+          <Text className="text-2xl text-white">{t("common.continue")}</Text>
         </Button>
       </View>
     </ScreenView>

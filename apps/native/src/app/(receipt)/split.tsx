@@ -13,6 +13,7 @@ import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { useMoneyFormatter } from "@/lib/money";
+import { t } from "@/lib/i18n";
 
 const Split = () => {
   const { colorScheme } = useColorScheme();
@@ -126,7 +127,7 @@ const Split = () => {
               size={30}
               color={colorScheme === "dark" ? "white" : "black"}
             />
-            <Text className="text-xl text-foreground">Back</Text>
+            <Text className="text-xl text-foreground">{t("common.back")}</Text>
           </TouchableOpacity>
           <Button action={saveAssignments} styles={{ padding: 10 }}>
             <Check color={"white"} size={25} />
@@ -134,11 +135,13 @@ const Split = () => {
         </View>
         <View className="flex-row justify-between items-center w-full my-5">
           <Text className="text-4xl font-bold text-foreground">
-            Assign items
+            {t("receipt.assignItems")}
           </Text>
         </View>
         <View className="flex-row items-center justify-start w-full">
-          <Text className="text-foreground text-lg mr-3">Split evenly</Text>
+          <Text className="text-foreground text-lg mr-3">
+            {t("receipt.splitEvenly")}
+          </Text>
           <View>
             <BouncyCheckbox
               isChecked={evenly === 1}

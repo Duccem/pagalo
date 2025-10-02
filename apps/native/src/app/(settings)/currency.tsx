@@ -7,6 +7,7 @@ import { Redirect, router } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { t } from "@/lib/i18n";
 
 export default function CurrencyScreen() {
   const { colorScheme } = useColorScheme();
@@ -32,7 +33,7 @@ export default function CurrencyScreen() {
             />
           </TouchableOpacity>
           <Text className="text-xl font-semibold text-foreground">
-            Select currency
+            {t("settings.selectCurrency")}
           </Text>
         </View>
         <ScrollView className="flex-1" contentContainerStyle={{ gap: 12 }}>
@@ -64,7 +65,9 @@ export default function CurrencyScreen() {
             );
           })}
           {loading && (
-            <Text className="text-center text-gray-500 text-sm">Loading…</Text>
+            <Text className="text-center text-gray-500 text-sm">
+              {t("common.loading")}
+            </Text>
           )}
         </ScrollView>
       </View>

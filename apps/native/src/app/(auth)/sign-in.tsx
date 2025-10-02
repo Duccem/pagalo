@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ArrowLeft } from "lucide-react-native";
 import Button from "@/components/ui/button";
+import { t } from "@/lib/i18n";
 
 export default function SignIn() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function SignIn() {
   const onSubmit = async () => {
     if (loading) return;
     if (!email || !password) {
-      Alert.alert("Required fields", "Enter email and password.");
+      Alert.alert(t("auth.requiredFields"), t("auth.requiredFieldsMsg"));
       return;
     }
     try {
@@ -40,8 +41,8 @@ export default function SignIn() {
       router.replace("/(tabs)");
     } catch (e: any) {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
-      const msg = e?.error?.message || e?.message || "Error signing in";
-      Alert.alert("Couldn't sign in", msg);
+      const msg = e?.error?.message || e?.message || t("auth.signInErrorTitle");
+      Alert.alert(t("auth.signInErrorTitle"), msg);
     } finally {
       setLoading(false);
     }
@@ -83,7 +84,7 @@ export default function SignIn() {
             }}
           >
             <ArrowLeft size={30} color={"black"} />
-            <Text className="text-xl text-foreground">Back</Text>
+            <Text className="text-xl text-foreground">{t("common.back")}</Text>
           </TouchableOpacity>
         </View>
         <View className="w-full justify-center items-center size-24">
@@ -95,15 +96,13 @@ export default function SignIn() {
         </View>
 
         <View className="mt-8 gap-4 w-full">
-          <Text className="text-2xl font-bold">Sign in</Text>
-          <Text className="text-gray-600">
-            Enter your email and password to continue.
-          </Text>
+          <Text className="text-2xl font-bold">{t("auth.signInHeader")}</Text>
+          <Text className="text-gray-600">{t("auth.signInSubtext")}</Text>
           <View className="gap-2">
-            <Text className="text-sm text-gray-700">Email</Text>
+            <Text className="text-sm text-gray-700">{t("auth.email")}</Text>
             <TextInput
               className="bg-white border rounded-xl px-4 py-3"
-              placeholder="you@email.com"
+              placeholder={t("placeholders.email")}
               autoCapitalize="none"
               keyboardType="email-address"
               value={email}
@@ -112,10 +111,10 @@ export default function SignIn() {
             />
           </View>
           <View className="gap-2">
-            <Text className="text-sm text-gray-700">Password</Text>
+            <Text className="text-sm text-gray-700">{t("auth.password")}</Text>
             <TextInput
               className="bg-white border rounded-xl px-4 py-3"
-              placeholder="••••••••"
+              placeholder={t("placeholders.password")}
               secureTextEntry
               value={password}
               onChangeText={setPassword}
@@ -124,7 +123,7 @@ export default function SignIn() {
           </View>
           <Button action={onSubmit}>
             <Text className="text-white font-semibold">
-              {loading ? "Signing in…" : "Sign in"}
+              {loading ? t("auth.signingIn") : t("auth.signIn")}
             </Text>
           </Button>
           <Button variant="outline" action={oauthLogin}>
@@ -138,16 +137,20 @@ export default function SignIn() {
               />
             )}
             <Text className="text-black font-semibold">
-              {loadingOauth ? "Starting..." : "Continue with Google"}
+              {loadingOauth
+                ? t("actions.starting")
+                : t("actions.continueWithGoogle")}
             </Text>
           </Button>
 
           <View className="flex-row gap-2 justify-center mt-2">
-            <Text className="text-gray-700">Don't have an account?</Text>
+            <Text className="text-gray-700">{t("auth.dontHaveAccount")}</Text>
             <TouchableOpacity
               onPress={() => router.push("/(auth)/sign-up" as any)}
             >
-              <Text className="text-blue-600 font-semibold">Sign up</Text>
+              <Text className="text-blue-600 font-semibold">
+                {t("auth.signUp")}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

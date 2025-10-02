@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useRef } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Button from "../ui/button";
+import { t } from "@/lib/i18n";
 
 const PeopleSheet = ({
   people,
@@ -80,7 +81,7 @@ const PeopleSheet = ({
         <View className="min-h-full">
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-2xl text-foreground mb-4 w-2/3">
-              Who's sharing <Text className="font-bold">{item}</Text>?
+              {t("receipt.whosSharingItem", { item })}
             </Text>
             <TouchableOpacity onPress={closeSheet}>
               <X />

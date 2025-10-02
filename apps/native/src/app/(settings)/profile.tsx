@@ -21,6 +21,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { t } from "@/lib/i18n";
 
 const ProfileScreen = () => {
   const { colorScheme } = useColorScheme();
@@ -38,8 +39,8 @@ const ProfileScreen = () => {
       const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!perm.granted) {
         Alert.alert(
-          "Permission needed",
-          "We need media library permission to pick an avatar"
+          t("settings.permissionNeeded"),
+          t("settings.permissionNeededMsg")
         );
         return;
       }
@@ -67,7 +68,7 @@ const ProfileScreen = () => {
     } catch (e) {
       console.error(e);
       setUploading(false);
-      Alert.alert("Error", "Could not pick image");
+      Alert.alert(t("common.error"), "Could not pick image");
     }
   };
 
@@ -84,7 +85,7 @@ const ProfileScreen = () => {
       router.back();
     } catch (e) {
       console.error(e);
-      Alert.alert("Error", "Could not update profile");
+      Alert.alert(t("common.error"), t("settings.profileUpdateError"));
     } finally {
       setSubmitting(false);
     }
@@ -110,10 +111,12 @@ const ProfileScreen = () => {
                 size={30}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <Text className="text-xl text-foreground">Back</Text>
+              <Text className="text-xl text-foreground">
+                {t("common.back")}
+              </Text>
             </TouchableOpacity>
             <Text className="text-lg font-medium text-foreground">
-              Edit profile
+              {t("settings.editProfile")}
             </Text>
           </View>
 
@@ -124,7 +127,7 @@ const ProfileScreen = () => {
                 {image ? (
                   <Image source={{ uri: image }} className="h-full w-full" />
                 ) : (
-                  <Text className="text-gray-400">No image</Text>
+                  <Text className="text-gray-400">{t("profile.noImage")}</Text>
                 )}
                 {uploading && (
                   <View className="absolute inset-0 bg-black/40 items-center justify-center">
@@ -133,7 +136,7 @@ const ProfileScreen = () => {
                 )}
               </View>
               <Text className="text-sm mt-2 text-gray-600 text-center">
-                Tap to change
+                {t("settings.tapToChange")}
               </Text>
             </Pressable>
           </View>
@@ -142,11 +145,11 @@ const ProfileScreen = () => {
           <View className="gap-6">
             <View>
               <Text className="text-xs uppercase text-gray-500 mb-2 tracking-wider">
-                Name
+                {t("auth.name")}
               </Text>
               <TextInput
                 className="border bg-card border-gray-200 text-foreground   rounded-2xl p-4 text-base"
-                placeholder="Your name"
+                placeholder={t("placeholders.yourName")}
                 value={name}
                 onChangeText={setName}
                 autoCapitalize="words"
@@ -155,7 +158,7 @@ const ProfileScreen = () => {
             </View>
             <View>
               <Text className="text-xs uppercase text-gray-500 mb-2 tracking-wider">
-                Email
+                {t("auth.email")}
               </Text>
               <View className="border bg-card border-gray-200  rounded-2xl p-4">
                 <Text className="text-base text-foreground">{user?.email}</Text>
@@ -168,17 +171,18 @@ const ProfileScreen = () => {
               {submitting ? (
                 <View className="flex-row items-center gap-2">
                   <ActivityIndicator />
-                  <Text className="text-white font-semibold">Saving...</Text>
+                  <Text className="text-white font-semibold">
+                    {t("profile.saving")}
+                  </Text>
                 </View>
               ) : (
                 <Text className="text-white font-semibold text-base">
-                  Save changes
+                  {t("settings.saveChanges")}
                 </Text>
               )}
             </Button>
             <Text className="text-center text-xs text-gray-400">
-              Avatar upload pending server endpoint. Changes may not persist
-              after re-login.
+              {t("settings.avatarNote")}
             </Text>
           </View>
         </View>

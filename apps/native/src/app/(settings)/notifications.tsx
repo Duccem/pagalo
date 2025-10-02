@@ -9,6 +9,7 @@ import { router } from "expo-router";
 import { ArrowLeft, Inbox } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { t } from "@/lib/i18n";
 
 const NotificationsScreen = () => {
   const { colorScheme } = useColorScheme();
@@ -44,26 +45,26 @@ const NotificationsScreen = () => {
               size={30}
               color={colorScheme === "dark" ? "white" : "black"}
             />
-            <Text className="text-xl text-foreground">Back</Text>
+            <Text className="text-xl text-foreground">{t("common.back")}</Text>
           </TouchableOpacity>
           <Text className="text-lg font-medium text-foreground">
-            Notifications
+            {t("settings.notifications")}
           </Text>
         </View>
 
         <View className="gap-4 flex-1">
           <Text className="text-xs uppercase text-gray-500 tracking-wider">
-            Notifications
+            {t("settings.notifications")}
           </Text>
           <View className="flex-1 bg-card rounded-2xl overflow-hidden">
             {list.length === 0 ? (
               <View className="flex-1 items-center justify-center p-6 gap-4">
                 <Inbox size={42} color="#999" />
                 <Text className="text-sm text-gray-500 text-center">
-                  No notifications.
+                  {t("settings.noNotifications")}
                 </Text>
                 <Text className="text-[11px] text-gray-400 text-center px-4">
-                  Enable and generate examples from the main Settings screen.
+                  {t("settings.notificationsHint")}
                 </Text>
               </View>
             ) : (

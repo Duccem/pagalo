@@ -32,6 +32,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { t } from "@/lib/i18n";
 
 export default function Scan() {
   const { colorScheme } = useColorScheme();
@@ -67,15 +68,15 @@ export default function Scan() {
                 size={30}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <Text className="text-xl">Back</Text>
+              <Text className="text-xl">{t("common.back")}</Text>
             </TouchableOpacity>
           </View>
           <Text className="text-center text-2xl text-muted-foreground px-8">
-            We need your permission to show the camera
+            {t("camera.permissionMessage")}
           </Text>
           <View className="w-full px-8">
             <Button action={requestPermission}>
-              <Text className="text-white">Grant permission</Text>
+              <Text className="text-white">{t("common.grantPermission")}</Text>
             </Button>
           </View>
         </View>
@@ -222,7 +223,9 @@ export default function Scan() {
               color={colorScheme === "dark" ? "white" : "black"}
               size={25}
             />
-            <Text className="text-lg text-foreground">Upload</Text>
+            <Text className="text-lg text-foreground">
+              {t("common.upload")}
+            </Text>
           </Button>
         )}
         {!photo && (

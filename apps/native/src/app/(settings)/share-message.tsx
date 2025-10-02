@@ -15,6 +15,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { t } from "@/lib/i18n";
 
 export default function ShareMessageScreen() {
   const { colorScheme } = useColorScheme();
@@ -65,7 +66,9 @@ export default function ShareMessageScreen() {
                 size={28}
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <Text className="text-lg text-foreground">Back</Text>
+              <Text className="text-lg text-foreground">
+                {t("common.back")}
+              </Text>
             </Pressable>
             <Button
               action={onSave}
@@ -84,7 +87,7 @@ export default function ShareMessageScreen() {
                   disabled ? "text-gray-600" : "text-white"
                 }`}
               >
-                Save
+                {t("common.save")}
               </Text>
             </Button>
           </View>
@@ -93,11 +96,10 @@ export default function ShareMessageScreen() {
             <View className="gap-4">
               <View className="gap-2">
                 <Text className="text-base font-semibold text-foreground">
-                  Share message
+                  {t("share.title")}
                 </Text>
                 <Text className="text-xs text-muted-foreground">
-                  This message will appear when you share bills or receipts. You
-                  can customize it for your friends or context.
+                  {t("share.description")}
                 </Text>
               </View>
 
@@ -106,7 +108,7 @@ export default function ShareMessageScreen() {
                   multiline={true}
                   numberOfLines={4}
                   className="text-base text-foreground "
-                  placeholder="Write the message..."
+                  placeholder={t("placeholders.writeMessage")}
                   value={value}
                   onChangeText={setValue}
                   placeholderTextColor="#9ca3af"
@@ -116,17 +118,19 @@ export default function ShareMessageScreen() {
                 />
                 <View className="flex-row justify-between mt-2">
                   <Text className="text-xs text-muted-foreground">
-                    {value.trim().length}/200 characters
+                    {value.trim().length}/200 {t("common.characters")}
                   </Text>
                   {value.trim() !== (shareMessage || defaultValue) && (
-                    <Text className="text-xs text-amber-600">Unsaved</Text>
+                    <Text className="text-xs text-amber-600">
+                      {t("common.unsaved")}
+                    </Text>
                   )}
                 </View>
               </View>
 
               <View className="bg-card rounded-2xl p-4 gap-2">
                 <Text className="text-xs uppercase text-muted-foreground tracking-wider">
-                  Preview
+                  {t("share.preview")}
                 </Text>
                 <View className="border border-gray-200 rounded-xl p-3 bg-muted">
                   <Text className="text-sm text-muted-foreground">

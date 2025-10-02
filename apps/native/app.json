@@ -48,7 +48,16 @@
           "granularPermissions": ["audio", "photo"]
         }
       ],
-      "expo-sqlite"
+      "expo-sqlite",
+      [
+        "expo-localization",
+        {
+          "supportedLocales": {
+            "ios": ["en", "es"],
+            "android": ["en", "es"]
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

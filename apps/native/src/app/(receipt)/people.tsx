@@ -25,6 +25,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { t } from "@/lib/i18n";
 
 const People = () => {
   const { colorScheme } = useColorScheme();
@@ -42,7 +43,7 @@ const People = () => {
   const addItem = async () => {
     if (!name) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-      Alert.alert("Error", "Please enter a name");
+      Alert.alert(t("common.error"), t("errors.enterName"));
       return;
     }
     await database.insert(schema.member).values({
@@ -64,7 +65,7 @@ const People = () => {
   const pasteFromClipboard = async () => {
     const text = await Clipboard.getStringAsync();
     if (!text) {
-      Alert.alert("Error", "Clipboard is empty");
+      Alert.alert(t("common.error"), t("clipboard.empty"));
       return;
     }
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -108,7 +109,7 @@ const People = () => {
               size={30}
               color={colorScheme === "dark" ? "white" : "black"}
             />
-            <Text className="text-xl text-foreground">Back</Text>
+            <Text className="text-xl text-foreground">{t("common.back")}</Text>
           </TouchableOpacity>
           <Button
             className=""
@@ -124,16 +125,16 @@ const People = () => {
         <View className="flex-1 justify-center items-center w-full gap-6 mt-10">
           <View className="gap-2">
             <Text className="text-4xl w-full text-start font-bold text-foreground">
-              Who's Splitting?
+              {t("receipt.whosSplitting")}
             </Text>
             <Text className="text-start text-lg text-muted-foreground">
-              Add people to split the bill with. You can add them later too.
+              {t("receipt.addPeopleHint")}
             </Text>
           </View>
           <View className="flex-row gap-2">
             <TextInput
               className="border bg-card border-gray-200 text-foreground  w-4/5 rounded-2xl px-5 py-3"
-              placeholder="eg. Jose"
+              placeholder={t("placeholders.jose")}
               value={name}
               onChangeText={setName}
             />
@@ -148,7 +149,9 @@ const People = () => {
             ) : (
               <ClipboardPaste size={25} color={"#fff"} />
             )}
-            <Text className="text-lg text-white">Paste names list</Text>
+            <Text className="text-lg text-white">
+              {t("receipt.pasteNamesList")}
+            </Text>
           </Button>
           <FlatList
             className="w-full mt-8  flex-1"

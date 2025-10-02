@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "@/components/ui/button";
+import { t } from "@/lib/i18n";
 
 export default function Welcome() {
   const router = useRouter();
@@ -23,8 +24,7 @@ export default function Welcome() {
           </Text>
         </View>
         <Text className="text-lg text-gray-700 mt-5 px-8 text-center">
-          Dont worry about the mess of calculate the division of the bill, we
-          will do it for you!
+          {t("home.tagline")}
         </Text>
         <LottieView
           style={{
@@ -39,7 +39,7 @@ export default function Welcome() {
       <View className="w-full px-5 gap-4">
         <Button action={() => router.push("/(auth)/sign-in" as any)}>
           <Text className="text-base text-white font-semibold">
-            Sign in with email
+            {t("actions.signInWithEmail")}
           </Text>
         </Button>
 
@@ -48,7 +48,7 @@ export default function Welcome() {
           action={() => router.push("/(auth)/sign-up" as any)}
         >
           <Text className="text-base font-semibold text-white">
-            Create account
+            {t("auth.createAccount")}
           </Text>
         </Button>
       </View>

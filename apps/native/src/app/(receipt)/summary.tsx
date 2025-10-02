@@ -23,6 +23,7 @@ import { useEffect } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import Toast from "react-native-simple-toast";
+import { t } from "@/lib/i18n";
 
 const Details = () => {
   const { colorScheme } = useColorScheme();
@@ -92,24 +93,28 @@ const Details = () => {
     if (data?.[0]?.evenly) {
       const perPerson =
         (data?.[0]?.total ?? 0) / Math.max(people?.length ?? 0, 1);
-      body = `Receipt Summary \n\nTotal: ${format(
-        data?.[0]?.total
-      )} \nTax: ${format(data?.[0]?.tax)} \nTip: ${format(
-        data?.[0]?.tip
-      )} \n\nEach person pays: ${format(perPerson)}`;
+      body = `${t("receipt.receiptSummary")} \n\n${t(
+        "receipt.total"
+      )}: ${format(data?.[0]?.total)} \n${t("receipt.tax")}: ${format(
+        data?.[0]?.tax
+      )} \n${t("receipt.tip")}: ${format(data?.[0]?.tip)} \n\n${t(
+        "receipt.eachPersonPays"
+      )} ${format(perPerson)}`;
     } else {
-      body = `Receipt Summary \n\nTotal: ${format(
-        data?.[0]?.total
-      )} \nTax: ${format(data?.[0]?.tax)} \nTip: ${format(
-        data?.[0]?.tip
-      )} \n\nPeople: \n${people
+      body = `${t("receipt.receiptSummary")} \n\n${t(
+        "receipt.total"
+      )}: ${format(data?.[0]?.total)} \n${t("receipt.tax")}: ${format(
+        data?.[0]?.tax
+      )} \n${t("receipt.tip")}: ${format(data?.[0]?.tip)} \n\n${t(
+        "receipt.people"
+      )}: \n${people
         ?.map((person) => `${person.name}: ${format(person.total)}`)
         .join("\n")}`;
     }
     const text = `${shareMessage}\n\n${body}`;
     await Clipboard.setStringAsync(text.trim());
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    Toast.show("Copied to clipboard", Toast.SHORT);
+    Toast.show(t("clipboard.copied"), Toast.SHORT);
   };
 
   const deleteInvoice = async () => {
@@ -142,7 +147,7 @@ const Details = () => {
               size={30}
               color={colorScheme === "dark" ? "white" : "black"}
             />
-            <Text className="text-xl text-foreground">Back</Text>
+            <Text className="text-xl text-foreground">{t("common.back")}</Text>
           </TouchableOpacity>
           <View className="flex-row items-center gap-4">
             <Button action={deleteInvoice} styles={{ padding: 10 }}>
@@ -166,28 +171,34 @@ const Details = () => {
           </Text>
           <View className="w-full  flex-row justify-between items-center">
             <Text className="text-2xl text-start font-bold text-foreground">
-              Split summary
+              {t("receipt.splitSummary")}
             </Text>
             <Text className="text-end text-foreground text-2xl">
-              {`${Math.round(percentagePayed * 100)}% paid`}
+              {`${Math.round(percentagePayed * 100)}% ${t("receipt.paid")}`}
             </Text>
           </View>
 
           <View className="w-full gap-2 flex-row justify-between items-center border-b border-foreground pb-4">
             <View className="w rounded-2xl">
-              <Text className="text-xl font-medium text-foreground">Total</Text>
+              <Text className="text-xl font-medium text-foreground">
+                {t("receipt.total")}
+              </Text>
               <Text className="text-lg font-bold text-muted-foreground">
                 {format(data[0]?.total)}
               </Text>
             </View>
             <View className="w rounded-2xl">
-              <Text className="text-xl font-medium text-foreground">Tax</Text>
+              <Text className="text-xl font-medium text-foreground">
+                {t("receipt.tax")}
+              </Text>
               <Text className="text-lg font-bold text-muted-foreground">
                 {format(data[0]?.tax)}
               </Text>
             </View>
             <View className="w rounded-2xl">
-              <Text className="text-xl font-medium text-foreground">Tip</Text>
+              <Text className="text-xl font-medium text-foreground">
+                {t("receipt.tip")}
+              </Text>
               <Text className="text-lg font-bold text-muted-foreground">
                 {format(data[0]?.tip)}
               </Text>

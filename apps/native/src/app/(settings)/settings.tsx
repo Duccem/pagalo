@@ -28,6 +28,7 @@ import {
   View,
 } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { t } from "@/lib/i18n";
 
 const Index = () => {
   const { isPending, data } = authClient.useSession();
@@ -48,7 +49,7 @@ const Index = () => {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
       await authClient.signOut();
     } catch {
-      Alert.alert("Error", "Could not sign out. Please try again.");
+      Alert.alert(t("common.error"), t("settings.signOutError"));
     }
   };
 
@@ -76,10 +77,12 @@ const Index = () => {
                 className="text-foreground"
                 color={colorScheme === "dark" ? "white" : "black"}
               />
-              <Text className="text-xl text-foreground">Back</Text>
+              <Text className="text-xl text-foreground">
+                {t("common.back")}
+              </Text>
             </TouchableOpacity>
             <Text className="text-lg font-medium text-foreground">
-              Settings
+              {t("settings.title")}
             </Text>
           </View>
           {/* User Card */}
@@ -104,7 +107,7 @@ const Index = () => {
                 className="text-lg font-semibold text-foreground"
                 numberOfLines={1}
               >
-                {data?.user.name || "User"}
+                {data?.user.name || t("common.user")}
               </Text>
               <Text className="text-muted-foreground text-sm" numberOfLines={1}>
                 {data?.user.email}
@@ -120,7 +123,7 @@ const Index = () => {
           {/* Preferences */}
           <View className="gap-4">
             <Text className="text-xs uppercase tracking-wider text-muted-foreground">
-              Preferences
+              {t("settings.preferences")}
             </Text>
             <View className="bg-card rounded-2xl divide-y overflow-hidden">
               <View className="flex-row items-center justify-between p-4">
@@ -134,7 +137,9 @@ const Index = () => {
                   ) : (
                     <SunMedium size={20} className="text-foreground" />
                   )}
-                  <Text className="text-base text-foreground">Dark mode</Text>
+                  <Text className="text-base text-foreground">
+                    {t("settings.darkMode")}
+                  </Text>
                 </View>
                 <Switch
                   value={isDarkColorScheme}
@@ -154,7 +159,9 @@ const Index = () => {
                 }}
               >
                 <View className="flex-row items-center gap-3">
-                  <Text className="text-base text-foreground">Currency</Text>
+                  <Text className="text-base text-foreground">
+                    {t("settings.currency")}
+                  </Text>
                 </View>
                 <View className="flex-row items-center gap-2">
                   <Text className="text-sm font-medium text-muted-foreground">
@@ -177,7 +184,7 @@ const Index = () => {
               >
                 <View className="flex-row items-center gap-3">
                   <Text className="text-base text-foreground">
-                    Share message
+                    {t("settings.shareMessage")}
                   </Text>
                 </View>
                 <View className="flex-row items-center gap-2 max-w-[55%]">
@@ -189,7 +196,7 @@ const Index = () => {
                       ? "..."
                       : (shareMessage || "").length > 28
                       ? `${shareMessage.slice(0, 20)}…`
-                      : shareMessage || "(empty)"}
+                      : shareMessage || t("common.empty")}
                   </Text>
                   <ChevronRight
                     size={18}
@@ -305,7 +312,7 @@ const Index = () => {
           {/* Account */}
           <View className="gap-4">
             <Text className="text-xs uppercase text-muted-foreground tracking-wider">
-              Account
+              {t("settings.account")}
             </Text>
             <View className="bg-card rounded-2xl overflow-hidden">
               <Pressable
@@ -314,7 +321,9 @@ const Index = () => {
               >
                 <View className="flex-row items-center gap-3">
                   <LogOut size={20} color="#dc2626" />
-                  <Text className="text-base text-red-600">Sign out</Text>
+                  <Text className="text-base text-red-600">
+                    {t("settings.signOut")}
+                  </Text>
                 </View>
                 <ChevronRight
                   size={20}
@@ -327,7 +336,7 @@ const Index = () => {
           {/* About */}
           <View className="gap-4 mb-4">
             <Text className="text-xs uppercase text-muted-foreground tracking-wider">
-              About
+              {t("settings.about")}
             </Text>
             <View className="bg-card rounded-2xl overflow-hidden">
               <View className="flex-row items-center justify-between p-4">
@@ -336,13 +345,16 @@ const Index = () => {
                     size={20}
                     color={colorScheme === "dark" ? "white" : "black"}
                   />
-                  <Text className="text-base text-foreground">Version</Text>
+                  <Text className="text-base text-foreground">
+                    {t("settings.version")}
+                  </Text>
                 </View>
                 <Text className="text-muted-foreground text-sm">{version}</Text>
               </View>
               <View className="flex-row items-center justify-between px-4 pb-4">
                 <Text className="text-xs text-muted-foreground">
-                  Build ID: {Constants?.nativeBuildVersion ?? "dev"}
+                  {t("settings.buildId")}:{" "}
+                  {Constants?.nativeBuildVersion ?? "dev"}
                 </Text>
               </View>
             </View>

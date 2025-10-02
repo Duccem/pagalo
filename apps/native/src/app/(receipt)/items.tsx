@@ -18,6 +18,7 @@ import {
   View,
 } from "react-native";
 import { useMoneyFormatter } from "@/lib/money";
+import { t } from "@/lib/i18n";
 
 const Items = () => {
   const { colorScheme } = useColorScheme();
@@ -55,7 +56,7 @@ const Items = () => {
   const addItem = async () => {
     if (!name || !price) {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-      Alert.alert("Error", "Please enter a name and price");
+      Alert.alert(t("common.error"), t("errors.enterNamePrice"));
       return;
     }
     await database.insert(schema.item).values({
@@ -107,7 +108,7 @@ const Items = () => {
               size={30}
               color={colorScheme === "dark" ? "white" : "black"}
             />
-            <Text className="text-xl text-foreground">Back</Text>
+            <Text className="text-xl text-foreground">{t("common.back")}</Text>
           </TouchableOpacity>
           <Button action={saveTotal} styles={{ padding: 10 }}>
             <Check color={"white"} size={25} />
@@ -115,13 +116,13 @@ const Items = () => {
         </View>
         <View className="w-full flex-1 justify-start items-center px-2">
           <Text className="text-4xl w-full text-start font-bold my-6 text-foreground">
-            Add Items
+            {t("receipt.addItems")}
           </Text>
 
           <View className="flex-row gap-2 w-full">
             <TextInput
               className="border bg-card border-gray-200 text-foreground  w-3/5 rounded-2xl px-4 py-3 "
-              placeholder="eg. Pizza"
+              placeholder={t("placeholders.pizza")}
               value={name}
               onChangeText={setName}
             />
@@ -139,7 +140,9 @@ const Items = () => {
 
           <View className="w-full flex-row justify-between items-center gap-2 my-5">
             <View className="w-2/5 gap-2">
-              <Text className="text-lg font-medium text-foreground">Tax:</Text>
+              <Text className="text-lg font-medium text-foreground">
+                {t("receipt.tax")}:
+              </Text>
 
               <View className="relative">
                 <TextInput
@@ -158,7 +161,9 @@ const Items = () => {
               </View>
             </View>
             <View className="w-2/5 gap-2">
-              <Text className="text-lg font-medium text-foreground">Tip:</Text>
+              <Text className="text-lg font-medium text-foreground">
+                {t("receipt.tip")}:
+              </Text>
 
               <View className="relative">
                 <TextInput
@@ -179,7 +184,7 @@ const Items = () => {
           </View>
           <View className="w-full">
             <Text className="text-2xl font-medium text-foreground">
-              Total: {format(totalPrice)}
+              {t("receipt.total")}: {format(totalPrice)}
             </Text>
           </View>
           <FlatList
