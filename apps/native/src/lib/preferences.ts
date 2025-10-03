@@ -3,6 +3,7 @@ import { useLiveQuery } from "drizzle-orm/expo-sqlite";
 import { useCallback, useState } from "react";
 import { preferences } from "./db/schema";
 import { useDatabase } from "./db/use-database";
+import { getCurrentLocale, setLocale } from "./i18n";
 
 export const SUPPORTED_CURRENCIES = ["USD", "MXN", "VES", "EUR"] as const;
 export const SUPPORTED_CURRENCIES_LABELS = {
@@ -17,6 +18,14 @@ const DEFAULT_CURRENCY: SupportedCurrency = "USD";
 const CURRENCY_KEY = "currency"; // key column in preferences table
 const SHARE_MESSAGE_KEY = "share_message"; // key for share message preference
 const DEFAULT_SHARE_MESSAGE = "Let's split the bill with Pagalo";
+// Language preference
+export const SUPPORTED_LANGUAGES = ["en", "es"] as const;
+export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
+export const SUPPORTED_LANGUAGES_LABELS: Record<SupportedLanguage, string> = {
+  en: "English",
+  es: "Español",
+};
+const LANGUAGE_KEY = "language";
 // Notification preferences keys
 const NOTIF_GENERAL_KEY = "notif_general"; // master enable
 const NOTIF_REMINDERS_KEY = "notif_reminders"; // payment reminders
@@ -148,6 +157,42 @@ export function useNotificationPreferences() {
     newsEnabled: news.value && general.value,
     setNewsEnabled: news.setValue,
     loading: general.loading || reminders.loading || news.loading,
+  } as const;
+}
+
+// Language preference hook
+export function useLanguagePreference() {
+  const db = useDatabase();
+  const [error, setError] = useState<string | null>(null);
+  const { data, error: liveError } = useLiveQuery(
+    db.select().from(preferences).where(eq(preferences.key, LANGUAGE_KEY))
+  );
+
+  const language: SupportedLanguage = ((data?.[0]?.value as
+    | SupportedLanguage
+    | undefined) ?? getCurrentLocale()) as SupportedLanguage;
+
+  const setLanguage = useCallback(
+    async (value: SupportedLanguage) => {
+      try {
+        await db
+          .insert(preferences)
+          .values({ key: LANGUAGE_KEY, value })
+          .onConflictDoUpdate({ target: preferences.key, set: { value } });
+        // Update i18n immediately
+        setLocale(value);
+      } catch (e: any) {
+        setError(e?.message || "Failed to save language");
+      }
+    },
+    [db]
+  );
+
+  return {
+    language,
+    setLanguage,
+    loading: !data && !liveError,
+    error: error || liveError?.message || null,
   } as const;
 }
 

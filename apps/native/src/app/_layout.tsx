@@ -19,6 +19,7 @@ import { SessionProvider } from "@/components/shared/session-provider";
 import { useMigrate } from "@/lib/db/use-database";
 // Initialize i18n as early as possible
 import "@/lib/i18n";
+import { LanguageProvider } from "@/components/shared/language-provider";
 
 export default function RootLayout() {
   const [appReady, setAppReady] = useState(false);
@@ -70,7 +71,9 @@ export default function RootLayout() {
             entering={FadeIn.duration(300)}
           >
             <SessionProvider>
-              <RootRouter />
+              <LanguageProvider>
+                <RootRouter />
+              </LanguageProvider>
             </SessionProvider>
             <StatusBar
               style={colorScheme === "dark" ? "dark" : "light"}

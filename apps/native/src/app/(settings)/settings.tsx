@@ -4,6 +4,8 @@ import {
   useCurrencyPreference,
   useNotificationPreferences,
   useShareMessagePreference,
+  useLanguagePreference,
+  SUPPORTED_LANGUAGES_LABELS,
 } from "@/lib/preferences";
 import { useColorScheme } from "@/lib/use-color-scheme";
 import Constants from "expo-constants";
@@ -37,6 +39,7 @@ const Index = () => {
   const { currency, loading: loadingCurrency } = useCurrencyPreference();
   const { shareMessage, loading: loadingShareMessage } =
     useShareMessagePreference();
+  const { language, loading: loadingLanguage } = useLanguagePreference();
   const _not = useNotificationPreferences();
   if (isPending) return null;
   if (!data) {
@@ -166,6 +169,32 @@ const Index = () => {
                 <View className="flex-row items-center gap-2">
                   <Text className="text-sm font-medium text-muted-foreground">
                     {loadingCurrency ? "..." : currency}
+                  </Text>
+                  <ChevronRight
+                    size={18}
+                    className="text-foreground"
+                    color={colorScheme === "dark" ? "white" : "black"}
+                  />
+                </View>
+              </Pressable>
+              {/* Language preference */}
+              <Pressable
+                className="flex-row items-center justify-between p-4"
+                onPress={() => {
+                  Haptics.selectionAsync();
+                  router.push("/(settings)/language" as any);
+                }}
+              >
+                <View className="flex-row items-center gap-3">
+                  <Text className="text-base text-foreground">
+                    {t("settings.language")}
+                  </Text>
+                </View>
+                <View className="flex-row items-center gap-2">
+                  <Text className="text-sm font-medium text-muted-foreground">
+                    {loadingLanguage
+                      ? "..."
+                      : SUPPORTED_LANGUAGES_LABELS[language]}
                   </Text>
                   <ChevronRight
                     size={18}

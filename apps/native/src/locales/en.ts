@@ -25,6 +25,8 @@ const en = {
     title: "Settings",
     preferences: "Preferences",
     darkMode: "Dark mode",
+    language: "Language",
+    selectLanguage: "Select language",
     currency: "Currency",
     selectCurrency: "Select currency",
     shareMessage: "Share message",

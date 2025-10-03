@@ -38,6 +38,13 @@ export default function SettingsLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="language"
+        options={{
+          title: "Language",
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }

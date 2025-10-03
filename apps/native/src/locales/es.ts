@@ -25,6 +25,8 @@ const es = {
     title: "Ajustes",
     preferences: "Preferencias",
     darkMode: "Modo oscuro",
+    language: "Idioma",
+    selectLanguage: "Seleccionar idioma",
     currency: "Moneda",
     selectCurrency: "Seleccionar moneda",
     shareMessage: "Mensaje para compartir",
